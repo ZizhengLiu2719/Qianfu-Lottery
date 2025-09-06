@@ -1,0 +1,13 @@
+name = "qianfu-jicai-api"
+main = "src/index.ts"
+compatibility_date = "2023-12-01"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[env.development]
+vars = { ENVIRONMENT = "development" }
+
+# 环境变量需要在 Cloudflare Dashboard 中设置:
+# - DATABASE_URL: Neon 数据库连接字符串
+# - JWT_SECRET: JWT 签名密钥

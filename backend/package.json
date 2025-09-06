@@ -1,0 +1,43 @@
+{
+  "name": "qianfu-jicai-backend",
+  "version": "1.0.0",
+  "description": "仟府集彩后端 API",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy src/index.ts",
+    "migrate:dev": "npx prisma migrate dev",
+    "migrate:deploy": "npx prisma migrate deploy",
+    "generate": "npx prisma generate",
+    "start:server": "tsx src/server.ts",
+    "build": "tsc",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "^4.4.0",
+    "@prisma/client": "^5.7.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "@prisma/adapter-neon": "^5.7.0",
+    "@neondatabase/serverless": "^0.7.2"
+  },
+  "devDependencies": {
+    "@hono/node-server": "^1.10.1",
+    "@cloudflare/workers-types": "^4.20240512.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.10.0",
+    "prisma": "^5.7.0",
+    "typescript": "^5.3.0",
+    "tsx": "^4.6.0",
+    "wrangler": "^3.19.0"
+  },
+  "keywords": [
+    "hono",
+    "cloudflare",
+    "prisma",
+    "api"
+  ],
+  "author": "Qianfu Jicai Team",
+  "license": "MIT"
+}

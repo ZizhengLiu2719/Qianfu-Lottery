@@ -1,0 +1,102 @@
+import '../models/models.dart';
+import 'dio_client.dart';
+
+class AuthRepository {
+  final DioClient _dioClient;
+
+  AuthRepository(this._dioClient);
+
+  // 用户注册
+  Future<AuthResponse> register({
+    required String email,
+    required String password,
+    String? firstName,
+    String? lastName,
+    String? language,
+  }) async {
+    final response = await _dioClient.post<AuthResponse>(
+      '/api/auth/register',
+      data: {
+        'email': email,
+        'password': password,
+        if (firstName != null) 'firstName': firstName,
+        if (lastName != null) 'lastName': lastName,
+        'language': language ?? 'zh',
+      },
+      fromJson: (json) => AuthResponse.fromJson(json),
+    );
+
+    if (response.data == null) {
+      throw const ApiException(
+        code: 500,
+        message: 'Registration failed',
+      );
+    }
+
+    return response.data!;
+  }
+
+  // 用户登录
+  Future<AuthResponse> login({
+    required String email,
+    required String password,
+  }) async {
+    final response = await _dioClient.post<AuthResponse>(
+      '/api/auth/login',
+      data: {
+        'email': email,
+        'password': password,
+      },
+      fromJson: (json) => AuthResponse.fromJson(json),
+    );
+
+    if (response.data == null) {
+      throw const ApiException(
+        code: 500,
+        message: 'Login failed',
+      );
+    }
+
+    return response.data!;
+  }
+
+  // 获取当前用户信息
+  Future<User> getCurrentUser() async {
+    final response = await _dioClient.get<User>(
+      '/api/me',
+      fromJson: (json) => User.fromJson(json['user']),
+    );
+
+    if (response.data == null) {
+      throw const ApiException(
+        code: 500,
+        message: 'Failed to get user info',
+      );
+    }
+
+    return response.data!;
+  }
+
+  // 获取仟彩豆交易历史
+  Future<List<QiancaiDouTransaction>> getTransactionHistory({
+    int page = 1,
+    int limit = 20,
+  }) async {
+    final response = await _dioClient.get<List<QiancaiDouTransaction>>(
+      '/api/me/qiancaidou/transactions',
+      queryParameters: {
+        'page': page,
+        'limit': limit,
+      },
+      fromJson: (json) {
+        final data = json as Map<String, dynamic>;
+        final transactions = data['transactions'] as List;
+        return transactions
+            .map((transaction) => QiancaiDouTransaction.fromJson(transaction))
+            .toList();
+      },
+    );
+
+    return response.data ?? [];
+  }
+}
