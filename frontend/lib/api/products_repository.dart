@@ -3,7 +3,8 @@ import '../models/models.dart';
 import 'dio_client.dart';
 
 final productsRepositoryProvider = Provider<ProductsRepository>((ref) {
-  return ProductsRepository(ref.watch(dioClientProvider));
+  final dioClient = ref.watch(dioClientProvider);
+  return ProductsRepository(dioClient);
 });
 
 class ProductsRepository {
