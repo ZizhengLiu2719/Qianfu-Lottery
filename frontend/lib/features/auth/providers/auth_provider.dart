@@ -6,8 +6,6 @@ import '../../../models/models.dart';
 import '../../../utils/token_manager.dart';
 
 // DI Providers
-final dioClientProvider = Provider<DioClient>((ref) => DioClient());
-
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dioClient = ref.watch(dioClientProvider);
   return AuthRepository(dioClient);

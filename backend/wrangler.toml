@@ -1,4 +1,4 @@
-name = "qianfu-jicai-api"
+name = "qianfu-lottery-api"
 main = "src/index.ts"
 compatibility_date = "2024-05-20"
 compatibility_flags = ["nodejs_compat"]

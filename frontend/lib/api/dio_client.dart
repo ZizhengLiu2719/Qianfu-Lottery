@@ -12,7 +12,7 @@ final dioClientProvider = Provider<DioClient>((ref) {
 class DioClient {
   static const String _baseUrl = kDebugMode 
       ? 'http://localhost:8787'  // 本地开发
-      : 'https://qianfu-jicai-api.workers.dev'; // 生产环境 Cloudflare Worker URL
+      : 'https://qianfu-lottery-api.michaelliu2719.workers.dev'; // 生产环境 Cloudflare Worker URL
 
   late final Dio _dio;
   final TokenManager _tokenManager = TokenManager();
