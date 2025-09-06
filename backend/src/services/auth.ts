@@ -1,52 +1,121 @@
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import { SignJWT, jwtVerify, type JWTPayload as JoseJWTPayload } from 'jose'
 
-export interface JWTPayload {
+export interface JWTPayload extends JoseJWTPayload {
   userId: number
   email: string
-  iat?: number
-  exp?: number
+}
+
+/**
+ * Converts a hex string to a Uint8Array.
+ */
+function hexToU8a(hex: string): Uint8Array {
+  return new Uint8Array(hex.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)))
+}
+
+/**
+ * Converts a Uint8Array to a hex string.
+ */
+function u8aToHex(bytes: Uint8Array): string {
+  return bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '')
 }
 
 export class AuthService {
-  private jwtSecret: string
+  private jwtSecret: Uint8Array
 
   constructor(jwtSecret: string) {
-    this.jwtSecret = jwtSecret
+    // IMPORTANT: The secret key must be securely generated and managed.
+    // For HS256, it's recommended to have a secret of at least 32 bytes.
+    // We'll use a TextEncoder to convert the string secret to a Uint8Array.
+    this.jwtSecret = new TextEncoder().encode(jwtSecret)
   }
 
   /**
-   * 哈希密码
+   * Hashes a password using the Web Crypto API (PBKDF2).
+   * @returns A string containing salt and hash, separated by a colon.
    */
   async hashPassword(password: string): Promise<string> {
-    const saltRounds = 12
-    return await bcrypt.hash(password, saltRounds)
+    const salt = crypto.getRandomValues(new Uint8Array(16))
+    const importedKey = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(password),
+      { name: 'PBKDF2' },
+      false,
+      ['deriveBits']
+    )
+    
+    const hashBuffer = await crypto.subtle.deriveBits(
+      {
+        name: 'PBKDF2',
+        salt: salt,
+        iterations: 100000,
+        hash: 'SHA-256',
+      },
+      importedKey,
+      256
+    )
+
+    const hash = new Uint8Array(hashBuffer)
+    return `${u8aToHex(salt)}:${u8aToHex(hash)}`
   }
 
   /**
-   * 验证密码
+   * Verifies a password against a stored salted hash.
    */
-  async verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
-    return await bcrypt.compare(password, hashedPassword)
+  async verifyPassword(password: string, storedHash: string): Promise<boolean> {
+    const [saltHex, hashHex] = storedHash.split(':')
+    if (!saltHex || !hashHex) {
+      return false
+    }
+
+    const salt = hexToU8a(saltHex)
+    const storedHashBytes = hexToU8a(hashHex)
+    
+    const importedKey = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(password),
+      { name: 'PBKDF2' },
+      false,
+      ['deriveBits']
+    )
+    
+    const derivedBuffer = await crypto.subtle.deriveBits(
+      {
+        name: 'PBKDF2',
+        salt: salt,
+        iterations: 100000,
+        hash: 'SHA-256',
+      },
+      importedKey,
+      256
+    )
+
+    const derivedBytes = new Uint8Array(derivedBuffer)
+    
+    // Constant-time comparison to prevent timing attacks
+    return crypto.subtle.timingSafeEqual(storedHashBytes, derivedBytes)
   }
 
   /**
-   * 生成 JWT Token
+   * Generates a JWT Token using 'jose'.
    */
-  generateToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
-    return jwt.sign(payload, this.jwtSecret, {
-      expiresIn: '7d', // 7天有效期
-      issuer: 'qianfu-jicai'
-    })
+  async generateToken(payload: Omit<JWTPayload, 'iat' | 'exp' | 'iss'>): Promise<string> {
+    return await new SignJWT(payload)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuer('qianfu-jicai')
+      .setIssuedAt()
+      .setExpirationTime('7d')
+      .sign(this.jwtSecret)
   }
 
   /**
-   * 验证 JWT Token
+   * Verifies a JWT Token using 'jose'.
    */
-  verifyToken(token: string): JWTPayload | null {
+  async verifyToken(token: string): Promise<JWTPayload | null> {
     try {
-      const decoded = jwt.verify(token, this.jwtSecret) as JWTPayload
-      return decoded
+      const { payload } = await jwtVerify(token, this.jwtSecret, {
+        issuer: 'qianfu-jicai'
+      })
+      return payload as JWTPayload
     } catch (error) {
       console.error('Token verification failed:', error)
       return null
@@ -54,7 +123,7 @@ export class AuthService {
   }
 
   /**
-   * 从 Authorization header 中提取 token
+   * Extracts token from an "Authorization: Bearer <token>" header.
    */
   extractTokenFromHeader(authorization: string | undefined): string | null {
     if (!authorization) return null

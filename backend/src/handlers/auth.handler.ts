@@ -97,7 +97,7 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
       })
 
       // 生成 JWT
-      const token = authService.generateToken({
+      const token = await authService.generateToken({
         userId: user.id,
         email: user.email
       })
@@ -175,7 +175,7 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
       }
 
       // 生成 JWT
-      const token = authService.generateToken({
+      const token = await authService.generateToken({
         userId: user.id,
         email: user.email
       })

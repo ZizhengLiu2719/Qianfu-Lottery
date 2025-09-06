@@ -24,7 +24,7 @@ export function createAuthMiddleware(authService: AuthService) {
         }, 401)
       }
 
-      const payload = authService.verifyToken(token)
+      const payload = await authService.verifyToken(token)
       if (!payload) {
         return c.json({ 
           code: 401, 

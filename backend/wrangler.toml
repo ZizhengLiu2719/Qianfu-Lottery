@@ -1,6 +1,7 @@
 name = "qianfu-jicai-api"
 main = "src/index.ts"
-compatibility_date = "2023-12-01"
+compatibility_date = "2024-05-20"
+compatibility_flags = ["nodejs_compat"]
 
 [env.production]
 vars = { ENVIRONMENT = "production" }

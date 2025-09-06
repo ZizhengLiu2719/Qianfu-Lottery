@@ -1,0 +1,70 @@
+# =============================================================================
+# SENSITIVE & ENVIRONMENT-SPECIFIC FILES
+# =============================================================================
+# 永远不要将包含密码、密钥等敏感信息的文件提交到版本控制中！
+# .env 文件专门用于存储这些敏感信息，必须被忽略。
+.env
+/backend/.env
+
+# =============================================================================
+# NODE / JAVASCRIPT
+# =============================================================================
+# 日志文件
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# 运行时数据
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# 依赖目录
+node_modules/
+/backend/node_modules/
+
+# 编译后的输出目录
+dist/
+/backend/dist/
+
+# =============================================================================
+# FLUTTER
+# =============================================================================
+# Flutter & Dart 工具生成的目录
+.dart_tool/
+/frontend/.dart_tool/
+.packages
+
+# 编译后的构建输出
+/frontend/build/
+build/
+
+# Flutter 插件和依赖关系
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# 生成的插件注册文件 (避免不同平台的冲突)
+/frontend/lib/generated_plugin_registrant.dart
+/frontend/ios/Runner/GeneratedPluginRegistrant.h
+/frontend/ios/Runner/GeneratedPluginRegistrant.m
+/frontend/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+
+# =============================================================================
+# IDE & 编辑器配置
+# =============================================================================
+.idea/
+.vscode/
+*.iml
+*.iws
+.project
+.classpath
+.settings/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
