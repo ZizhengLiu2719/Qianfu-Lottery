@@ -17,7 +17,7 @@ class MainScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final location = GoRouterState.of(context).location;
+    final location = GoRouterState.of(context).uri.toString();
     final currentPage = getCurrentBottomNavPage(location);
     final user = ref.watch(currentUserProvider);
     final qiancaiDouBalance = ref.watch(qiancaiDouBalanceProvider);

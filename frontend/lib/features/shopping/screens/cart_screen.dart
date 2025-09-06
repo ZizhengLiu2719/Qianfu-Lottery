@@ -9,6 +9,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../api/dio_client.dart';
 import '../../../api/products_repository.dart';
+import '../../../models/product.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
@@ -297,7 +298,7 @@ class CartScreen extends ConsumerWidget {
   Future<void> _checkout(BuildContext context, WidgetRef ref) async {
     try {
       final cartItems = ref.read(cartProvider);
-      final repository = ref.read(ProductsRepository(ref.read(dioClientProvider)));
+      final repository = ref.read(productsRepositoryProvider);
       
       await repository.createOrder(items: cartItems);
       

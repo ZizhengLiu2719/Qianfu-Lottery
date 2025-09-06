@@ -63,8 +63,9 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final authState = ref.read(authProvider);
       final isAuthenticated = authState.isAuthenticated;
-      final isAuthPage = state.location == AppRoutes.login || 
-                        state.location == AppRoutes.register;
+      final currentRoute = state.uri.toString();
+      final isAuthPage = currentRoute == AppRoutes.login ||
+                        currentRoute == AppRoutes.register;
 
       // 如果未认证且不在认证页面，跳转到登录页
       if (!isAuthenticated && !isAuthPage) {

@@ -1,5 +1,10 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/models.dart';
 import 'dio_client.dart';
+
+final productsRepositoryProvider = Provider<ProductsRepository>((ref) {
+  return ProductsRepository(ref.watch(dioClientProvider));
+});
 
 class ProductsRepository {
   final DioClient _dioClient;

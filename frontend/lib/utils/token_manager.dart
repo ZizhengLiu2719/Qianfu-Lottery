@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class TokenManager {
@@ -66,42 +68,29 @@ class TokenManager {
   }
 
   // 检查 Token 是否即将过期（预留时间刷新）
-  Future<bool> shouldRefreshToken() async {
+  Future<bool> shouldRefreshToken({Duration refreshThreshold = const Duration(minutes: 5)}) async {
     final token = await getToken();
     if (token == null) return false;
 
     try {
-      // 解析 JWT Token 的 payload
       final parts = token.split('.');
-      if (parts.length != 3) return true;
+      if (parts.length != 3) return true; // Malformed token
 
       final payload = parts[1];
-      // 添加必要的填充
-      final normalizedPayload = base64Normalize(payload);
-      
-      final decoded = Uri.decodeFull(String.fromCharCodes(
-        Uri.dataFromString(normalizedPayload, encoding: Uri.encodeFull).data
-      ));
+      final normalizedPayload = base64Url.normalize(payload);
+      final decodedPayload = utf8.decode(base64Url.decode(normalizedPayload));
+      final payloadMap = json.decode(decodedPayload) as Map<String, dynamic>;
 
-      // 这里简化处理，实际项目中应该正确解析 JWT
-      // 如果解析失败，假设需要刷新
-      return false;
+      if (payloadMap['exp'] == null || payloadMap['exp'] is! int) {
+        return true; // No expiration claim
+      }
+
+      final expiry = DateTime.fromMillisecondsSinceEpoch((payloadMap['exp'] as int) * 1000);
+      final timeUntilExpiry = expiry.difference(DateTime.now());
+
+      return timeUntilExpiry < refreshThreshold;
     } catch (e) {
-      return true;
-    }
-  }
-
-  // Base64 标准化（添加必要的填充）
-  String base64Normalize(String source) {
-    switch (source.length % 4) {
-      case 0:
-        return source;
-      case 2:
-        return source + "==";
-      case 3:
-        return source + "=";
-      default:
-        throw Exception("Illegal base64url string!");
+      return true; // If any error decoding, assume it needs refresh
     }
   }
 }
