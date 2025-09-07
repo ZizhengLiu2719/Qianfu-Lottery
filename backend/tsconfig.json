@@ -28,6 +28,7 @@
   },
   "include": [
     "src/**/*",
+    "src/env.d.ts",
     "prisma/**/*"
   ],
   "exclude": [

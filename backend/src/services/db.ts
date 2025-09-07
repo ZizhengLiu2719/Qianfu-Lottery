@@ -1,6 +1,7 @@
 import { Pool } from '@neondatabase/serverless'
 import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
+import * as wasm from '../../node_modules/.prisma/client/query_engine_bg.wasm'
 
 // 数据库连接单例
 let prisma: PrismaClient
@@ -16,7 +17,8 @@ export function getPrismaClient(databaseUrl: string): PrismaClient {
     // 初始化 Prisma 客户端
     prisma = new PrismaClient({ 
       adapter,
-      log: ['error', 'warn']
+      log: ['error', 'warn'],
+      queryEngineWasm: { ...wasm }
     })
   }
   
