@@ -35,19 +35,47 @@ class TravelScreen extends ConsumerWidget {
               ],
             ),
             SizedBox(height: 12.h),
-            Expanded(
-              child: Center(
-                child: Text(
-                  '旅游内容页面',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.textSecondary,
-                      ),
-                ),
-              ),
-            ),
+            Expanded(child: _TravelExamples()),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _TravelExamples extends StatelessWidget {
+  final List<Map<String, String>> posts = const [
+    {
+      'title': '西湖一日游攻略',
+      'summary': '早上断桥、下午灵隐、傍晚苏堤看日落',
+    },
+    {
+      'title': '成都·火锅 + 大熊猫',
+      'summary': '必吃推荐与最佳参观时段',
+    },
+    {
+      'title': '三亚海边拍照点合集',
+      'summary': '椰林沙滩、礁石海湾、最佳光线时间',
+    },
+  ];
+
+  const _TravelExamples({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemCount: posts.length,
+      separatorBuilder: (_, __) => const Divider(height: 1),
+      itemBuilder: (context, index) {
+        final p = posts[index];
+        return ListTile(
+          leading: const Icon(FeatherIcons.map, color: AppTheme.textPrimary),
+          title: Text(p['title']!),
+          subtitle: Text(p['summary']!),
+          trailing: const Icon(FeatherIcons.chevronRight, size: 18, color: AppTheme.textTertiary),
+          onTap: () {},
+        );
+      },
     );
   }
 }

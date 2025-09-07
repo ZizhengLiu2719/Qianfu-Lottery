@@ -72,6 +72,14 @@ app.get('/api/me', async (c) => {
   return handlers.getMe(c)
 })
 
+// 更新资料（受保护）
+app.patch('/api/me', async (c) => {
+  const { authService, qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createAuthHandlers(authService, qiancaiDouService)
+  return handlers.updateProfile(c)
+})
+
 // 商品相关路由
 app.get('/api/products', async (c) => {
   const { qiancaiDouService } = initializeServices(c)

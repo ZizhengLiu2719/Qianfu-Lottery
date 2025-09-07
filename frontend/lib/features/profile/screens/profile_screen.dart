@@ -21,42 +21,19 @@ class ProfileScreen extends ConsumerWidget {
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-          // 用户信息头部
-          SliverAppBar(
-            expandedHeight: 120.h,
-            backgroundColor: Colors.white,
-            pinned: true,
-            centerTitle: false,
-            title: Row(
-              children: [
-                CircleAvatar(
-                  radius: 18.r,
-                  backgroundColor: AppTheme.primaryColor,
-                  child: Icon(FeatherIcons.user, color: Colors.white, size: 16.sp),
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  user?.displayName ?? '我的',
-                  style: TextStyle(
-                    color: AppTheme.textPrimary,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w700,
+          // 用户信息头部（编辑头像 + 名称 + 积分）
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
+              child: Row(
+                children: [
+                  _EditableAvatar(
+                    initialName: user?.displayName ?? '未命名',
+                    points: qiancaiDouBalance,
                   ),
-                ),
-              ],
-            ),
-            actions: [
-              Padding(
-                padding: EdgeInsets.only(right: 12.w),
-                child: Row(
-                  children: [
-                    Icon(Icons.diamond, color: AppTheme.primaryColor, size: 18.sp),
-                    SizedBox(width: 4.w),
-                    Text('$qiancaiDouBalance', style: TextStyle(color: AppTheme.primaryColor)),
-                  ],
-                ),
+                ],
               ),
-            ],
+            ),
           ),
           
           // 菜单列表
@@ -106,17 +83,12 @@ class ProfileScreen extends ConsumerWidget {
     required String title,
     required VoidCallback onTap,
   }) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 8.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(color: AppTheme.dividerColor),
-        ),
-      ),
+    return SizedBox(
+      height: 56.h,
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-        leading: Icon(icon, color: AppTheme.textPrimary, size: 20.sp),
+        dense: true,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
+        leading: Icon(icon, color: AppTheme.textPrimary, size: 22.sp),
         title: Text(title, style: Theme.of(context).textTheme.titleMedium),
         trailing: Icon(FeatherIcons.chevronRight, color: AppTheme.textTertiary, size: 18.sp),
         onTap: onTap,
@@ -169,6 +141,138 @@ class ProfileScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _EditableAvatar extends StatefulWidget {
+  final String initialName;
+  final int points;
+
+  const _EditableAvatar({required this.initialName, required this.points});
+
+  @override
+  State<_EditableAvatar> createState() => _EditableAvatarState();
+}
+
+class _EditableAvatarState extends State<_EditableAvatar> {
+  String? _avatarPath; // data URL
+  late TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.initialName);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickAvatar() async {
+    // Web/Flutter 通用：使用 file_picker/web 或 html input（此处使用简化实现：showDialog 提示由前端补齐插件）
+    // 为了跨平台，这里先使用 image_picker_web 的 API 占位（用户可添加依赖）
+    // 如果未添加依赖，提供一个输入对话框让用户粘贴 data URL
+    String? inputDataUrl;
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        final controller = TextEditingController();
+        return AlertDialog(
+          title: const Text('上传头像 (粘贴 data URL)'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: 'data:image/png;base64,...'),
+            minLines: 1,
+            maxLines: 3,
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
+            TextButton(
+              onPressed: () {
+                inputDataUrl = controller.text.trim();
+                Navigator.pop(ctx);
+              },
+              child: const Text('确定'),
+            )
+          ],
+        );
+      },
+    );
+
+    if (inputDataUrl != null && inputDataUrl!.startsWith('data:image')) {
+      setState(() => _avatarPath = inputDataUrl);
+      // 同步到服务器
+      try {
+        final repo = context.read(authRepositoryProvider);
+        await repo.updateProfile(avatarDataUrl: inputDataUrl);
+        // 刷新用户
+        // ignore: use_build_context_synchronously
+        context.read(authProvider.notifier).refreshUser();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('上传失败: $e')),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Stack(
+          children: [
+            CircleAvatar(
+              radius: 32,
+              backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+              backgroundImage: _avatarPath != null ? NetworkImage(_avatarPath!) : null,
+              child: _avatarPath == null ? Icon(FeatherIcons.user, color: AppTheme.textPrimary) : null,
+            ),
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: GestureDetector(
+                onTap: _pickAvatar,
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: const BoxDecoration(
+                    color: AppTheme.primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.edit, size: 14, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                ),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              Row(
+                children: [
+                  const Icon(Icons.diamond, size: 16, color: AppTheme.primaryColor),
+                  SizedBox(width: 4.w),
+                  Text('${widget.points}', style: TextStyle(color: AppTheme.primaryColor)),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

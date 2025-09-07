@@ -99,4 +99,32 @@ class AuthRepository {
 
     return response.data ?? [];
   }
+
+  // 更新当前用户资料
+  Future<User> updateProfile({
+    String? firstName,
+    String? lastName,
+    String? language,
+    String? avatarDataUrl,
+  }) async {
+    final response = await _dioClient.patch<User>(
+      '/api/me',
+      data: {
+        if (firstName != null) 'firstName': firstName,
+        if (lastName != null) 'lastName': lastName,
+        if (language != null) 'language': language,
+        if (avatarDataUrl != null) 'avatarDataUrl': avatarDataUrl,
+      },
+      fromJson: (json) => User.fromJson(json['user']),
+    );
+
+    if (response.data == null) {
+      throw const ApiException(
+        code: 500,
+        message: '更新用户资料失败',
+      );
+    }
+
+    return response.data!;
+  }
 }

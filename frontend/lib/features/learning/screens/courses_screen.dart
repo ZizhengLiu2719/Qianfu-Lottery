@@ -13,7 +13,7 @@ class CoursesScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.courses_title),
+        title: const Text('线上课程'),
         backgroundColor: Colors.white,
       ),
       body: Padding(
@@ -23,28 +23,56 @@ class CoursesScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(FeatherIcons.bookOpen, color: AppTheme.primaryColor),
+                Icon(FeatherIcons.playCircle, color: AppTheme.primaryColor),
                 SizedBox(width: 8.w),
-                Text(
-                  AppLocalizations.of(context)!.courses_title,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                const Text('热门线上课程', style: TextStyle(fontWeight: FontWeight.w600)),
               ],
             ),
             SizedBox(height: 12.h),
-            Expanded(
-              child: Center(
-                child: Text(
-                  '课程列表页面',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.textSecondary,
-                      ),
-                ),
-              ),
-            ),
+            Expanded(child: _Examples()),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Examples extends StatelessWidget {
+  final List<Map<String, dynamic>> data = const [
+    {
+      'title': 'AI 编程入门（直播课）',
+      'subtitle': '每周二/四 晚 20:00 · 60 分钟',
+      'icon': FeatherIcons.cpu
+    },
+    {
+      'title': '英语口语提升（录播+答疑）',
+      'subtitle': '随时观看 · 每周一次答疑',
+      'icon': FeatherIcons.mic
+    },
+    {
+      'title': '短视频剪辑（实战）',
+      'subtitle': '四周完成作品集',
+      'icon': FeatherIcons.film
+    },
+  ];
+
+  const _Examples({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemCount: data.length,
+      separatorBuilder: (_, __) => const Divider(height: 1),
+      itemBuilder: (context, index) {
+        final item = data[index];
+        return ListTile(
+          leading: Icon(item['icon'] as IconData, color: AppTheme.textPrimary),
+          title: Text(item['title'] as String),
+          subtitle: Text(item['subtitle'] as String),
+          trailing: const Icon(FeatherIcons.chevronRight, size: 18, color: AppTheme.textTertiary),
+          onTap: () {},
+        );
+      },
     );
   }
 }

@@ -56,7 +56,8 @@ class User {
 
   String get displayName {
     if (firstName != null && lastName != null) {
-      return '$firstName $lastName'.trim();
+      // 中国姓名习惯：姓在前（无空格）
+      return '${lastName!}${firstName!}';
     }
     if (firstName != null) {
       return firstName!;

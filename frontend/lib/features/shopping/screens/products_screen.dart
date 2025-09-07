@@ -46,13 +46,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-          // 自定义 App Bar
-          _buildSliverAppBar(context, qiancaiDouBalance, cartItemCount),
-          
-          // 分类筛选
-          SliverToBoxAdapter(
-            child: _buildCategoryFilter(context),
-          ),
+          // 顶部一行：左侧横向标签，右侧购物车
+          _buildTopFilterBar(context, cartItemCount),
           
           // 产品网格
           productsAsync.when(
@@ -69,86 +64,50 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     );
   }
 
-  Widget _buildSliverAppBar(BuildContext context, int balance, int cartCount) {
-    return SliverAppBar(
-      expandedHeight: 120.h,
-      floating: true,
-      pinned: true,
-      backgroundColor: Colors.white,
-      elevation: 0,
-      flexibleSpace: FlexibleSpaceBar(
-        titlePadding: EdgeInsets.only(left: 20.w, bottom: 16.h),
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildTopFilterBar(BuildContext context, int cartCount) {
+    return SliverToBoxAdapter(
+      child: Container(
+        color: Colors.white,
+        padding: EdgeInsets.only(left: 12.w, right: 8.w, top: 12.h, bottom: 8.h),
+        child: Row(
           children: [
-            Text(
-              AppLocalizations.of(context)!.products_title,
-              style: TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: 24.sp,
-                fontWeight: FontWeight.bold,
+            // 横向标签
+            Expanded(
+              child: SizedBox(
+                height: 36.h,
+                child: _buildCategoryFilter(context),
               ),
             ),
-            SizedBox(height: 4.h),
-            Row(
+            // 购物车
+            Stack(
               children: [
-                Icon(
-                  Icons.account_balance_wallet_outlined,
-                  size: 16.sp,
-                  color: AppTheme.primaryColor,
+                IconButton(
+                  icon: const Icon(FeatherIcons.shoppingCart, color: AppTheme.textPrimary),
+                  onPressed: () => context.go(AppRoutes.cart),
                 ),
-                SizedBox(width: 4.w),
-                Text(
-                  '$balance ${AppLocalizations.of(context)!.qiancaidou_unit}',
-                  style: TextStyle(
-                    color: AppTheme.primaryColor,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
+                if (cartCount > 0)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                      child: Text(
+                        cartCount > 99 ? '99+' : cartCount.toString(),
+                        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
-                ),
               ],
-            ),
+            )
           ],
         ),
       ),
-      actions: [
-        // 购物车图标
-        Stack(
-          children: [
-            IconButton(
-              icon: const Icon(FeatherIcons.shoppingCart, color: AppTheme.textPrimary),
-              onPressed: () => context.go(AppRoutes.cart),
-            ),
-            if (cartCount > 0)
-              Positioned(
-                right: 8,
-                top: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 16,
-                    minHeight: 16,
-                  ),
-                  child: Text(
-                    cartCount > 99 ? '99+' : cartCount.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-          ],
-        ),
-        SizedBox(width: 16.w),
-      ],
     );
   }
 
@@ -212,26 +171,67 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         : products.where((p) => p.category == _selectedCategory).toList();
 
     if (filteredProducts.isEmpty) {
-      return SliverToBoxAdapter(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(40.w),
-            child: Column(
-              children: [
-                Icon(
-                  FeatherIcons.package,
-                  size: 64.sp,
-                  color: AppTheme.textTertiary,
+      // 展示示例
+      final examples = [
+        Product(
+          id: 1,
+          title: '蓝牙耳机',
+          description: '降噪/长续航',
+          images: const ['https://picsum.photos/seed/earbuds/600/600'],
+          priceInQiancaiDou: 399,
+          stock: 10,
+          category: 'electronics',
+          isActive: true,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+        Product(
+          id: 2,
+          title: '运动水杯',
+          description: '便携耐用',
+          images: const ['https://picsum.photos/seed/bottle/600/600'],
+          priceInQiancaiDou: 99,
+          stock: 8,
+          category: 'sports',
+          isActive: true,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+        Product(
+          id: 3,
+          title: '畅销图书',
+          description: '经典必读',
+          images: const ['https://picsum.photos/seed/book/600/600'],
+          priceInQiancaiDou: 59,
+          stock: 15,
+          category: 'books',
+          isActive: true,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      ];
+
+      return SliverPadding(
+        padding: EdgeInsets.symmetric(horizontal: 8.w),
+        sliver: SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisSpacing: 8.w,
+            crossAxisSpacing: 8.w,
+            childAspectRatio: 1,
+          ),
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final product = examples[index];
+              return GestureDetector(
+                onTap: () {},
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: Image.network(product.mainImage, fit: BoxFit.cover),
                 ),
-                SizedBox(height: 16.h),
-                Text(
-                  AppLocalizations.of(context)!.common_empty,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppTheme.textTertiary,
-                  ),
-                ),
-              ],
-            ),
+              );
+            },
+            childCount: examples.length,
           ),
         ),
       );
