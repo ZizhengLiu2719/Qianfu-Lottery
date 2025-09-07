@@ -1,22 +1,18 @@
-import { Pool } from '@neondatabase/serverless'
 import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
-import * as wasm from '../../node_modules/.prisma/client/query_engine_bg.wasm'
 
 // 数据库连接单例
 let prisma: PrismaClient
 
 export function getPrismaClient(databaseUrl: string): PrismaClient {
   if (!prisma) {
-    // 重新引入 Pool 来正确初始化适配器
-    const pool = new Pool({ connectionString: databaseUrl })
-    const adapter = new PrismaNeon(pool)
+    // 使用 PrismaNeon 适配器并传入连接配置
+    const adapter = new PrismaNeon({ connectionString: databaseUrl })
     
-    // 初始化 Prisma 客户端
+    // 初始化 Prisma 客户端 - 在 Prisma 6.15.0+ 中不再需要 queryEngineWasm
     prisma = new PrismaClient({ 
       adapter,
-      log: ['error', 'warn'],
-      queryEngineWasm: { ...wasm }
+      log: ['error', 'warn']
     })
   }
   

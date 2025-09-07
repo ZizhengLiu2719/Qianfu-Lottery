@@ -92,7 +92,12 @@ export class AuthService {
     const derivedBytes = new Uint8Array(derivedBuffer)
     
     // Constant-time comparison to prevent timing attacks
-    return crypto.subtle.timingSafeEqual(storedHashBytes, derivedBytes)
+    if (storedHashBytes.length !== derivedBytes.length) return false
+    let diff = 0
+    for (let i = 0; i < storedHashBytes.length; i++) {
+      diff |= storedHashBytes[i] ^ derivedBytes[i]
+    }
+    return diff === 0
   }
 
   /**
