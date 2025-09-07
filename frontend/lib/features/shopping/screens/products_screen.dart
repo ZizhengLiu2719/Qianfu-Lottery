@@ -122,9 +122,9 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 16.h),
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       child: SizedBox(
-        height: 40.h,
+        height: 44.h,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -136,7 +136,13 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             return Container(
               margin: EdgeInsets.only(right: 12.w),
               child: FilterChip(
-                label: Text(category['name'] as String),
+                label: Text(
+                  category['name'] as String,
+                  style: TextStyle(
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                    fontSize: 14.sp,
+                  ),
+                ),
                 selected: isSelected,
                 onSelected: (selected) {
                   setState(() {
@@ -144,16 +150,14 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                   });
                 },
                 backgroundColor: Colors.white,
-                selectedColor: AppTheme.primaryColor.withOpacity(0.1),
+                selectedColor: AppTheme.primaryColor.withOpacity(0.12),
                 checkmarkColor: AppTheme.primaryColor,
-                labelStyle: TextStyle(
-                  color: isSelected ? AppTheme.primaryColor : AppTheme.textSecondary,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.r),
+                  borderRadius: BorderRadius.circular(22.r),
                   side: BorderSide(
                     color: isSelected ? AppTheme.primaryColor : AppTheme.dividerColor,
+                    width: isSelected ? 1.6 : 1.2,
                   ),
                 ),
               ),
@@ -171,67 +175,21 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         : products.where((p) => p.category == _selectedCategory).toList();
 
     if (filteredProducts.isEmpty) {
-      // 展示示例
-      final examples = [
-        Product(
-          id: 1,
-          title: '蓝牙耳机',
-          description: '降噪/长续航',
-          images: const ['https://picsum.photos/seed/earbuds/600/600'],
-          priceInQiancaiDou: 399,
-          stock: 10,
-          category: 'electronics',
-          isActive: true,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ),
-        Product(
-          id: 2,
-          title: '运动水杯',
-          description: '便携耐用',
-          images: const ['https://picsum.photos/seed/bottle/600/600'],
-          priceInQiancaiDou: 99,
-          stock: 8,
-          category: 'sports',
-          isActive: true,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ),
-        Product(
-          id: 3,
-          title: '畅销图书',
-          description: '经典必读',
-          images: const ['https://picsum.photos/seed/book/600/600'],
-          priceInQiancaiDou: 59,
-          stock: 15,
-          category: 'books',
-          isActive: true,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ),
-      ];
-
-      return SliverPadding(
-        padding: EdgeInsets.symmetric(horizontal: 8.w),
-        sliver: SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 8.w,
-            crossAxisSpacing: 8.w,
-            childAspectRatio: 1,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final product = examples[index];
-              return GestureDetector(
-                onTap: () {},
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.r),
-                  child: Image.network(product.mainImage, fit: BoxFit.cover),
+      // 空态：无占位图片，给出清晰提示
+      return SliverToBoxAdapter(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 60.h),
+          child: Center(
+            child: Column(
+              children: [
+                Icon(FeatherIcons.image, size: 40.sp, color: AppTheme.textTertiary),
+                SizedBox(height: 12.h),
+                Text(
+                  AppLocalizations.of(context)!.common_empty,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-              );
-            },
-            childCount: examples.length,
+              ],
+            ),
           ),
         ),
       );

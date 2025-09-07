@@ -108,6 +108,21 @@ app.get('/api/me/orders', async (c) => {
   return handlers.getUserOrders(c)
 })
 
+// 获取单个订单与取消订单
+app.get('/api/me/orders/:id', async (c) => {
+  const { qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createProductHandlers(qiancaiDouService)
+  return handlers.getOrderById(c)
+})
+
+app.patch('/api/orders/:id/cancel', async (c) => {
+  const { qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createProductHandlers(qiancaiDouService)
+  return handlers.cancelOrder(c)
+})
+
 // 课程和预约相关路由
 app.get('/api/courses', async (c) => {
   const { qiancaiDouService } = initializeServices(c)

@@ -36,35 +36,43 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
           
-          // 菜单列表
+          // 信息分区：订单/预约/资产/设置（去除外部图标与箭头，使用清晰分组卡片）
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(20.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildMenuItem(
-                    context,
-                    icon: FeatherIcons.shoppingBag,
-                    title: AppLocalizations.of(context)!.profile_my_orders,
-                    onTap: () => context.go(AppRoutes.orders),
+                  _Section(
+                    title: '订单与预约',
+                    children: [
+                      _PlainItem(
+                        title: AppLocalizations.of(context)!.profile_my_orders,
+                        onTap: () => context.go(AppRoutes.orders),
+                      ),
+                      _PlainItem(
+                        title: AppLocalizations.of(context)!.profile_my_appointments,
+                        onTap: () => context.go(AppRoutes.appointments),
+                      ),
+                    ],
                   ),
-                  _buildMenuItem(
-                    context,
-                    icon: FeatherIcons.calendar,
-                    title: AppLocalizations.of(context)!.profile_my_appointments,
-                    onTap: () => context.go(AppRoutes.appointments),
+                  _Section(
+                    title: '资产与记录',
+                    children: [
+                      _PlainItem(
+                        title: AppLocalizations.of(context)!.profile_transaction_history,
+                        onTap: () => context.go(AppRoutes.transactionHistory),
+                      ),
+                    ],
                   ),
-                  _buildMenuItem(
-                    context,
-                    icon: FeatherIcons.creditCard,
-                    title: AppLocalizations.of(context)!.profile_transaction_history,
-                    onTap: () => context.go(AppRoutes.transactionHistory),
-                  ),
-                  _buildMenuItem(
-                    context,
-                    icon: FeatherIcons.settings,
-                    title: AppLocalizations.of(context)!.profile_settings,
-                    onTap: () => context.go(AppRoutes.settings),
+                  _Section(
+                    title: '设置',
+                    children: [
+                      _PlainItem(
+                        title: AppLocalizations.of(context)!.profile_settings,
+                        onTap: () => context.go(AppRoutes.settings),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20.h),
                   _buildLogoutButton(context, ref),
@@ -140,6 +148,66 @@ class ProfileScreen extends ConsumerWidget {
             child: Text(AppLocalizations.of(context)!.common_confirm),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+  const _Section({required this.title, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppTheme.borderRadiusLarge),
+        boxShadow: [AppTheme.cardShadow],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 8.h),
+            child: Text(title, style: Theme.of(context).textTheme.titleLarge),
+          ),
+          const Divider(height: 1, color: AppTheme.dividerColor),
+          ..._withDividers(children),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _withDividers(List<Widget> items) {
+    final result = <Widget>[];
+    for (var i = 0; i < items.length; i++) {
+      result.add(items[i]);
+      if (i != items.length - 1) {
+        result.add(const Divider(height: 1, color: AppTheme.dividerColor));
+      }
+    }
+    return result;
+  }
+}
+
+class _PlainItem extends StatelessWidget {
+  final String title;
+  final VoidCallback onTap;
+  const _PlainItem({required this.title, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        child: Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
       ),
     );
   }

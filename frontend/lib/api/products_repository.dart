@@ -103,4 +103,30 @@ class ProductsRepository {
 
     return response.data ?? [];
   }
+
+  // 获取单个订单
+  Future<Order> getOrderById(int orderId) async {
+    final response = await _dioClient.get<Order>(
+      '/api/me/orders/$orderId',
+      fromJson: (json) => Order.fromJson(json['order']),
+    );
+
+    if (response.data == null) {
+      throw const ApiException(code: 404, message: '订单不存在');
+    }
+    return response.data!;
+  }
+
+  // 取消订单
+  Future<Order> cancelOrder(int orderId) async {
+    final response = await _dioClient.patch<Order>(
+      '/api/orders/$orderId/cancel',
+      fromJson: (json) => Order.fromJson(json['order']),
+    );
+
+    if (response.data == null) {
+      throw const ApiException(code: 500, message: '取消订单失败');
+    }
+    return response.data!;
+  }
 }
