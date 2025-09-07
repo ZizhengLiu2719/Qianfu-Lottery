@@ -7,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../routing/app_router.dart';
 import '../providers/auth_provider.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/sticker.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -125,21 +124,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                 children: [
                   SizedBox(height: 20.h),
                   
-                  // 标题（贴纸风）
-                  StickerContainer(
-                    tilt: -0.02,
-                    padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
-                    child: _buildHeader(context),
-                  ),
+                  // 标题
+                  _buildHeader(context),
                   
                   SizedBox(height: 40.h),
                   
-                  // 注册表单（贴纸风）
-                  StickerContainer(
-                    tilt: 0.01,
-                    padding: EdgeInsets.all(20.w),
-                    child: _buildRegisterForm(context),
-                  ),
+                  // 注册表单
+                  _buildRegisterForm(context),
                   
                   SizedBox(height: 40.h),
                   
@@ -301,9 +292,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
           
           SizedBox(height: 32.h),
           
-          // 注册按钮（贴纸风）
-          StickerButton(
+          // 注册按钮
+          ElevatedButton(
             onPressed: _isLoading ? null : _handleRegister,
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(double.infinity, 56.h),
+            ),
             child: _isLoading
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,

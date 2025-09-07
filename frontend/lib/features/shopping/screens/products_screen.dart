@@ -14,7 +14,6 @@ import '../../../routing/app_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
-import '../../../core/widgets/sticker.dart';
 
 // 产品列表 Provider
 final productsRepositoryProvider = Provider<ProductsRepository>((ref) {
@@ -44,7 +43,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     final qiancaiDouBalance = ref.watch(qiancaiDouBalanceProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           // 自定义 App Bar
@@ -238,16 +237,41 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
       );
     }
 
+    // Instagram 风格：三列等高网格，纯白背景
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      sliver: SliverMasonryGrid.count(
-        crossAxisCount: 2,
-        mainAxisSpacing: 16.w,
-        crossAxisSpacing: 16.w,
-        childCount: filteredProducts.length,
-        itemBuilder: (context, index) {
-          return _buildProductCard(context, filteredProducts[index]);
-        },
+      padding: EdgeInsets.symmetric(horizontal: 8.w),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: 8.w,
+          crossAxisSpacing: 8.w,
+          childAspectRatio: 1,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final product = filteredProducts[index];
+            return GestureDetector(
+              onTap: () => context.go('/products/${product.id}'),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: product.mainImage.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: product.mainImage,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(
+                        color: AppTheme.backgroundColor,
+                        child: Icon(
+                          FeatherIcons.image,
+                          size: 20.sp,
+                          color: AppTheme.textTertiary,
+                        ),
+                      ),
+              ),
+            );
+          },
+          childCount: filteredProducts.length,
+        ),
       ),
     );
   }
@@ -255,9 +279,18 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   Widget _buildProductCard(BuildContext context, Product product) {
     return GestureDetector(
       onTap: () => context.go('/products/${product.id}'),
-      child: StickerContainer(
-        tilt: 0.01,
-        padding: EdgeInsets.zero,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

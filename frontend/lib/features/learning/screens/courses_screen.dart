@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/sticker.dart';
 
 class CoursesScreen extends ConsumerWidget {
   const CoursesScreen({super.key});
@@ -22,18 +21,15 @@ class CoursesScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            StickerContainer(
-              tilt: -0.01,
-              child: Row(
-                children: [
-                  Icon(FeatherIcons.bookOpen, color: AppTheme.primaryColor),
-                  SizedBox(width: 8.w),
-                  Text(
-                    AppLocalizations.of(context)!.courses_title,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ],
-              ),
+            Row(
+              children: [
+                Icon(FeatherIcons.bookOpen, color: AppTheme.primaryColor),
+                SizedBox(width: 8.w),
+                Text(
+                  AppLocalizations.of(context)!.courses_title,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ],
             ),
             SizedBox(height: 12.h),
             Expanded(

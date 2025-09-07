@@ -8,7 +8,6 @@ import 'package:lottie/lottie.dart';
 import '../../../routing/app_router.dart';
 import '../providers/auth_provider.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/sticker.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -112,20 +111,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                   SizedBox(height: 60.h),
                   
                   // Logo 和标题
-                  StickerContainer(
-                    tilt: -0.02,
-                    padding: EdgeInsets.symmetric(vertical: 24.h),
-                    child: _buildHeader(context),
-                  ),
+                  _buildHeader(context),
                   
                   SizedBox(height: 60.h),
                   
                   // 登录表单
-                  StickerContainer(
-                    tilt: 0.01,
-                    padding: EdgeInsets.all(20.w),
-                    child: _buildLoginForm(context),
-                  ),
+                  _buildLoginForm(context),
                   
                   SizedBox(height: 40.h),
                   
@@ -250,9 +241,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           
           SizedBox(height: 32.h),
           
-          // 登录按钮（贴纸风）
-          StickerButton(
+          // 登录按钮
+          ElevatedButton(
             onPressed: _isLoading ? null : _handleLogin,
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(double.infinity, 56.h),
+            ),
             child: _isLoading
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,

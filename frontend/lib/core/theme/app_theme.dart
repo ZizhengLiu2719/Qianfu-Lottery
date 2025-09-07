@@ -3,21 +3,24 @@ import 'package:flutter/services.dart';
 
 class AppTheme {
   // 主色调
-  static const Color primaryColor = Color(0xFF6366F1); // 紫色
-  static const Color primaryVariant = Color(0xFF4F46E5);
-  static const Color secondaryColor = Color(0xFF10B981); // 绿色
-  static const Color accentColor = Color(0xFFF59E0B); // 橙色
+  // Instagram 蓝（交互按钮/链接）
+  static const Color primaryColor = Color(0xFF0095F6);
+  static const Color primaryVariant = Color(0xFF0077CC);
+  // 次要强调使用深色文本（与 IG 相近的黑）
+  static const Color secondaryColor = Color(0xFF262626);
+  // 点赞/告警使用红色（接近 IG 红）
+  static const Color accentColor = Color(0xFFED4956);
 
   // 中性色
-  static const Color backgroundColor = Color(0xFFF8FAFC);
+  static const Color backgroundColor = Color(0xFFFFFFFF);
   static const Color surfaceColor = Color(0xFFFFFFFF);
   static const Color cardColor = Color(0xFFFFFFFF);
-  static const Color dividerColor = Color(0xFFE2E8F0);
+  static const Color dividerColor = Color(0xFFDBDBDB);
 
   // 文字颜色
-  static const Color textPrimary = Color(0xFF1E293B);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color textTertiary = Color(0xFF94A3B8);
+  static const Color textPrimary = Color(0xFF262626);
+  static const Color textSecondary = Color(0xFF8E8E8E);
+  static const Color textTertiary = Color(0xFFB3B3B3);
   static const Color textInverse = Color(0xFFFFFFFF);
 
   // 状态色
@@ -28,7 +31,8 @@ class AppTheme {
 
   // 渐变色
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primaryColor, primaryVariant],
+    // 接近 Instagram 的蓝紫渐变
+    colors: [Color(0xFF405DE6), Color(0xFF5851DB)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -116,7 +120,7 @@ class AppTheme {
       // 底部导航主题
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: surfaceColor,
-        selectedItemColor: primaryColor,
+        selectedItemColor: textPrimary,
         unselectedItemColor: textSecondary,
         type: BottomNavigationBarType.fixed,
         elevation: 8,
@@ -143,14 +147,14 @@ class AppTheme {
           elevation: 0,
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadiusMedium),
+            borderRadius: BorderRadius.circular(8),
           ),
           padding: const EdgeInsets.symmetric(
             horizontal: spacingLarge,
             vertical: spacingMedium,
           ),
           textStyle: const TextStyle(
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -158,17 +162,17 @@ class AppTheme {
 
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: primaryColor,
-          side: const BorderSide(color: primaryColor),
+          foregroundColor: textPrimary,
+          side: const BorderSide(color: dividerColor),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadiusMedium),
+            borderRadius: BorderRadius.circular(8),
           ),
           padding: const EdgeInsets.symmetric(
             horizontal: spacingLarge,
             vertical: spacingMedium,
           ),
           textStyle: const TextStyle(
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -178,14 +182,14 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: primaryColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadiusMedium),
+            borderRadius: BorderRadius.circular(8),
           ),
           padding: const EdgeInsets.symmetric(
             horizontal: spacingMedium,
             vertical: spacingSmall,
           ),
           textStyle: const TextStyle(
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -193,22 +197,21 @@ class AppTheme {
 
       // 输入框主题
       inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: const Color(0xFFF1F5F9),
+        filled: false,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(borderRadiusMedium),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: dividerColor),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(borderRadiusMedium),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: dividerColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(borderRadiusMedium),
-          borderSide: const BorderSide(color: primaryColor, width: 2),
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: primaryColor, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(borderRadiusMedium),
+          borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: errorColor, width: 1),
         ),
         contentPadding: const EdgeInsets.symmetric(
@@ -216,12 +219,12 @@ class AppTheme {
           vertical: spacingMedium,
         ),
         hintStyle: const TextStyle(
-          color: textTertiary,
-          fontSize: 16,
+          color: textSecondary,
+          fontSize: 15,
         ),
         labelStyle: const TextStyle(
           color: textSecondary,
-          fontSize: 16,
+          fontSize: 15,
         ),
       ),
 
@@ -291,13 +294,13 @@ class AppTheme {
 
       // Chip 主题
       chipTheme: ChipThemeData(
-        backgroundColor: const Color(0xFFF1F5F9),
-        selectedColor: primaryColor.withOpacity(0.1),
-        secondarySelectedColor: primaryColor.withOpacity(0.1),
+        backgroundColor: Colors.white,
+        selectedColor: Color(0xFFEFEFEF),
+        secondarySelectedColor: Color(0xFFEFEFEF),
         labelStyle: const TextStyle(color: textPrimary),
-        secondaryLabelStyle: const TextStyle(color: primaryColor),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadiusLarge),
+        secondaryLabelStyle: const TextStyle(color: textPrimary),
+        shape: StadiumBorder(
+          side: BorderSide(color: dividerColor),
         ),
         padding: const EdgeInsets.symmetric(
           horizontal: spacingMedium,
