@@ -14,6 +14,7 @@ import '../../../routing/app_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
+import '../../../core/widgets/sticker.dart';
 
 // 产品列表 Provider
 final productsRepositoryProvider = Provider<ProductsRepository>((ref) {
@@ -254,12 +255,9 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   Widget _buildProductCard(BuildContext context, Product product) {
     return GestureDetector(
       onTap: () => context.go('/products/${product.id}'),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppTheme.borderRadiusMedium),
-          boxShadow: [AppTheme.cardShadow],
-        ),
+      child: StickerContainer(
+        tilt: 0.01,
+        padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

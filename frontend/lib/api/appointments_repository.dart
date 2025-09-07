@@ -56,7 +56,7 @@ class AppointmentsRepository {
     if (response.data == null) {
       throw const ApiException(
         code: 500,
-        message: 'Failed to create appointment',
+        message: '创建预约失败',
       );
     }
 
@@ -92,7 +92,7 @@ class AppointmentsRepository {
     if (response.data == null) {
       throw const ApiException(
         code: 500,
-        message: 'Failed to cancel appointment',
+        message: '取消预约失败',
       );
     }
 

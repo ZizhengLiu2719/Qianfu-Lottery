@@ -61,7 +61,7 @@ class QianfuJicaiApp extends ConsumerWidget {
           darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.system,
           
-          // 国际化配置
+          // 国际化配置（默认中文）
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -70,6 +70,7 @@ class QianfuJicaiApp extends ConsumerWidget {
           ],
           supportedLocales: L10n.supportedLocales,
           localeResolutionCallback: L10n.localeResolutionCallback,
+          locale: const Locale('zh', 'CN'),
           
           // 性能配置
           builder: (context, child) {

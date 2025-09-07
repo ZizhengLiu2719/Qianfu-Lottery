@@ -29,7 +29,7 @@ class AuthRepository {
     if (response.data == null) {
       throw const ApiException(
         code: 500,
-        message: 'Registration failed',
+        message: '注册失败',
       );
     }
 
@@ -53,7 +53,7 @@ class AuthRepository {
     if (response.data == null) {
       throw const ApiException(
         code: 500,
-        message: 'Login failed',
+        message: '登录失败',
       );
     }
 
@@ -70,7 +70,7 @@ class AuthRepository {
     if (response.data == null) {
       throw const ApiException(
         code: 500,
-        message: 'Failed to get user info',
+        message: '获取用户信息失败',
       );
     }
 

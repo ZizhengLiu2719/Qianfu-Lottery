@@ -101,7 +101,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         isLoading: false,
       );
     } catch (e) {
-      String errorMessage = 'Login failed';
+      String errorMessage = '登录失败';
       if (e is ApiException) {
         errorMessage = e.message;
       }
@@ -143,7 +143,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         isLoading: false,
       );
     } catch (e) {
-      String errorMessage = 'Registration failed';
+      String errorMessage = '注册失败';
       if (e is ApiException) {
         errorMessage = e.message;
       }

@@ -41,7 +41,7 @@ class TravelRepository {
     if (response.data == null) {
       throw const ApiException(
         code: 404,
-        message: 'Travel post not found',
+        message: '未找到旅游文章',
       );
     }
 
@@ -81,7 +81,7 @@ class TravelRepository {
     if (response.data == null) {
       throw const ApiException(
         code: 500,
-        message: 'Search failed',
+        message: '搜索失败',
       );
     }
 

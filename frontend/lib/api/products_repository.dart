@@ -45,7 +45,7 @@ class ProductsRepository {
     if (response.data == null) {
       throw const ApiException(
         code: 404,
-        message: 'Product not found',
+        message: '商品不存在',
       );
     }
 
@@ -76,7 +76,7 @@ class ProductsRepository {
     if (response.data == null) {
       throw const ApiException(
         code: 500,
-        message: 'Failed to create order',
+        message: '创建订单失败',
       );
     }
 

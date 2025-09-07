@@ -13,6 +13,7 @@ import '../../../models/product.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
+import '../../../core/widgets/sticker.dart';
 
 class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
@@ -61,27 +62,31 @@ class CartScreen extends ConsumerWidget {
 
   Widget _buildEmptyState(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            FeatherIcons.shoppingCart,
-            size: 80.sp,
-            color: AppTheme.textTertiary,
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            AppLocalizations.of(context)!.cart_empty,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+      child: StickerContainer(
+        tilt: -0.02,
+        padding: EdgeInsets.all(24.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              FeatherIcons.shoppingCart,
+              size: 80.sp,
               color: AppTheme.textTertiary,
             ),
-          ),
-          SizedBox(height: 24.h),
-          ElevatedButton(
-            onPressed: () => context.go(AppRoutes.products),
-            child: Text('去购物'),
-          ),
-        ],
+            SizedBox(height: 16.h),
+            Text(
+              AppLocalizations.of(context)!.cart_empty,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: AppTheme.textTertiary,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            StickerButton(
+              onPressed: () => context.go(AppRoutes.products),
+              child: const Text('去购物'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -258,13 +263,9 @@ class CartScreen extends ConsumerWidget {
             
             SizedBox(height: 16.h),
             
-            SizedBox(
-              width: double.infinity,
-              height: 48.h,
-              child: ElevatedButton(
-                onPressed: canCheckout ? () => _checkout(context, ref) : null,
-                child: Text(AppLocalizations.of(context)!.cart_checkout),
-              ),
+            StickerButton(
+              onPressed: canCheckout ? () => _checkout(context, ref) : null,
+              child: Text(AppLocalizations.of(context)!.cart_checkout),
             ),
           ],
         ),

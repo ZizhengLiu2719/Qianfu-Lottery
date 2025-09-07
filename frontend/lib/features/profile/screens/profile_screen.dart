@@ -8,6 +8,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../../core/widgets/sticker.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -98,29 +99,41 @@ class ProfileScreen extends ConsumerWidget {
               padding: EdgeInsets.all(20.w),
               child: Column(
                 children: [
-                  _buildMenuItem(
-                    context,
-                    icon: FeatherIcons.shoppingBag,
-                    title: AppLocalizations.of(context)!.profile_my_orders,
-                    onTap: () => context.go(AppRoutes.orders),
+                  StickerContainer(
+                    tilt: -0.01,
+                    child: _buildMenuItem(
+                      context,
+                      icon: FeatherIcons.shoppingBag,
+                      title: AppLocalizations.of(context)!.profile_my_orders,
+                      onTap: () => context.go(AppRoutes.orders),
+                    ),
                   ),
-                  _buildMenuItem(
-                    context,
-                    icon: FeatherIcons.calendar,
-                    title: AppLocalizations.of(context)!.profile_my_appointments,
-                    onTap: () => context.go(AppRoutes.appointments),
+                  StickerContainer(
+                    tilt: 0.015,
+                    child: _buildMenuItem(
+                      context,
+                      icon: FeatherIcons.calendar,
+                      title: AppLocalizations.of(context)!.profile_my_appointments,
+                      onTap: () => context.go(AppRoutes.appointments),
+                    ),
                   ),
-                  _buildMenuItem(
-                    context,
-                    icon: FeatherIcons.creditCard,
-                    title: AppLocalizations.of(context)!.profile_transaction_history,
-                    onTap: () => context.go(AppRoutes.transactionHistory),
+                  StickerContainer(
+                    tilt: -0.008,
+                    child: _buildMenuItem(
+                      context,
+                      icon: FeatherIcons.creditCard,
+                      title: AppLocalizations.of(context)!.profile_transaction_history,
+                      onTap: () => context.go(AppRoutes.transactionHistory),
+                    ),
                   ),
-                  _buildMenuItem(
-                    context,
-                    icon: FeatherIcons.settings,
-                    title: AppLocalizations.of(context)!.profile_settings,
-                    onTap: () => context.go(AppRoutes.settings),
+                  StickerContainer(
+                    tilt: 0.01,
+                    child: _buildMenuItem(
+                      context,
+                      icon: FeatherIcons.settings,
+                      title: AppLocalizations.of(context)!.profile_settings,
+                      onTap: () => context.go(AppRoutes.settings),
+                    ),
                   ),
                   SizedBox(height: 20.h),
                   _buildLogoutButton(context, ref),
