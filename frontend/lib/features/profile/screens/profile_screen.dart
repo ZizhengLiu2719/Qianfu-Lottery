@@ -145,17 +145,17 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-class _EditableAvatar extends StatefulWidget {
+class _EditableAvatar extends ConsumerStatefulWidget {
   final String initialName;
   final int points;
 
   const _EditableAvatar({required this.initialName, required this.points});
 
   @override
-  State<_EditableAvatar> createState() => _EditableAvatarState();
+  ConsumerState<_EditableAvatar> createState() => _EditableAvatarState();
 }
 
-class _EditableAvatarState extends State<_EditableAvatar> {
+class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
   String? _avatarPath; // data URL
   late TextEditingController _nameController;
 
@@ -206,11 +206,10 @@ class _EditableAvatarState extends State<_EditableAvatar> {
       setState(() => _avatarPath = inputDataUrl);
       // 同步到服务器
       try {
-        final repo = context.read(authRepositoryProvider);
+        final repo = ref.read(authRepositoryProvider);
         await repo.updateProfile(avatarDataUrl: inputDataUrl);
         // 刷新用户
-        // ignore: use_build_context_synchronously
-        context.read(authProvider.notifier).refreshUser();
+        ref.read(authProvider.notifier).refreshUser();
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('上传失败: $e')),
