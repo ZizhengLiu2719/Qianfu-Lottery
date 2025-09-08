@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../utils/safe_size.dart';
 import '../../../api/dio_client.dart';
 import '../../../api/appointments_repository.dart';
 import '../../../models/appointment.dart';
@@ -30,13 +31,13 @@ class CourseDetailScreen extends ConsumerWidget {
         data: (schedules) {
           if (schedules.isEmpty) return const Center(child: Text('暂无可预约时间'));
           return ListView.separated(
-            padding: EdgeInsets.all(16.w),
+            padding: EdgeInsets.all(safeW(16)),
             itemCount: schedules.length,
             separatorBuilder: (_, __) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final s = schedules[index];
               return ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                contentPadding: EdgeInsets.symmetric(horizontal: safeW(8), vertical: safeH(8)),
                 title: Text(s.course?.title ?? '课程'),
                 subtitle: Text('${s.dateDisplay}  ${s.timeRange}  ·  余${s.availableSlots}'),
                 trailing: ElevatedButton(

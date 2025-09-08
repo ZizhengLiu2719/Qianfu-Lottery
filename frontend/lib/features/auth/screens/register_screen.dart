@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../utils/safe_size.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../routing/app_router.dart';
@@ -116,18 +117,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            padding: EdgeInsets.symmetric(horizontal: safeW(24)),
             child: SlideTransition(
               position: _slideAnimation,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: 20.h),
+                  SizedBox(height: safeH(20)),
                   
                   // 标题
                   _buildHeader(context),
                   
-                  SizedBox(height: 40.h),
+                  SizedBox(height: safeH(40)),
                   
                   // 注册表单
                   _buildRegisterForm(context),
@@ -137,7 +138,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                   // 登录链接
                   _buildLoginLink(context),
                   
-                  SizedBox(height: 40.h),
+                  SizedBox(height: safeH(40)),
                 ],
               ),
             ),
@@ -190,7 +191,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                   ),
                 ),
               ),
-              SizedBox(width: 16.w),
+              SizedBox(width: safeW(16)),
               Expanded(
                 child: TextFormField(
                   controller: _lastNameController,
@@ -203,7 +204,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
             ],
           ),
           
-          SizedBox(height: 16.h),
+          SizedBox(height: safeH(16)),
           
           // 邮箱输入框
           TextFormField(
@@ -225,7 +226,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
             },
           ),
           
-          SizedBox(height: 16.h),
+          SizedBox(height: safeH(16)),
           
           // 密码输入框
           TextFormField(
@@ -290,33 +291,33 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
             },
           ),
           
-          SizedBox(height: 32.h),
+          SizedBox(height: safeH(32)),
           
           // 注册按钮
           ElevatedButton(
             onPressed: _isLoading ? null : _handleRegister,
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(double.infinity, 56.h),
+              minimumSize: Size(double.infinity, safeH(56)),
             ),
             child: _isLoading
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 20.w,
-                        height: 20.w,
+                        width: safeW(20),
+                        height: safeW(20),
                         child: const CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       ),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: safeW(12)),
                       Text(AppLocalizations.of(context)!.common_loading),
                     ],
                   )
                 : Text(
                     AppLocalizations.of(context)!.auth_register,
-                    style: TextStyle(fontSize: 16.sp),
+                    style: TextStyle(fontSize: safeSp(16)),
                   ),
           ),
         ],

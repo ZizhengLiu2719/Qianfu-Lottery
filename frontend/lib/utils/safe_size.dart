@@ -30,4 +30,14 @@ double safeH(double value) {
   }
 }
 
+double safeR(double value) {
+  try {
+    final r = value.r;
+    if (r.isNaN || !r.isFinite) return value;
+    return r;
+  } catch (_) {
+    return value;
+  }
+}
+
 
