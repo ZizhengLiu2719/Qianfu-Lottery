@@ -21,7 +21,7 @@ app.get('/api/health', (c) => {
     message: 'API is healthy',
     data: {
       timestamp: new Date().toISOString(),
-      environment: (c.env as any)?.ENVIRONMENT || 'development'
+      environment: c.env?.ENVIRONMENT || 'development'
     }
   })
 })
@@ -225,9 +225,6 @@ app.get('/api/entertainment/*', (c) => {
 
 // 404 处理
 app.notFound((c) => {
-  c.header('Access-Control-Allow-Origin', '*')
-  c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
-  c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   return c.json({
     code: 404,
     message: 'API endpoint not found',
@@ -238,10 +235,6 @@ app.notFound((c) => {
 // 全局错误处理
 app.onError((err, c) => {
   console.error('Unhandled error:', err)
-  // Ensure CORS headers also present on error responses
-  c.header('Access-Control-Allow-Origin', '*')
-  c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
-  c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   return c.json({
     code: 500,
     message: 'Internal server error',

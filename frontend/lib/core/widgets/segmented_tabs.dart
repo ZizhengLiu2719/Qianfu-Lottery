@@ -18,7 +18,7 @@ class SegmentedTabs extends StatelessWidget {
     final double tabHeight = isDesktopWeb ? 44 : 40.h;
     final double fontSize = isDesktopWeb
         ? (width >= 1440 ? 18 : 16)
-        : (14 * MediaQuery.of(context).textScaleFactor).clamp(12, 18).toDouble();
+        : 14.sp;
 
     return SizedBox(
       height: tabHeight,
