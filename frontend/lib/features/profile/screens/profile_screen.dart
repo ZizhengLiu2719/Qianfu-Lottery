@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../routing/app_router.dart';
@@ -42,27 +41,23 @@ class ProfileScreen extends ConsumerWidget {
               padding: EdgeInsets.all(20.w),
               child: Column(
                 children: [
-                  _buildMenuItem(
+                  _buildMenuTextItem(
                     context,
-                    icon: FeatherIcons.shoppingBag,
                     title: AppLocalizations.of(context)!.profile_my_orders,
                     onTap: () => context.go(AppRoutes.orders),
                   ),
-                  _buildMenuItem(
+                  _buildMenuTextItem(
                     context,
-                    icon: FeatherIcons.calendar,
                     title: AppLocalizations.of(context)!.profile_my_appointments,
                     onTap: () => context.go(AppRoutes.appointments),
                   ),
-                  _buildMenuItem(
+                  _buildMenuTextItem(
                     context,
-                    icon: FeatherIcons.creditCard,
                     title: AppLocalizations.of(context)!.profile_transaction_history,
                     onTap: () => context.go(AppRoutes.transactionHistory),
                   ),
-                  _buildMenuItem(
+                  _buildMenuTextItem(
                     context,
-                    icon: FeatherIcons.settings,
                     title: AppLocalizations.of(context)!.profile_settings,
                     onTap: () => context.go(AppRoutes.settings),
                   ),
@@ -77,21 +72,32 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildMenuItem(
+  Widget _buildMenuTextItem(
     BuildContext context, {
-    required IconData icon,
     required String title,
     required VoidCallback onTap,
   }) {
-    return SizedBox(
-      height: 56.h,
-      child: ListTile(
-        dense: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-        leading: Icon(icon, color: AppTheme.textPrimary, size: 22.sp),
-        title: Text(title, style: Theme.of(context).textTheme.titleMedium),
-        trailing: Icon(FeatherIcons.chevronRight, color: AppTheme.textTertiary, size: 18.sp),
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(12.r),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: AppTheme.borderColor.withOpacity(0.5)),
+          ),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppTheme.textPrimary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -106,17 +112,7 @@ class ProfileScreen extends ConsumerWidget {
           side: const BorderSide(color: AppTheme.errorColor),
           padding: EdgeInsets.symmetric(vertical: 16.h),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              FeatherIcons.logOut,
-              size: 20.sp,
-            ),
-            SizedBox(width: 8.w),
-            Text(AppLocalizations.of(context)!.auth_logout),
-          ],
-        ),
+        child: Text(AppLocalizations.of(context)!.auth_logout),
       ),
     );
   }
@@ -228,22 +224,30 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
               radius: 32,
               backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
               backgroundImage: _avatarPath != null ? NetworkImage(_avatarPath!) : null,
-              child: _avatarPath == null ? Icon(FeatherIcons.user, color: AppTheme.textPrimary) : null,
+              child: _avatarPath == null
+                  ? Text(
+                      widget.initialName.isNotEmpty ? widget.initialName.characters.first : '-',
+                      style: TextStyle(
+                        color: AppTheme.textPrimary,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  : null,
             ),
             Positioned(
               right: 0,
               bottom: 0,
-              child: GestureDetector(
-                onTap: _pickAvatar,
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  decoration: const BoxDecoration(
-                    color: AppTheme.primaryColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.edit, size: 14, color: Colors.white),
+              child: TextButton(
+                onPressed: _pickAvatar,
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  backgroundColor: AppTheme.primaryColor,
+                  foregroundColor: Colors.white,
                 ),
+                child: const Text('更换'),
               ),
             ),
           ],
@@ -261,12 +265,9 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
                 ),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              Row(
-                children: [
-                  const Icon(Icons.diamond, size: 16, color: AppTheme.primaryColor),
-                  SizedBox(width: 4.w),
-                  Text('${widget.points}', style: TextStyle(color: AppTheme.primaryColor)),
-                ],
+              Text(
+                '${widget.points} 仟彩豆',
+                style: const TextStyle(color: AppTheme.primaryColor),
               ),
             ],
           ),
