@@ -6,11 +6,11 @@
 import { serve } from '@hono/node-server'
 import { app } from './app'
 
-const port = parseInt(process.env.PORT || '3000')
+const port = 3000 // Fixed port for local development
 
 console.log(`🚀 Starting Qianfu Jicai API server...`)
 console.log(`📍 Server will run on http://localhost:${port}`)
-console.log(`🌍 Environment: ${process.env.ENVIRONMENT || 'development'}`)
+console.log(`🌍 Environment: development`)
 
 serve({
   fetch: app.fetch,

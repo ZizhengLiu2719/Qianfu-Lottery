@@ -11,8 +11,17 @@ import { QiancaiDouService } from './services/qiancaidou'
 // 创建 Hono 应用实例
 export const app = new Hono()
 
-// 全局中间件
+// 全局 CORS 中间件 - 必须在所有路由之前
 app.use('*', corsMiddleware())
+
+// 添加额外的 CORS 处理
+app.options('*', (c) => {
+  c.header('Access-Control-Allow-Origin', '*')
+  c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
+  c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  c.header('Access-Control-Max-Age', '86400')
+  return new Response('', { status: 204 })
+})
 
 // 健康检查端点
 app.get('/api/health', (c) => {

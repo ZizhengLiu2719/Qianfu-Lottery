@@ -1,15 +1,17 @@
-import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
 
-// 创建新的 Prisma 客户端实例（每个请求都应该有自己的实例）
+// 为 Cloudflare Workers 创建优化的 Prisma 客户端
 export function createPrismaClient(databaseUrl: string): PrismaClient {
-  // 使用 PrismaNeon 适配器并传入连接配置
-  const adapter = new PrismaNeon({ connectionString: databaseUrl })
-  
-  // 初始化 Prisma 客户端 - 在 Prisma 6.15.0+ 中不再需要 queryEngineWasm
-  return new PrismaClient({ 
-    adapter,
-    log: ['error', 'warn']
+  // 直接使用 Prisma 客户端，不使用 PrismaNeon 适配器
+  // 这避免了 Cloudflare Workers 中的 I/O 共享问题
+  return new PrismaClient({
+    datasources: {
+      db: {
+        url: databaseUrl
+      }
+    },
+    log: ['error'],
+    errorFormat: 'minimal'
   })
 }
 
@@ -25,30 +27,59 @@ function isTransientDbError(error: unknown): boolean {
 
 /**
  * 在数据库连接异常时自动重试一次，每次都创建新的 PrismaClient
- * 这样确保每个请求都有独立的数据库连接上下文
+ * 专为 Cloudflare Workers 环境优化，确保每个请求都有独立的数据库连接上下文
  */
 export async function runWithPrisma<T>(
   databaseUrl: string,
   runner: (client: PrismaClient) => Promise<T>
 ): Promise<T> {
-  let client = createPrismaClient(databaseUrl)
+  let client: PrismaClient | null = null
+  
   try {
+    // 确保在请求上下文中创建客户端
+    client = createPrismaClient(databaseUrl)
+    
+    // 强制等待连接建立
+    await client.$connect()
+    
     const result = await runner(client)
+    
+    // 确保在完成后立即断开连接
     await client.$disconnect()
+    client = null
+    
     return result
   } catch (err) {
-    await client.$disconnect().catch(() => {})
+    // 确保清理连接
+    if (client) {
+      await client.$disconnect().catch(() => {})
+      client = null
+    }
     
-    if (!isTransientDbError(err)) throw err
+    if (!isTransientDbError(err)) {
+      console.error('Database error (non-transient):', err)
+      throw err
+    }
     
-    // 重试一次，创建新的客户端
-    client = createPrismaClient(databaseUrl)
+    console.log('Retrying database operation due to transient error:', err)
+    
+    // 重试一次，创建完全新的客户端
     try {
+      client = createPrismaClient(databaseUrl)
+      await client.$connect()
+      
       const result = await runner(client)
+      
       await client.$disconnect()
+      client = null
+      
       return result
     } catch (err2) {
-      await client.$disconnect().catch(() => {})
+      if (client) {
+        await client.$disconnect().catch(() => {})
+        client = null
+      }
+      console.error('Database error after retry:', err2)
       throw err2
     }
   }
