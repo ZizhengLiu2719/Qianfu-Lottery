@@ -151,12 +151,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               ),
             ],
           ),
-          child: Padding(
-            padding: EdgeInsets.all(14.w),
-            child: Image.asset(
-              'assets/images/Colorful Pinwheel Logo Design.png',
-              fit: BoxFit.contain,
-            ),
+          child: Icon(
+            Icons.diamond,
+            color: Colors.white,
+            size: 60.sp,
           ),
         ),
         
