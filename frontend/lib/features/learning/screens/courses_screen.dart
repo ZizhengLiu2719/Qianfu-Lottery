@@ -28,7 +28,7 @@ class CoursesScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text('线下课程预约'),
+        title: const Text('线上课程预约'),
         backgroundColor: Colors.white,
       ),
       body: Padding(

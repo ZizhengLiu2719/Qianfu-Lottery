@@ -14,6 +14,7 @@ import '../../../routing/app_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
+import '../../../core/widgets/segmented_tabs.dart';
 
 // 产品列表 Provider
 final productsRepositoryProvider = Provider<ProductsRepository>((ref) {
@@ -64,6 +65,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     );
   }
 
+  int _selectedTabIndex = 0;
+
   Widget _buildTopFilterBar(BuildContext context, int cartCount) {
     return SliverToBoxAdapter(
       child: Container(
@@ -72,12 +75,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         child: Row(
           children: [
             // 横向标签
-            Expanded(
-              child: SizedBox(
-                height: 36.h,
-                child: _buildCategoryFilter(context),
-              ),
-            ),
+            Expanded(child: _buildCategoryTabs(context)),
             // 购物车
             Stack(
               children: [
@@ -111,60 +109,21 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     );
   }
 
-  Widget _buildCategoryFilter(BuildContext context) {
-    final categories = [
-      {'key': null, 'name': AppLocalizations.of(context)!.products_category_all},
-      {'key': 'electronics', 'name': '数码'},
-      {'key': 'clothing', 'name': '服装'},
-      {'key': 'food', 'name': '食品'},
-      {'key': 'books', 'name': '图书'},
-      {'key': 'sports', 'name': '运动'},
+  Widget _buildCategoryTabs(BuildContext context) {
+    final tabs = [
+      AppLocalizations.of(context)!.products_category_all,
+      '数码', '服装', '食品', '图书', '运动',
     ];
-
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.h),
-      child: SizedBox(
-        height: 44.h,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          itemCount: categories.length,
-          itemBuilder: (context, index) {
-            final category = categories[index];
-            final isSelected = _selectedCategory == category['key'];
-
-            return Container(
-              margin: EdgeInsets.only(right: 12.w),
-              child: FilterChip(
-                label: Text(
-                  category['name'] as String,
-                  style: TextStyle(
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                    fontSize: 14.sp,
-                  ),
-                ),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    _selectedCategory = selected ? category['key'] as String? : null;
-                  });
-                },
-                backgroundColor: Colors.white,
-                selectedColor: AppTheme.primaryColor.withOpacity(0.12),
-                checkmarkColor: AppTheme.primaryColor,
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22.r),
-                  side: BorderSide(
-                    color: isSelected ? AppTheme.primaryColor : AppTheme.dividerColor,
-                    width: isSelected ? 1.6 : 1.2,
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+    final values = [null, 'electronics', 'clothing', 'food', 'books', 'sports'];
+    return SegmentedTabs(
+      tabs: tabs,
+      selectedIndex: _selectedTabIndex,
+      onChanged: (i) {
+        setState(() {
+          _selectedTabIndex = i;
+          _selectedCategory = values[i] as String?;
+        });
+      },
     );
   }
 
