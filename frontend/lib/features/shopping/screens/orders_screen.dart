@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../utils/safe_size.dart';
 import '../../../api/dio_client.dart';
 import '../../../api/products_repository.dart';
 import '../../../models/product.dart';
@@ -36,7 +37,7 @@ class OrdersScreen extends ConsumerWidget {
               return InkWell(
                 onTap: () => _openOrderDetail(context, o),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                  padding: EdgeInsets.symmetric(horizontal: safeW(16), vertical: safeH(12)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -47,17 +48,17 @@ class OrdersScreen extends ConsumerWidget {
                           Text(o.statusDisplay, style: Theme.of(context).textTheme.titleSmall),
                         ],
                       ),
-                      SizedBox(height: 8.h),
+                      SizedBox(height: safeH(8)),
                       Wrap(
-                        spacing: 8.w,
-                        runSpacing: 4.h,
+                        spacing: safeW(8),
+                        runSpacing: safeH(4),
                         children: o.items.map((it) => Text('×${it.quantity} ${it.product?.title ?? ''}')).toList(),
                       ),
-                      SizedBox(height: 8.h),
+                      SizedBox(height: safeH(8)),
                       Row(
                         children: [
                           const Icon(Icons.diamond, size: 16),
-                          SizedBox(width: 4.w),
+                          SizedBox(width: safeW(4)),
                           Text('${o.totalCost}', style: Theme.of(context).textTheme.titleMedium),
                         ],
                       ),
@@ -86,9 +87,9 @@ void _openOrderDetail(BuildContext context, Order order) {
       return Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(ctx).viewInsets.bottom,
-          left: 16.w,
-          right: 16.w,
-          top: 16.w,
+          left: safeW(16),
+          right: safeW(16),
+          top: safeW(16),
         ),
         child: _OrderDetailContent(order: order),
       );

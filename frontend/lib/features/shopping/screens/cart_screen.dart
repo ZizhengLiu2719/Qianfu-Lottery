@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../utils/safe_size.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,6 +14,7 @@ import '../../../models/product.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
+import '../../../core/widgets/qc_coin.dart';
 
 class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
@@ -44,7 +46,7 @@ class CartScreen extends ConsumerWidget {
                 // 购物车列表
                 Expanded(
                   child: ListView.builder(
-                    padding: EdgeInsets.all(16.w),
+                    padding: EdgeInsets.all(safeW(16)),
                     itemCount: cartItems.length,
                     itemBuilder: (context, index) {
                       return _buildCartItem(context, ref, cartItems[index]);
@@ -66,17 +68,17 @@ class CartScreen extends ConsumerWidget {
         children: [
           Icon(
             FeatherIcons.shoppingCart,
-            size: 80.sp,
+            size: safeSp(80),
             color: AppTheme.textTertiary,
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: safeH(16)),
           Text(
             AppLocalizations.of(context)!.cart_empty,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: AppTheme.textTertiary,
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: safeH(24)),
           ElevatedButton(
             onPressed: () => context.go(AppRoutes.products),
             child: const Text('去购物'),
@@ -88,8 +90,8 @@ class CartScreen extends ConsumerWidget {
 
   Widget _buildCartItem(BuildContext context, WidgetRef ref, CartItem item) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
-      padding: EdgeInsets.all(16.w),
+      margin: EdgeInsets.only(bottom: safeH(16)),
+      padding: EdgeInsets.all(safeW(16)),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppTheme.borderRadiusMedium),
@@ -99,10 +101,10 @@ class CartScreen extends ConsumerWidget {
         children: [
           // 商品图片
           ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(safeR(8)),
             child: SizedBox(
-              width: 60.w,
-              height: 60.w,
+              width: safeW(60),
+              height: safeW(60),
               child: item.product.mainImage.isNotEmpty
                   ? CachedNetworkImage(
                       imageUrl: item.product.mainImage,
@@ -112,14 +114,14 @@ class CartScreen extends ConsumerWidget {
                       color: AppTheme.backgroundColor,
                       child: Icon(
                         FeatherIcons.image,
-                        size: 24.sp,
+                        size: safeSp(24),
                         color: AppTheme.textTertiary,
                       ),
                     ),
             ),
           ),
           
-          SizedBox(width: 12.w),
+          SizedBox(width: safeW(12)),
           
           // 商品信息
           Expanded(
@@ -132,15 +134,11 @@ class CartScreen extends ConsumerWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: safeH(4)),
                 Row(
                   children: [
-                    Icon(
-                      Icons.diamond,
-                      size: 14.sp,
-                      color: AppTheme.primaryColor,
-                    ),
-                    SizedBox(width: 4.w),
+                    const QcCoin(size: 14),
+                    SizedBox(width: safeW(4)),
                     Text(
                       '${item.product.priceInQiancaiDou}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -170,14 +168,14 @@ class CartScreen extends ConsumerWidget {
                 },
                 icon: Icon(
                   item.quantity > 1 ? FeatherIcons.minus : FeatherIcons.trash2,
-                  size: 16.sp,
+                  size: safeSp(16),
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                padding: EdgeInsets.symmetric(horizontal: safeW(12), vertical: safeH(4)),
                 decoration: BoxDecoration(
                   border: Border.all(color: AppTheme.dividerColor),
-                  borderRadius: BorderRadius.circular(4.r),
+                  borderRadius: BorderRadius.circular(safeR(4)),
                 ),
                 child: Text(
                   '${item.quantity}',
@@ -191,7 +189,7 @@ class CartScreen extends ConsumerWidget {
                     item.quantity + 1,
                   );
                 },
-                icon: Icon(FeatherIcons.plus, size: 16.sp),
+                icon: Icon(FeatherIcons.plus, size: safeSp(16)),
               ),
             ],
           ),
@@ -204,10 +202,10 @@ class CartScreen extends ConsumerWidget {
     final canCheckout = balance >= totalPrice;
 
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.all(safeW(20)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(safeR(20))),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -228,12 +226,8 @@ class CartScreen extends ConsumerWidget {
                 ),
                 Row(
                   children: [
-                    Icon(
-                      Icons.diamond,
-                      size: 20.sp,
-                      color: AppTheme.primaryColor,
-                    ),
-                    SizedBox(width: 4.w),
+                    const QcCoin(size: 20),
+                    SizedBox(width: safeW(4)),
                     Text(
                       '$totalPrice',
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -247,7 +241,7 @@ class CartScreen extends ConsumerWidget {
             ),
             
             if (!canCheckout) ...[
-              SizedBox(height: 8.h),
+              SizedBox(height: safeH(8)),
               Text(
                 AppLocalizations.of(context)!.error_insufficient_balance,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -256,11 +250,11 @@ class CartScreen extends ConsumerWidget {
               ),
             ],
             
-            SizedBox(height: 16.h),
+            SizedBox(height: safeH(16)),
             
             SizedBox(
               width: double.infinity,
-              height: 48.h,
+              height: safeH(48),
               child: ElevatedButton(
                 onPressed: canCheckout ? () => _checkout(context, ref) : null,
                 child: Text(AppLocalizations.of(context)!.cart_checkout),

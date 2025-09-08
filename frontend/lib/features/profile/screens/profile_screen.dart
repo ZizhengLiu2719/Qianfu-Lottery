@@ -8,6 +8,8 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../../core/widgets/qc_coin.dart';
+import '../../../utils/safe_size.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -24,7 +26,7 @@ class ProfileScreen extends ConsumerWidget {
           // 用户信息头部（编辑头像 + 名称 + 积分）
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
+              padding: EdgeInsets.fromLTRB(safeW(16), safeH(16), safeW(16), safeH(8)),
               child: Row(
                 children: [
                   _EditableAvatar(
@@ -39,7 +41,7 @@ class ProfileScreen extends ConsumerWidget {
           // 信息分区：订单/预约/资产/设置（去除外部图标与箭头，使用清晰分组卡片）
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              padding: EdgeInsets.symmetric(horizontal: safeW(16), vertical: safeH(8)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -74,7 +76,7 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: safeH(20)),
                   _buildLogoutButton(context, ref),
                 ],
               ),
@@ -92,13 +94,13 @@ class ProfileScreen extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     return SizedBox(
-      height: 56.h,
+      height: safeH(56),
       child: ListTile(
         dense: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-        leading: Icon(icon, color: AppTheme.textPrimary, size: 22.sp),
+        contentPadding: EdgeInsets.symmetric(horizontal: safeW(16)),
+        leading: Icon(icon, color: AppTheme.textPrimary, size: safeSp(22)),
         title: Text(title, style: Theme.of(context).textTheme.titleMedium),
-        trailing: Icon(FeatherIcons.chevronRight, color: AppTheme.textTertiary, size: 18.sp),
+        trailing: Icon(FeatherIcons.chevronRight, color: AppTheme.textTertiary, size: safeSp(18)),
         onTap: onTap,
       ),
     );
@@ -112,16 +114,16 @@ class ProfileScreen extends ConsumerWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppTheme.errorColor,
           side: const BorderSide(color: AppTheme.errorColor),
-          padding: EdgeInsets.symmetric(vertical: 16.h),
+          padding: EdgeInsets.symmetric(vertical: safeH(16)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               FeatherIcons.logOut,
-              size: 20.sp,
+              size: safeSp(20),
             ),
-            SizedBox(width: 8.w),
+            SizedBox(width: safeW(8)),
             Text(AppLocalizations.of(context)!.auth_logout),
           ],
         ),
@@ -161,7 +163,7 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
+      margin: EdgeInsets.only(bottom: safeH(16)),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppTheme.borderRadiusLarge),
@@ -171,7 +173,7 @@ class _Section extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 8.h),
+            padding: EdgeInsets.fromLTRB(safeW(16), safeH(14), safeW(16), safeH(8)),
             child: Text(title, style: Theme.of(context).textTheme.titleLarge),
           ),
           const Divider(height: 1, color: AppTheme.dividerColor),
@@ -203,7 +205,7 @@ class _PlainItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        padding: EdgeInsets.symmetric(horizontal: safeW(16), vertical: safeH(14)),
         child: Text(
           title,
           style: Theme.of(context).textTheme.titleMedium,
@@ -316,7 +318,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
             ),
           ],
         ),
-        SizedBox(width: 12.w),
+        SizedBox(width: safeW(12)),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,8 +333,8 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
               ),
               Row(
                 children: [
-                  const Icon(Icons.diamond, size: 16, color: AppTheme.primaryColor),
-                  SizedBox(width: 4.w),
+                  const QcCoin(size: 16),
+                  SizedBox(width: safeW(4)),
                   Text('${widget.points}', style: TextStyle(color: AppTheme.primaryColor)),
                 ],
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../utils/safe_size.dart';
 import '../../../api/dio_client.dart';
 import '../../../api/products_repository.dart';
 import '../../../models/product.dart';
@@ -28,25 +29,25 @@ class ProductDetailScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('商品详情')),
       body: asyncProduct.when(
         data: (p) => SingleChildScrollView(
-          padding: EdgeInsets.all(16.w),
+          padding: EdgeInsets.all(safeW(16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(12.r),
+                borderRadius: BorderRadius.circular(safeR(12)),
                 child: p.mainImage.isNotEmpty
-                    ? Image.network(p.mainImage, height: 260.h, width: double.infinity, fit: BoxFit.cover)
-                    : Container(height: 260.h, color: AppTheme.backgroundColor),
+                    ? Image.network(p.mainImage, height: safeH(260), width: double.infinity, fit: BoxFit.cover)
+                    : Container(height: safeH(260), color: AppTheme.backgroundColor),
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: safeH(16)),
               Text(p.title, style: Theme.of(context).textTheme.headlineSmall),
-              SizedBox(height: 8.h),
+              SizedBox(height: safeH(8)),
               Row(children: [
                 const Icon(Icons.diamond, color: AppTheme.primaryColor, size: 18),
-                SizedBox(width: 4.w),
+                SizedBox(width: safeW(4)),
                 Text('${p.priceInQiancaiDou}', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppTheme.primaryColor)),
               ]),
-              SizedBox(height: 16.h),
+              SizedBox(height: safeH(16)),
               Text(p.description, style: Theme.of(context).textTheme.bodyLarge),
             ],
           ),

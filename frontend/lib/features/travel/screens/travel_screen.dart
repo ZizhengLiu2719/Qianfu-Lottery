@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../utils/safe_size.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../api/dio_client.dart';
@@ -76,7 +77,7 @@ class _TravelPostsSliver extends StatelessWidget {
     if (posts.isEmpty) {
       return SliverToBoxAdapter(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 24.h),
+          padding: EdgeInsets.symmetric(vertical: safeH(24)),
           child: Center(
             child: Text('暂无内容', style: Theme.of(context).textTheme.titleMedium),
           ),
@@ -85,12 +86,12 @@ class _TravelPostsSliver extends StatelessWidget {
     }
 
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      padding: EdgeInsets.symmetric(horizontal: safeW(12)),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          mainAxisSpacing: 8.w,
-          crossAxisSpacing: 8.w,
+          mainAxisSpacing: safeW(8),
+          crossAxisSpacing: safeW(8),
           childAspectRatio: 0.7,
         ),
         delegate: SliverChildBuilderDelegate(
@@ -105,15 +106,15 @@ class _TravelPostsSliver extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.r),
+                      borderRadius: BorderRadius.circular(safeR(8)),
                       child: p.mainImage.isNotEmpty
                           ? Image.network(p.mainImage, width: double.infinity, fit: BoxFit.cover)
                           : Container(color: AppTheme.backgroundColor),
                     ),
                   ),
-                  SizedBox(height: 6.h),
+                  SizedBox(height: safeH(6)),
                   Text(p.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppTheme.textPrimary)),
-                  SizedBox(height: 2.h),
+                  SizedBox(height: safeH(2)),
                   Text(p.categoryDisplay, style: Theme.of(context).textTheme.bodySmall),
                 ],
               ),
@@ -131,7 +132,7 @@ class _LoadingSliver extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.all(24.w),
+        padding: EdgeInsets.all(safeW(24)),
         child: const Center(child: CircularProgressIndicator()),
       ),
     );
@@ -146,7 +147,7 @@ class _ErrorSliver extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.all(24.w),
+        padding: EdgeInsets.all(safeW(24)),
         child: Center(child: Text(message)),
       ),
     );

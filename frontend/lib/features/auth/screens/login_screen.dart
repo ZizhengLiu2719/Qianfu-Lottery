@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../utils/safe_size.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lottie/lottie.dart';
 
@@ -102,28 +103,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            padding: EdgeInsets.symmetric(horizontal: safeW(24)),
             child: SlideTransition(
               position: _slideAnimation,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: 60.h),
+                  SizedBox(height: safeH(60)),
                   
                   // Logo 和标题
                   _buildHeader(context),
                   
-                  SizedBox(height: 60.h),
+                  SizedBox(height: safeH(60)),
                   
                   // 登录表单
                   _buildLoginForm(context),
                   
-                  SizedBox(height: 40.h),
+                  SizedBox(height: safeH(40)),
                   
                   // 注册链接
                   _buildRegisterLink(context),
                   
-                  SizedBox(height: 40.h),
+                  SizedBox(height: safeH(40)),
                 ],
               ),
             ),
@@ -136,44 +137,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   Widget _buildHeader(BuildContext context) {
     return Column(
       children: [
-        // Logo 动画
-        Container(
-          width: 120.w,
-          height: 120.w,
-          decoration: BoxDecoration(
-            gradient: AppTheme.primaryGradient,
-            borderRadius: BorderRadius.circular(30.r),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.primaryColor.withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Icon(
-            Icons.diamond,
-            color: Colors.white,
-            size: 60.sp,
-          ),
-        ),
-        
-        SizedBox(height: 24.h),
-        
-        Text(
-          AppLocalizations.of(context)!.appName,
-          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-            color: AppTheme.textPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        
-        SizedBox(height: 8.h),
-        
-        Text(
-          AppLocalizations.of(context)!.appTagline,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: AppTheme.textSecondary,
+        SizedBox(
+          width: safeW(140),
+          height: safeW(140),
+          child: Image.asset(
+            'assets/images/Colorful Pinwheel Logo Design.png',
+            fit: BoxFit.contain,
           ),
         ),
       ],
@@ -206,7 +175,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             },
           ),
           
-          SizedBox(height: 16.h),
+          SizedBox(height: safeH(16)),
+          SizedBox(height: safeH(16)),
           
           // 密码输入框
           TextFormField(
@@ -239,33 +209,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             },
           ),
           
-          SizedBox(height: 32.h),
+          SizedBox(height: safeH(32)),
           
           // 登录按钮
           ElevatedButton(
             onPressed: _isLoading ? null : _handleLogin,
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(double.infinity, 56.h),
+              minimumSize: Size(double.infinity, safeH(56)),
             ),
             child: _isLoading
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 20.w,
-                        height: 20.w,
+                        width: safeW(20),
+                        height: safeW(20),
                         child: const CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       ),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: safeW(12)),
                       Text(AppLocalizations.of(context)!.common_loading),
                     ],
                   )
                 : Text(
                     AppLocalizations.of(context)!.auth_login,
-                    style: TextStyle(fontSize: 16.sp),
+                    style: TextStyle(fontSize: safeSp(16)),
                   ),
           ),
         ],

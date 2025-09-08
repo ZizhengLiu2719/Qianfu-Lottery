@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../utils/safe_size.dart';
 import '../../../api/dio_client.dart';
 import '../../../api/appointments_repository.dart';
 import '../../../models/appointment.dart';
@@ -33,14 +34,14 @@ class AppointmentsScreen extends ConsumerWidget {
               final a = list[index];
               final schedule = a.schedule;
               return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                padding: EdgeInsets.symmetric(horizontal: safeW(16), vertical: safeH(12)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(schedule?.course?.title ?? '课程', style: Theme.of(context).textTheme.titleMedium),
-                    SizedBox(height: 6.h),
+                    SizedBox(height: safeH(6)),
                     Text('${schedule?.dateDisplay ?? ''}  ${schedule?.timeRange ?? ''}'),
-                    SizedBox(height: 6.h),
+                    SizedBox(height: safeH(6)),
                     Text(a.statusDisplay, style: Theme.of(context).textTheme.titleSmall),
                   ],
                 ),
