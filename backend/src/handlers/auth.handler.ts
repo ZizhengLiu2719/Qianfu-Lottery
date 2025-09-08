@@ -1,6 +1,6 @@
 import { Context } from 'hono'
 import { AuthService } from '../services/auth'
-import { getPrismaClient, runWithPrisma } from '../services/db'
+import { runWithPrisma } from '../services/db'
 import { QiancaiDouService } from '../services/qiancaidou'
 
 interface RegisterRequest {
@@ -65,34 +65,30 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = getPrismaClient(databaseUrl)
+      const user = await runWithPrisma(databaseUrl, async (prisma) => {
+        // 检查邮箱是否已存在
+        const existingUser = await prisma.user.findUnique({
+          where: { email: body.email }
+        })
 
-      // 检查邮箱是否已存在
-      const existingUser = await prisma.user.findUnique({
-        where: { email: body.email }
-      })
-
-      if (existingUser) {
-        return c.json({
-          code: 409,
-          message: 'Email already registered',
-          data: null
-        }, 409)
-      }
-
-      // 哈希密码
-      const passwordHash = await authService.hashPassword(body.password)
-
-      // 创建用户
-      const user = await prisma.user.create({
-        data: {
-          email: body.email,
-          passwordHash,
-          firstName: body.firstName,
-          lastName: body.lastName,
-          language: body.language || 'zh',
-          qiancaiDouBalance: 100 // 新用户奖励100仟彩豆
+        if (existingUser) {
+          throw new Error('Email already registered')
         }
+
+        // 哈希密码
+        const passwordHash = await authService.hashPassword(body.password)
+
+        // 创建用户
+        return await prisma.user.create({
+          data: {
+            email: body.email,
+            passwordHash,
+            firstName: body.firstName,
+            lastName: body.lastName,
+            language: body.language || 'zh',
+            qiancaiDouBalance: 100 // 新用户奖励100仟彩豆
+          }
+        })
       })
 
       // 记录新用户奖励
@@ -128,6 +124,15 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
 
     } catch (error) {
       console.error('Registration error:', error)
+      
+      if (error instanceof Error && error.message.includes('Email already registered')) {
+        return c.json({
+          code: 409,
+          message: 'Email already registered',
+          data: null
+        }, 409)
+      }
+      
       return c.json({
         code: 500,
         message: 'Internal server error',
@@ -156,11 +161,10 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = getPrismaClient(databaseUrl)
-
-      // 查找用户
-      const user = await prisma.user.findUnique({
-        where: { email: body.email }
+      const user = await runWithPrisma(databaseUrl, async (prisma) => {
+        return await prisma.user.findUnique({
+          where: { email: body.email }
+        })
       })
 
       if (!user) {
@@ -280,7 +284,7 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = getPrismaClient(databaseUrl)
+      // Database operations will be wrapped in runWithPrisma
 
       const data: any = {}
       if (typeof body.firstName === 'string') data.firstName = body.firstName
@@ -291,20 +295,22 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
         data.avatarUrl = body.avatarDataUrl
       }
 
-      const user = await prisma.user.update({
-        where: { id: currentUser.id },
-        data,
-        select: {
-          id: true,
-          email: true,
-          firstName: true,
-          lastName: true,
-          qiancaiDouBalance: true,
-          language: true,
-          avatarUrl: true,
-          createdAt: true,
-          updatedAt: true
-        }
+      const user = await runWithPrisma(databaseUrl, async (prisma) => {
+        return await prisma.user.update({
+          where: { id: currentUser.id },
+          data,
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            qiancaiDouBalance: true,
+            language: true,
+            avatarUrl: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        })
       })
 
       return c.json({

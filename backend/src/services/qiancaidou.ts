@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { runWithPrisma } from './db'
 
 export type TransactionReason = 
   | 'ADMIN_ADJUSTMENT'      // 管理员调整
@@ -17,18 +17,20 @@ export interface QiancaiDouTransaction {
 }
 
 export class QiancaiDouService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private databaseUrl: string) {}
 
   /**
    * 获取用户仟彩豆余额
    */
   async getBalance(userId: number): Promise<number> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { qiancaiDouBalance: true }
+    return await runWithPrisma(this.databaseUrl, async (prisma) => {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { qiancaiDouBalance: true }
+      })
+      
+      return user?.qiancaiDouBalance ?? 0
     })
-    
-    return user?.qiancaiDouBalance ?? 0
   }
 
   /**
@@ -39,39 +41,41 @@ export class QiancaiDouService {
       throw new Error('Credit amount must be positive')
     }
 
-    return await this.prisma.$transaction(async (tx) => {
-      // 获取当前余额
-      const user = await tx.user.findUnique({
-        where: { id: transaction.userId },
-        select: { qiancaiDouBalance: true }
-      })
+    return await runWithPrisma(this.databaseUrl, async (prisma) => {
+      return await prisma.$transaction(async (tx) => {
+        // 获取当前余额
+        const user = await tx.user.findUnique({
+          where: { id: transaction.userId },
+          select: { qiancaiDouBalance: true }
+        })
 
-      if (!user) {
-        throw new Error('User not found')
-      }
-
-      const newBalance = user.qiancaiDouBalance + transaction.amount
-
-      // 更新用户余额
-      await tx.user.update({
-        where: { id: transaction.userId },
-        data: { qiancaiDouBalance: newBalance }
-      })
-
-      // 记录交易
-      await tx.qiancaiDouTransaction.create({
-        data: {
-          userId: transaction.userId,
-          amount: transaction.amount,
-          newBalance,
-          reason: transaction.reason,
-          description: transaction.description,
-          refTable: transaction.refTable,
-          refId: transaction.refId
+        if (!user) {
+          throw new Error('User not found')
         }
-      })
 
-      return newBalance
+        const newBalance = user.qiancaiDouBalance + transaction.amount
+
+        // 更新用户余额
+        await tx.user.update({
+          where: { id: transaction.userId },
+          data: { qiancaiDouBalance: newBalance }
+        })
+
+        // 记录交易
+        await tx.qiancaiDouTransaction.create({
+          data: {
+            userId: transaction.userId,
+            amount: transaction.amount,
+            newBalance,
+            reason: transaction.reason,
+            description: transaction.description,
+            refTable: transaction.refTable,
+            refId: transaction.refId
+          }
+        })
+
+        return newBalance
+      })
     })
   }
 
@@ -83,43 +87,45 @@ export class QiancaiDouService {
       throw new Error('Debit amount must be positive')
     }
 
-    return await this.prisma.$transaction(async (tx) => {
-      // 获取当前余额并锁定行
-      const user = await tx.user.findUnique({
-        where: { id: transaction.userId },
-        select: { qiancaiDouBalance: true }
-      })
+    return await runWithPrisma(this.databaseUrl, async (prisma) => {
+      return await prisma.$transaction(async (tx) => {
+        // 获取当前余额并锁定行
+        const user = await tx.user.findUnique({
+          where: { id: transaction.userId },
+          select: { qiancaiDouBalance: true }
+        })
 
-      if (!user) {
-        throw new Error('User not found')
-      }
-
-      const newBalance = user.qiancaiDouBalance - transaction.amount
-
-      if (newBalance < 0) {
-        throw new Error('Insufficient QiancaiDou balance')
-      }
-
-      // 更新用户余额
-      await tx.user.update({
-        where: { id: transaction.userId },
-        data: { qiancaiDouBalance: newBalance }
-      })
-
-      // 记录交易（以负数记录）
-      await tx.qiancaiDouTransaction.create({
-        data: {
-          userId: transaction.userId,
-          amount: -transaction.amount,
-          newBalance,
-          reason: transaction.reason,
-          description: transaction.description,
-          refTable: transaction.refTable,
-          refId: transaction.refId
+        if (!user) {
+          throw new Error('User not found')
         }
-      })
 
-      return newBalance
+        const newBalance = user.qiancaiDouBalance - transaction.amount
+
+        if (newBalance < 0) {
+          throw new Error('Insufficient QiancaiDou balance')
+        }
+
+        // 更新用户余额
+        await tx.user.update({
+          where: { id: transaction.userId },
+          data: { qiancaiDouBalance: newBalance }
+        })
+
+        // 记录交易（以负数记录）
+        await tx.qiancaiDouTransaction.create({
+          data: {
+            userId: transaction.userId,
+            amount: -transaction.amount,
+            newBalance,
+            reason: transaction.reason,
+            description: transaction.description,
+            refTable: transaction.refTable,
+            refId: transaction.refId
+          }
+        })
+
+        return newBalance
+      })
     })
   }
 
@@ -131,26 +137,28 @@ export class QiancaiDouService {
     page: number = 1, 
     limit: number = 20
   ) {
-    const offset = (page - 1) * limit
+    return await runWithPrisma(this.databaseUrl, async (prisma) => {
+      const offset = (page - 1) * limit
 
-    const [transactions, total] = await Promise.all([
-      this.prisma.qiancaiDouTransaction.findMany({
-        where: { userId },
-        orderBy: { createdAt: 'desc' },
-        skip: offset,
-        take: limit
-      }),
-      this.prisma.qiancaiDouTransaction.count({
-        where: { userId }
-      })
-    ])
+      const [transactions, total] = await Promise.all([
+        prisma.qiancaiDouTransaction.findMany({
+          where: { userId },
+          orderBy: { createdAt: 'desc' },
+          skip: offset,
+          take: limit
+        }),
+        prisma.qiancaiDouTransaction.count({
+          where: { userId }
+        })
+      ])
 
-    return {
-      transactions,
-      total,
-      page,
-      totalPages: Math.ceil(total / limit)
-    }
+      return {
+        transactions,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit)
+      }
+    })
   }
 
   /**
