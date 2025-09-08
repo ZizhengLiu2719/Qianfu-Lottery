@@ -5,7 +5,7 @@ import { createProductHandlers } from './handlers/products.handler'
 import { createTravelHandlers } from './handlers/travel.handler'
 import { corsMiddleware, createAuthMiddleware } from './middleware/auth.middleware'
 import { AuthService } from './services/auth'
-import { createPrismaClient } from './services/db'
+import { getPrismaClient } from './services/db'
 import { QiancaiDouService } from './services/qiancaidou'
 
 // 创建 Hono 应用实例
@@ -21,7 +21,7 @@ app.get('/api/health', (c) => {
     message: 'API is healthy',
     data: {
       timestamp: new Date().toISOString(),
-      environment: (c.env as any)?.ENVIRONMENT || 'development'
+      environment: c.env?.ENVIRONMENT || 'development'
     }
   })
 })
@@ -38,9 +38,9 @@ function initializeServices(c: any) {
     throw new Error('JWT_SECRET environment variable is required')
   }
 
-  const prisma = createPrismaClient(databaseUrl)
+  const prisma = getPrismaClient(databaseUrl)
   const authService = new AuthService(jwtSecret)
-  const qiancaiDouService = new QiancaiDouService(databaseUrl)
+  const qiancaiDouService = new QiancaiDouService(prisma)
   const authMiddleware = createAuthMiddleware(authService)
 
   return {

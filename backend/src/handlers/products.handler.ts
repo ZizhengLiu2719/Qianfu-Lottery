@@ -1,5 +1,5 @@
 import { Context } from 'hono'
-import { createPrismaClient } from '../services/db'
+import { getPrismaClient } from '../services/db'
 import { QiancaiDouService } from '../services/qiancaidou'
 
 interface CreateOrderRequest {
@@ -23,7 +23,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = createPrismaClient(databaseUrl)
+      const prisma = getPrismaClient(databaseUrl)
 
       // 获取查询参数
       const page = Math.max(1, parseInt(c.req.query('page') || '1'))
@@ -91,7 +91,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = createPrismaClient(databaseUrl)
+      const prisma = getPrismaClient(databaseUrl)
 
       const product = await prisma.product.findUnique({
         where: { 
@@ -145,10 +145,10 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = createPrismaClient(databaseUrl)
+      const prisma = getPrismaClient(databaseUrl)
 
       // 使用数据库事务确保数据一致性
-      const result = await prisma.$transaction(async (tx: any) => {
+      const result = await prisma.$transaction(async (tx) => {
         // 验证所有商品存在且有库存
         const productIds = body.items.map(item => item.productId)
         const products = await tx.product.findMany({
@@ -167,7 +167,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         const orderItems = []
 
         for (const item of body.items) {
-          const product = products.find((p: any) => p.id === item.productId)
+          const product = products.find(p => p.id === item.productId)
           if (!product) {
             throw new Error(`Product ${item.productId} not found`)
           }
@@ -273,7 +273,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = createPrismaClient(databaseUrl)
+      const prisma = getPrismaClient(databaseUrl)
 
       const [orders, total] = await Promise.all([
         prisma.order.findMany({
@@ -341,7 +341,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = createPrismaClient(databaseUrl)
+      const prisma = getPrismaClient(databaseUrl)
 
       const order = await prisma.order.findFirst({
         where: { id: orderId, userId: currentUser.id },
@@ -380,9 +380,9 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = createPrismaClient(databaseUrl)
+      const prisma = getPrismaClient(databaseUrl)
 
-      const result = await prisma.$transaction(async (tx: any) => {
+      const result = await prisma.$transaction(async (tx) => {
         const order = await tx.order.findFirst({
           where: { id: orderId, userId: currentUser.id },
           include: { items: true }
