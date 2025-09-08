@@ -1,5 +1,5 @@
 import { Context } from 'hono'
-import { runWithPrisma } from '../services/db'
+import { getPrismaClient } from '../services/db'
 import { QiancaiDouService } from '../services/qiancaidou'
 
 interface CreateOrderRequest {
@@ -23,31 +23,29 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
+      const prisma = getPrismaClient(databaseUrl)
+
       // 获取查询参数
       const page = Math.max(1, parseInt(c.req.query('page') || '1'))
       const limit = Math.min(50, Math.max(1, parseInt(c.req.query('limit') || '20')))
       const category = c.req.query('category')
       const offset = (page - 1) * limit
 
-      const { products, total } = await runWithPrisma(databaseUrl, async (prisma) => {
-        // 构建查询条件
-        const where = {
-          isActive: true,
-          ...(category && { category })
-        }
+      // 构建查询条件
+      const where = {
+        isActive: true,
+        ...(category && { category })
+      }
 
-        const [list, count] = await Promise.all([
-          prisma.product.findMany({
-            where,
-            orderBy: { createdAt: 'desc' },
-            skip: offset,
-            take: limit
-          }),
-          prisma.product.count({ where })
-        ])
-
-        return { products: list, total: count }
-      })
+      const [products, total] = await Promise.all([
+        prisma.product.findMany({
+          where,
+          orderBy: { createdAt: 'desc' },
+          skip: offset,
+          take: limit
+        }),
+        prisma.product.count({ where })
+      ])
 
       return c.json({
         code: 200,
@@ -93,13 +91,13 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const product = await runWithPrisma(databaseUrl, async (prisma) => {
-        return prisma.product.findUnique({
-          where: { 
-            id: productId,
-            isActive: true
-          }
-        })
+      const prisma = getPrismaClient(databaseUrl)
+
+      const product = await prisma.product.findUnique({
+        where: { 
+          id: productId,
+          isActive: true
+        }
       })
 
       if (!product) {
@@ -147,9 +145,10 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      // 使用 runWithPrisma 确保每个请求都有独立的数据库连接
-      const result = await runWithPrisma(databaseUrl, async (prisma) => {
-        return await prisma.$transaction(async (tx) => {
+      const prisma = getPrismaClient(databaseUrl)
+
+      // 使用数据库事务确保数据一致性
+      const result = await prisma.$transaction(async (tx) => {
         // 验证所有商品存在且有库存
         const productIds = body.items.map(item => item.productId)
         const products = await tx.product.findMany({
@@ -230,7 +229,6 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         }
 
         return order
-        })
       })
 
       return c.json({
@@ -275,8 +273,9 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const { orders, total } = await runWithPrisma(databaseUrl, async (prisma) => {
-        const [ordersList, totalCount] = await Promise.all([
+      const prisma = getPrismaClient(databaseUrl)
+
+      const [orders, total] = await Promise.all([
         prisma.order.findMany({
           where: { userId: currentUser.id },
           include: {
@@ -299,10 +298,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         prisma.order.count({
           where: { userId: currentUser.id }
         })
-        ])
-        
-        return { orders: ordersList, total: totalCount }
-      })
+      ])
 
       return c.json({
         code: 200,
@@ -345,15 +341,15 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const order = await runWithPrisma(databaseUrl, async (prisma) => {
-        return await prisma.order.findFirst({
+      const prisma = getPrismaClient(databaseUrl)
+
+      const order = await prisma.order.findFirst({
         where: { id: orderId, userId: currentUser.id },
         include: {
           items: {
             include: { product: true }
           }
         }
-        })
       })
 
       if (!order) {
@@ -384,8 +380,9 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const result = await runWithPrisma(databaseUrl, async (prisma) => {
-        return await prisma.$transaction(async (tx) => {
+      const prisma = getPrismaClient(databaseUrl)
+
+      const result = await prisma.$transaction(async (tx) => {
         const order = await tx.order.findFirst({
           where: { id: orderId, userId: currentUser.id },
           include: { items: true }
@@ -441,7 +438,6 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         })
 
         return updated
-        })
       })
 
       return c.json({ code: 200, message: 'Order cancelled successfully', data: { order: result } })

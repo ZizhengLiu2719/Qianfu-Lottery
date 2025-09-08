@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../utils/safe_size.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
@@ -33,7 +32,7 @@ class CoursesScreen extends ConsumerWidget {
         backgroundColor: Colors.white,
       ),
       body: Padding(
-        padding: EdgeInsets.all(safeW(16)),
+        padding: EdgeInsets.all(16.w),
         child: Consumer(
           builder: (context, ref, _) {
             final asyncCourses = ref.watch(_coursesProvider);
@@ -48,7 +47,7 @@ class CoursesScreen extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final c = courses[index];
                     return ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: safeW(8), vertical: safeH(8)),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                       leading: CircleAvatar(
                         backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
                         backgroundImage: (c.imageUrl != null && c.imageUrl!.isNotEmpty)

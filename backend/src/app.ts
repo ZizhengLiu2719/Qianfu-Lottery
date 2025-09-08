@@ -5,23 +5,14 @@ import { createProductHandlers } from './handlers/products.handler'
 import { createTravelHandlers } from './handlers/travel.handler'
 import { corsMiddleware, createAuthMiddleware } from './middleware/auth.middleware'
 import { AuthService } from './services/auth'
-// Removed getPrismaClient import - services should use runWithPrisma instead
+import { getPrismaClient } from './services/db'
 import { QiancaiDouService } from './services/qiancaidou'
 
 // 创建 Hono 应用实例
 export const app = new Hono()
 
-// 全局 CORS 中间件 - 必须在所有路由之前
+// 全局中间件
 app.use('*', corsMiddleware())
-
-// 添加额外的 CORS 处理
-app.options('*', (c) => {
-  c.header('Access-Control-Allow-Origin', '*')
-  c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
-  c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-  c.header('Access-Control-Max-Age', '86400')
-  return new Response('', { status: 204 })
-})
 
 // 健康检查端点
 app.get('/api/health', (c) => {
@@ -30,7 +21,7 @@ app.get('/api/health', (c) => {
     message: 'API is healthy',
     data: {
       timestamp: new Date().toISOString(),
-      environment: (c.env as any)?.ENVIRONMENT || 'development'
+      environment: c.env?.ENVIRONMENT || 'development'
     }
   })
 })
@@ -47,15 +38,16 @@ function initializeServices(c: any) {
     throw new Error('JWT_SECRET environment variable is required')
   }
 
+  const prisma = getPrismaClient(databaseUrl)
   const authService = new AuthService(jwtSecret)
-  // QiancaiDouService now gets database URL instead of a shared client
-  const qiancaiDouService = new QiancaiDouService(databaseUrl)
+  const qiancaiDouService = new QiancaiDouService(prisma)
   const authMiddleware = createAuthMiddleware(authService)
 
   return {
     authService,
     qiancaiDouService,
-    authMiddleware
+    authMiddleware,
+    prisma
   }
 }
 
@@ -233,9 +225,6 @@ app.get('/api/entertainment/*', (c) => {
 
 // 404 处理
 app.notFound((c) => {
-  c.header('Access-Control-Allow-Origin', '*')
-  c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
-  c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   return c.json({
     code: 404,
     message: 'API endpoint not found',
@@ -246,10 +235,6 @@ app.notFound((c) => {
 // 全局错误处理
 app.onError((err, c) => {
   console.error('Unhandled error:', err)
-  // Ensure CORS headers also present on error responses
-  c.header('Access-Control-Allow-Origin', '*')
-  c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
-  c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   return c.json({
     code: 500,
     message: 'Internal server error',

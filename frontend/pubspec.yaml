@@ -72,15 +72,6 @@ flutter:
     - assets/lottie/
     # - assets/fonts/
 
-# 自动生成启动图标 & Web 图标
-flutter_launcher_icons:
-  android: true
-  ios: true
-  web:
-    generate: true
-    image_path: "assets/images/Colorful Pinwheel Logo Design.png"
-  image_path: "assets/images/Colorful Pinwheel Logo Design.png"
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

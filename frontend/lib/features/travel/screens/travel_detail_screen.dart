@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../utils/safe_size.dart';
 import '../../../api/dio_client.dart';
 import '../../../api/travel_repository.dart';
 import '../../../models/models.dart';
@@ -28,25 +27,25 @@ class TravelDetailScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('旅游详情')),
       body: asyncPost.when(
         data: (post) => SingleChildScrollView(
-          padding: EdgeInsets.all(safeW(16)),
+          padding: EdgeInsets.all(16.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (post.mainImage.isNotEmpty)
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(safeR(12)),
+                  borderRadius: BorderRadius.circular(12.r),
                   child: Image.network(post.mainImage, fit: BoxFit.cover),
                 ),
-              SizedBox(height: safeH(16)),
+              SizedBox(height: 16.h),
               Text(post.title, style: Theme.of(context).textTheme.headlineSmall),
-              SizedBox(height: safeH(8)),
+              SizedBox(height: 8.h),
               Wrap(
-                spacing: safeW(8),
+                spacing: 8.w,
                 children: post.tags
                     .map((t) => Chip(label: Text(t)))
                     .toList(),
               ),
-              SizedBox(height: safeH(16)),
+              SizedBox(height: 16.h),
               Text(post.content, style: Theme.of(context).textTheme.bodyLarge),
             ],
           ),
