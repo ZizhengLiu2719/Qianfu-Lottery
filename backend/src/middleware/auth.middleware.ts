@@ -54,17 +54,26 @@ export function createAuthMiddleware(authService: AuthService) {
 // CORS 中间件
 export function corsMiddleware() {
   return async (c: Context, next: Next): Promise<Response | void> => {
-    // 设置 CORS 头
+    // 设置 CORS 头 - 必须在所有响应中设置
     c.header('Access-Control-Allow-Origin', '*')
     c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
     c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     c.header('Access-Control-Max-Age', '86400')
+    c.header('Access-Control-Allow-Credentials', 'false')
 
     // 处理预检请求
     if (c.req.method === 'OPTIONS') {
-      return new Response('', { status: 204 })
+      return new Response('', { 
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Max-Age': '86400'
+        }
+      })
     }
 
-    return await next()
+    await next()
   }
 }
