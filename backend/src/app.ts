@@ -111,6 +111,14 @@ app.patch('/api/me', async (c) => {
   return handlers.updateProfile(c)
 })
 
+// 上传头像（受保护）
+app.post('/api/me/avatar', async (c) => {
+  const { authService, qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createAuthHandlers(authService, qiancaiDouService)
+  return handlers.uploadAvatar(c)
+})
+
 // 商品相关路由
 app.get('/api/products', async (c) => {
   const { qiancaiDouService } = initializeServices(c)

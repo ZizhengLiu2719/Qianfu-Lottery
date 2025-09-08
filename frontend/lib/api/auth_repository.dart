@@ -127,4 +127,30 @@ class AuthRepository {
 
     return response.data!;
   }
+
+  // 上传头像
+  Future<Map<String, dynamic>> uploadAvatar({
+    required String avatarData,
+    required String mimeType,
+    required int size,
+  }) async {
+    final response = await _dioClient.post<Map<String, dynamic>>(
+      '/api/me/avatar',
+      data: {
+        'avatarData': avatarData,
+        'mimeType': mimeType,
+        'size': size,
+      },
+      fromJson: (json) => json as Map<String, dynamic>,
+    );
+
+    if (response.data == null) {
+      throw const ApiException(
+        code: 500,
+        message: '上传头像失败',
+      );
+    }
+
+    return response.data!;
+  }
 }

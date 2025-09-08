@@ -1,12 +1,19 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../../api/auth_repository.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -154,6 +161,7 @@ class _EditableAvatar extends ConsumerStatefulWidget {
 class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
   String? _avatarPath; // data URL
   late TextEditingController _nameController;
+  bool _isUploading = false;
 
   @override
   void initState() {
@@ -168,6 +176,131 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
   }
 
   Future<void> _pickAvatar() async {
+    if (_isUploading) return;
+
+    // 根据平台选择不同的图片选择方式
+    if (kIsWeb) {
+      await _pickImageFromWeb();
+    } else {
+      await _pickImageFromMobile();
+    }
+  }
+
+  Future<void> _pickImageFromWeb() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        if (file.bytes != null) {
+          await _processImageData(file.bytes!, file.extension ?? 'jpg');
+        }
+      }
+    } catch (e) {
+      _showError('选择图片失败: $e');
+    }
+  }
+
+  Future<void> _pickImageFromMobile() async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        final bytes = await image.readAsBytes();
+        final extension = image.path.split('.').last.toLowerCase();
+        await _processImageData(bytes, extension);
+      }
+    } catch (e) {
+      _showError('选择图片失败: $e');
+    }
+  }
+
+  Future<void> _processImageData(Uint8List bytes, String extension) async {
+    setState(() {
+      _isUploading = true;
+    });
+
+    try {
+      // 转换为Base64
+      final base64String = base64Encode(bytes);
+      
+      // 确定MIME类型
+      String mimeType;
+      switch (extension.toLowerCase()) {
+        case 'jpg':
+        case 'jpeg':
+          mimeType = 'image/jpeg';
+          break;
+        case 'png':
+          mimeType = 'image/png';
+          break;
+        case 'gif':
+          mimeType = 'image/gif';
+          break;
+        case 'webp':
+          mimeType = 'image/webp';
+          break;
+        default:
+          mimeType = 'image/jpeg';
+      }
+
+      // 上传到服务器
+      final authRepo = ref.read(authRepositoryProvider);
+      final result = await authRepo.uploadAvatar(
+        avatarData: base64String,
+        mimeType: mimeType,
+        size: bytes.length,
+      );
+
+      if (result.isSuccess && result.data != null) {
+        setState(() {
+          _avatarPath = result.data!['avatarUrl'];
+        });
+        _showSuccess('头像上传成功');
+      } else {
+        _showError(result.message);
+      }
+    } catch (e) {
+      _showError('上传失败: $e');
+    } finally {
+      setState(() {
+        _isUploading = false;
+      });
+    }
+  }
+
+  void _showError(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppTheme.errorColor,
+        ),
+      );
+    }
+  }
+
+  void _showSuccess(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppTheme.successColor,
+        ),
+      );
+    }
+  }
+
+  Future<void> _pickAvatarOld() async {
     // Web/Flutter 通用：使用 file_picker/web 或 html input（此处使用简化实现：showDialog 提示由前端补齐插件）
     // 为了跨平台，这里先使用 image_picker_web 的 API 占位（用户可添加依赖）
     // 如果未添加依赖，提供一个输入对话框让用户粘贴 data URL
@@ -239,15 +372,24 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
               right: 0,
               bottom: 0,
               child: TextButton(
-                onPressed: _pickAvatar,
+                onPressed: _isUploading ? null : _pickAvatar,
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  backgroundColor: AppTheme.primaryColor,
+                  backgroundColor: _isUploading ? AppTheme.textTertiary : AppTheme.primaryColor,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('更换'),
+                child: _isUploading 
+                  ? SizedBox(
+                      width: 12.w,
+                      height: 12.w,
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  : const Text('更换'),
               ),
             ),
           ],

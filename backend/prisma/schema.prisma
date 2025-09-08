@@ -17,6 +17,9 @@ model User {
   firstName               String?
   lastName                String?
   avatarUrl               String?
+  avatarData              String?                  // Base64编码的头像数据
+  avatarMimeType          String?                  // 头像MIME类型
+  avatarSize              Int?                     // 头像文件大小（字节）
   language                String                   @default("zh")
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt

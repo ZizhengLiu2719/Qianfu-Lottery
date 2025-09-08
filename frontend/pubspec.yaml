@@ -41,6 +41,10 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   package_info_plus: ^4.2.0
   url_launcher: ^6.2.2
+  
+  # 图片选择
+  image_picker: ^1.0.7
+  file_picker: ^8.0.0+1
 
   # 图标
   cupertino_icons: ^1.0.6

@@ -23,6 +23,12 @@ interface UpdateProfileRequest {
   avatarDataUrl?: string // data:image/png;base64,...
 }
 
+interface UploadAvatarRequest {
+  avatarData: string // Base64编码的图片数据
+  mimeType: string   // 图片MIME类型
+  size: number       // 文件大小
+}
+
 export function createAuthHandlers(authService: AuthService, qiancaiDouService: QiancaiDouService) {
   
   /**
@@ -279,6 +285,92 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
   }
 
   /**
+   * 上传头像
+   */
+  const uploadAvatar = async (c: Context) => {
+    try {
+      const currentUser = c.get('user')
+      const body = await c.req.json() as UploadAvatarRequest
+
+      // 验证图片数据
+      if (!body.avatarData || !body.mimeType || !body.size) {
+        return c.json({
+          code: 400,
+          message: 'Avatar data, mime type and size are required',
+          data: null
+        }, 400)
+      }
+
+      // 验证MIME类型
+      const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+      if (!allowedMimeTypes.includes(body.mimeType)) {
+        return c.json({
+          code: 400,
+          message: 'Unsupported image format. Allowed: JPEG, PNG, GIF, WebP',
+          data: null
+        }, 400)
+      }
+
+      // 验证文件大小（最大5MB）
+      const maxSize = 5 * 1024 * 1024 // 5MB
+      if (body.size > maxSize) {
+        return c.json({
+          code: 400,
+          message: 'Image size too large. Maximum 5MB allowed',
+          data: null
+        }, 400)
+      }
+
+      const databaseUrl = c.env?.DATABASE_URL as string
+      if (!databaseUrl) {
+        throw new Error('DATABASE_URL not configured')
+      }
+
+      const prisma = getPrismaClient(databaseUrl)
+
+      // 更新用户头像数据
+      const updatedUser = await prisma.user.update({
+        where: { id: currentUser.id },
+        data: {
+          avatarData: body.avatarData,
+          avatarMimeType: body.mimeType,
+          avatarSize: body.size,
+          avatarUrl: `data:${body.mimeType};base64,${body.avatarData}`,
+          updatedAt: new Date()
+        },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          avatarUrl: true,
+          avatarData: true,
+          avatarMimeType: true,
+          avatarSize: true,
+          qiancaiDouBalance: true,
+          language: true,
+          createdAt: true,
+          updatedAt: true
+        }
+      })
+
+      return c.json({
+        code: 200,
+        message: 'Avatar uploaded successfully',
+        data: { user: updatedUser }
+      })
+
+    } catch (error) {
+      console.error('Upload avatar error:', error)
+      return c.json({
+        code: 500,
+        message: 'Internal server error',
+        data: null
+      }, 500)
+    }
+  }
+
+  /**
    * 更新当前用户资料（姓名/语言/头像）
    */
   const updateProfile = async (c: Context) => {
@@ -337,6 +429,7 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
     register,
     login,
     getMe,
-    updateProfile
+    updateProfile,
+    uploadAvatar,
   }
 }
