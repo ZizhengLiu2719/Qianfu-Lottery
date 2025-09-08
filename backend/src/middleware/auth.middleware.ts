@@ -55,19 +55,31 @@ export function createAuthMiddleware(authService: AuthService) {
 // CORS 中间件
 export function corsMiddleware() {
   return async (c: Context, next: Next) => {
+    // 允许的来源（按需添加你的前端域名）
+    const allowedOrigins = new Set<string>([
+      'https://qianfu-lottery.pages.dev',
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://localhost:8080',
+      'http://localhost:8787'
+    ])
+
+    const requestOrigin = c.req.header('Origin') || ''
+    const allowOrigin = allowedOrigins.has(requestOrigin) ? requestOrigin : '*'
+
     // 设置 CORS 头
-    c.header('Access-Control-Allow-Origin', '*')
+    c.header('Access-Control-Allow-Origin', allowOrigin)
     c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
     c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     c.header('Access-Control-Max-Age', '86400')
+    c.header('Vary', 'Origin')
 
     // 处理预检请求：必须携带CORS响应头
     if (c.req.method === 'OPTIONS') {
-      c.header('Vary', 'Origin')
       return new Response('', {
         status: 204,
         headers: {
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': allowOrigin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
           'Access-Control-Max-Age': '86400'
