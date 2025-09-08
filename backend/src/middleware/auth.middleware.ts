@@ -67,10 +67,16 @@ export function corsMiddleware() {
     const requestOrigin = c.req.header('Origin') || ''
     const allowOrigin = allowedOrigins.has(requestOrigin) ? requestOrigin : '*'
 
+    // 需要允许的请求头（动态回显浏览器预检里的请求头，避免大小写不一致导致失败）
+    const requestedHeaders = c.req.header('Access-Control-Request-Headers')
+    const allowHeaders = requestedHeaders && requestedHeaders.trim().length > 0
+      ? requestedHeaders
+      : 'Content-Type, Authorization'
+
     // 设置 CORS 头
     c.header('Access-Control-Allow-Origin', allowOrigin)
     c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
-    c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    c.header('Access-Control-Allow-Headers', allowHeaders)
     c.header('Access-Control-Max-Age', '86400')
     c.header('Vary', 'Origin')
 
@@ -81,7 +87,7 @@ export function corsMiddleware() {
         headers: {
           'Access-Control-Allow-Origin': allowOrigin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Headers': allowHeaders,
           'Access-Control-Max-Age': '86400'
         }
       })
