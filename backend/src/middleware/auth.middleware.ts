@@ -56,16 +56,9 @@ export function createAuthMiddleware(authService: AuthService) {
 export function corsMiddleware() {
   return async (c: Context, next: Next) => {
     // 允许的来源（按需添加你的前端域名）
-    const allowedOrigins = new Set<string>([
-      'https://qianfu-lottery.pages.dev',
-      'http://localhost:5173',
-      'http://localhost:3000',
-      'http://localhost:8080',
-      'http://localhost:8787'
-    ])
-
     const requestOrigin = c.req.header('Origin') || ''
-    const allowOrigin = allowedOrigins.has(requestOrigin) ? requestOrigin : '*'
+    // 放宽策略：如果有 Origin，则回显该值；否则使用 *
+    const allowOrigin = requestOrigin || '*'
 
     // 需要允许的请求头（动态回显浏览器预检里的请求头，避免大小写不一致导致失败）
     const requestedHeaders = c.req.header('Access-Control-Request-Headers')

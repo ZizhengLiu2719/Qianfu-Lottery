@@ -26,6 +26,37 @@ app.get('/api/health', (c) => {
   })
 })
 
+// 诊断端点：检查环境变量与数据库连接
+app.get('/api/diag', async (c) => {
+  const env: Record<string, unknown> = (c.env as unknown as Record<string, unknown>) || {}
+  const databaseUrl = env['DATABASE_URL'] as string | undefined
+  const jwtSecret = env['JWT_SECRET'] as string | undefined
+
+  const result: any = {
+    environment: (c.env as any)?.ENVIRONMENT || 'development',
+    hasDatabaseUrl: Boolean(databaseUrl),
+    hasJwtSecret: Boolean(jwtSecret),
+    dbConnection: {
+      ok: false,
+      error: null as string | null
+    }
+  }
+
+  if (databaseUrl) {
+    try {
+      const prisma = getPrismaClient(databaseUrl)
+      // 简单查询：尝试读取用户数量，验证表是否存在
+      await prisma.user.count()
+      result.dbConnection.ok = true
+    } catch (err: any) {
+      result.dbConnection.ok = false
+      result.dbConnection.error = String(err?.message || err)
+    }
+  }
+
+  return c.json({ code: 200, message: 'diag', data: result })
+})
+
 // 初始化服务和处理器的工厂函数
 function initializeServices(c: any) {
   const databaseUrl = c.env?.DATABASE_URL as string
