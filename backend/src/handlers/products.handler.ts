@@ -1,5 +1,5 @@
 import { Context } from 'hono'
-import { getPrismaClient } from '../services/db'
+import { getPrismaClient, runWithPrisma } from '../services/db'
 import { QiancaiDouService } from '../services/qiancaidou'
 
 interface CreateOrderRequest {
@@ -23,29 +23,31 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = getPrismaClient(databaseUrl)
-
       // 获取查询参数
       const page = Math.max(1, parseInt(c.req.query('page') || '1'))
       const limit = Math.min(50, Math.max(1, parseInt(c.req.query('limit') || '20')))
       const category = c.req.query('category')
       const offset = (page - 1) * limit
 
-      // 构建查询条件
-      const where = {
-        isActive: true,
-        ...(category && { category })
-      }
+      const { products, total } = await runWithPrisma(databaseUrl, async (prisma) => {
+        // 构建查询条件
+        const where = {
+          isActive: true,
+          ...(category && { category })
+        }
 
-      const [products, total] = await Promise.all([
-        prisma.product.findMany({
-          where,
-          orderBy: { createdAt: 'desc' },
-          skip: offset,
-          take: limit
-        }),
-        prisma.product.count({ where })
-      ])
+        const [list, count] = await Promise.all([
+          prisma.product.findMany({
+            where,
+            orderBy: { createdAt: 'desc' },
+            skip: offset,
+            take: limit
+          }),
+          prisma.product.count({ where })
+        ])
+
+        return { products: list, total: count }
+      })
 
       return c.json({
         code: 200,
@@ -91,13 +93,13 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = getPrismaClient(databaseUrl)
-
-      const product = await prisma.product.findUnique({
-        where: { 
-          id: productId,
-          isActive: true
-        }
+      const product = await runWithPrisma(databaseUrl, async (prisma) => {
+        return prisma.product.findUnique({
+          where: { 
+            id: productId,
+            isActive: true
+          }
+        })
       })
 
       if (!product) {

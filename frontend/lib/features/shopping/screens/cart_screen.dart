@@ -101,7 +101,7 @@ class CartScreen extends ConsumerWidget {
         children: [
           // 商品图片
           ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
+            borderRadius: BorderRadius.circular(safeR(8)),
             child: SizedBox(
               width: safeW(60),
               height: safeW(60),
@@ -168,7 +168,7 @@ class CartScreen extends ConsumerWidget {
                 },
                 icon: Icon(
                   item.quantity > 1 ? FeatherIcons.minus : FeatherIcons.trash2,
-                  size: 16.sp,
+                  size: safeSp(16),
                 ),
               ),
               Container(
@@ -189,7 +189,7 @@ class CartScreen extends ConsumerWidget {
                     item.quantity + 1,
                   );
                 },
-                icon: Icon(FeatherIcons.plus, size: 16.sp),
+                icon: Icon(FeatherIcons.plus, size: safeSp(16)),
               ),
             ],
           ),
