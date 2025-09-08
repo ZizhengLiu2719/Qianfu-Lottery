@@ -61,9 +61,18 @@ export function corsMiddleware() {
     c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     c.header('Access-Control-Max-Age', '86400')
 
-    // 处理预检请求
+    // 处理预检请求：必须携带CORS响应头
     if (c.req.method === 'OPTIONS') {
-      return new Response('', { status: 204 })
+      c.header('Vary', 'Origin')
+      return new Response('', {
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Max-Age': '86400'
+        }
+      })
     }
 
     await next()

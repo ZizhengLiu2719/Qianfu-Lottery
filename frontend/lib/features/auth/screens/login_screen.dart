@@ -136,29 +136,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   Widget _buildHeader(BuildContext context) {
     return Column(
       children: [
-        // Logo 动画
-        Container(
+        // 直接展示透明背景的图片
+        Image.asset(
+          'assets/images/Colorful Pinwheel Logo Design.png',
           width: 120.w,
           height: 120.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30.r),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(30.r),
-            child: Image.asset(
-              'assets/images/Colorful Pinwheel Logo Design.png',
-              width: 120.w,
-              height: 120.w,
-              fit: BoxFit.cover,
-            ),
-          ),
+          fit: BoxFit.contain,
         ),
       ],
     );
