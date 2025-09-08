@@ -9,6 +9,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../../core/widgets/qc_coin.dart';
+import '../../../utils/safe_size.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -113,7 +114,7 @@ class ProfileScreen extends ConsumerWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppTheme.errorColor,
           side: const BorderSide(color: AppTheme.errorColor),
-          padding: EdgeInsets.symmetric(vertical: 16.h),
+          padding: EdgeInsets.symmetric(vertical: safeH(16)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -172,7 +173,7 @@ class _Section extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 14.h, 16.w, 8.h),
+            padding: EdgeInsets.fromLTRB(safeW(16), safeH(14), safeW(16), safeH(8)),
             child: Text(title, style: Theme.of(context).textTheme.titleLarge),
           ),
           const Divider(height: 1, color: AppTheme.dividerColor),
@@ -317,7 +318,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
             ),
           ],
         ),
-        SizedBox(width: 12.w),
+        SizedBox(width: safeW(12)),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,7 +334,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
               Row(
                 children: [
                   const QcCoin(size: 16),
-                  SizedBox(width: 4.w),
+                  SizedBox(width: safeW(4)),
                   Text('${widget.points}', style: TextStyle(color: AppTheme.primaryColor)),
                 ],
               ),

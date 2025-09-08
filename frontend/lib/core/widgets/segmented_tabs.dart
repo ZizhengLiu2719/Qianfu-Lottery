@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/foundation.dart';
 import '../../core/theme/app_theme.dart';
 
 class SegmentedTabs extends StatelessWidget {
@@ -11,8 +12,16 @@ class SegmentedTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Web 桌面自适配：标签高度与字体稍大，避免桌面显示过小或异常
+    final width = MediaQuery.of(context).size.width;
+    final bool isDesktopWeb = kIsWeb && width >= 900;
+    final double tabHeight = isDesktopWeb ? 44 : 40.h;
+    final double fontSize = isDesktopWeb
+        ? (width >= 1440 ? 18 : 16)
+        : 14.sp;
+
     return SizedBox(
-      height: 40.h,
+      height: tabHeight,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -22,7 +31,7 @@ class SegmentedTabs extends StatelessWidget {
             onTap: () => onChanged(index),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: isDesktopWeb ? 10 : 8.h),
               decoration: BoxDecoration(
                 color: selected ? AppTheme.primaryColor : Colors.white,
                 border: Border.all(color: selected ? AppTheme.primaryColor : AppTheme.dividerColor, width: selected ? 1.6 : 1.2),
@@ -35,7 +44,7 @@ class SegmentedTabs extends StatelessWidget {
                   style: TextStyle(
                     color: selected ? Colors.white : AppTheme.textPrimary,
                     fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
-                    fontSize: 14.sp,
+                    fontSize: fontSize,
                     fontFamilyFallback: const [
                       'PingFang SC',
                       'Microsoft YaHei',
