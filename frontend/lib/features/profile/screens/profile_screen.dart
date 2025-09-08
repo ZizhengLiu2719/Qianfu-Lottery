@@ -253,6 +253,8 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
           mimeType = 'image/jpeg';
       }
 
+      print('上传头像数据: mimeType=$mimeType, size=${bytes.length}');
+
       // 上传到服务器
       final authRepo = ref.read(authRepositoryProvider);
       final result = await authRepo.uploadAvatar(
@@ -260,6 +262,8 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         mimeType: mimeType,
         size: bytes.length,
       );
+
+      print('上传结果: $result');
 
       if (result['code'] == 200 && result['data'] != null) {
         setState(() {
@@ -270,6 +274,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         _showError(result['message'] ?? '上传失败');
       }
     } catch (e) {
+      print('上传头像错误: $e');
       _showError('上传失败: $e');
     } finally {
       setState(() {
