@@ -26,7 +26,7 @@ class ProfileScreen extends ConsumerWidget {
           // 用户信息头部（编辑头像 + 名称 + 积分）
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
+              padding: EdgeInsets.fromLTRB(safeW(16), safeH(16), safeW(16), safeH(8)),
               child: Row(
                 children: [
                   _EditableAvatar(
@@ -41,7 +41,7 @@ class ProfileScreen extends ConsumerWidget {
           // 信息分区：订单/预约/资产/设置（去除外部图标与箭头，使用清晰分组卡片）
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              padding: EdgeInsets.symmetric(horizontal: safeW(16), vertical: safeH(8)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -76,7 +76,7 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: safeH(20)),
                   _buildLogoutButton(context, ref),
                 ],
               ),
@@ -121,9 +121,9 @@ class ProfileScreen extends ConsumerWidget {
           children: [
             Icon(
               FeatherIcons.logOut,
-              size: 20.sp,
+              size: safeSp(20),
             ),
-            SizedBox(width: 8.w),
+            SizedBox(width: safeW(8)),
             Text(AppLocalizations.of(context)!.auth_logout),
           ],
         ),
@@ -163,7 +163,7 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
+      margin: EdgeInsets.only(bottom: safeH(16)),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppTheme.borderRadiusLarge),
@@ -205,7 +205,7 @@ class _PlainItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        padding: EdgeInsets.symmetric(horizontal: safeW(16), vertical: safeH(14)),
         child: Text(
           title,
           style: Theme.of(context).textTheme.titleMedium,
