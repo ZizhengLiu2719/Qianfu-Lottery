@@ -141,39 +141,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           width: 120.w,
           height: 120.w,
           decoration: BoxDecoration(
-            gradient: AppTheme.primaryGradient,
             borderRadius: BorderRadius.circular(30.r),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.primaryColor.withOpacity(0.3),
+                color: Colors.black.withOpacity(0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
             ],
           ),
-          child: Icon(
-            Icons.diamond,
-            color: Colors.white,
-            size: 60.sp,
-          ),
-        ),
-        
-        SizedBox(height: 24.h),
-        
-        Text(
-          AppLocalizations.of(context)!.appName,
-          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-            color: AppTheme.textPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        
-        SizedBox(height: 8.h),
-        
-        Text(
-          AppLocalizations.of(context)!.appTagline,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: AppTheme.textSecondary,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30.r),
+            child: Image.asset(
+              'assets/images/Colorful Pinwheel Logo Design.png',
+              width: 120.w,
+              height: 120.w,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ],
