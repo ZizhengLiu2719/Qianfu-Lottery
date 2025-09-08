@@ -17,10 +17,10 @@ class AppTheme {
   static const Color cardColor = Color(0xFFFFFFFF);
   static const Color dividerColor = Color(0xFFDBDBDB);
 
-  // 文字颜色（整体加深，提升对比度与可读性）
-  static const Color textPrimary = Color(0xFF111111);
-  static const Color textSecondary = Color(0xFF222222);
-  static const Color textTertiary = Color(0xFF444444);
+  // 文字颜色
+  static const Color textPrimary = Color(0xFF262626);
+  static const Color textSecondary = Color(0xFF8E8E8E);
+  static const Color textTertiary = Color(0xFFB3B3B3);
   static const Color textInverse = Color(0xFFFFFFFF);
 
   // 状态色
@@ -228,7 +228,7 @@ class AppTheme {
         ),
       ),
 
-      // 文字主题（整体使用更深的文字颜色，并略微加粗标题）
+      // 文字主题
       textTheme: const TextTheme(
         displayLarge: TextStyle(
           color: textPrimary,
@@ -281,7 +281,7 @@ class AppTheme {
           fontWeight: FontWeight.normal,
         ),
         bodyMedium: TextStyle(
-          color: textPrimary,
+          color: textSecondary,
           fontSize: 14,
           fontWeight: FontWeight.normal,
         ),
