@@ -1,9 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 
-// 为 Cloudflare Workers 创建优化的 Prisma 客户端
+// 创建标准 Prisma 客户端（假设使用 Accelerate 或直接连接）
 export function createPrismaClient(databaseUrl: string): PrismaClient {
-  // 直接使用 Prisma 客户端，不使用 PrismaNeon 适配器
-  // 这避免了 Cloudflare Workers 中的 I/O 共享问题
   return new PrismaClient({
     datasources: {
       db: {
@@ -36,16 +34,14 @@ export async function runWithPrisma<T>(
   let client: PrismaClient | null = null
   
   try {
-    // 确保在请求上下文中创建客户端
+    // 为每个请求创建新的客户端实例
     client = createPrismaClient(databaseUrl)
     
-    // 强制等待连接建立
-    await client.$connect()
-    
+    // 执行数据库操作
     const result = await runner(client)
     
-    // 确保在完成后立即断开连接
-    await client.$disconnect()
+    // 清理连接
+    await client.$disconnect().catch(() => {})
     client = null
     
     return result
@@ -66,11 +62,9 @@ export async function runWithPrisma<T>(
     // 重试一次，创建完全新的客户端
     try {
       client = createPrismaClient(databaseUrl)
-      await client.$connect()
-      
       const result = await runner(client)
       
-      await client.$disconnect()
+      await client.$disconnect().catch(() => {})
       client = null
       
       return result
