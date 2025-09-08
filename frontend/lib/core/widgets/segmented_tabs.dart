@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../utils/safe_size.dart';
 import 'package:flutter/foundation.dart';
 import '../../core/theme/app_theme.dart';
 
@@ -16,7 +15,7 @@ class SegmentedTabs extends StatelessWidget {
     // Web 桌面自适配：标签高度与字体稍大，避免桌面显示过小或异常
     final width = MediaQuery.of(context).size.width;
     final bool isDesktopWeb = kIsWeb && width >= 900;
-    final double tabHeight = isDesktopWeb ? 44 : safeH(40);
+    final double tabHeight = isDesktopWeb ? 44 : 40.h;
     final double fontSize = isDesktopWeb
         ? (width >= 1440 ? 18 : 16)
         : (14 * MediaQuery.of(context).textScaleFactor).clamp(12, 18).toDouble();
@@ -25,18 +24,18 @@ class SegmentedTabs extends StatelessWidget {
       height: tabHeight,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: safeW(16)),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         itemBuilder: (context, index) {
           final bool selected = index == selectedIndex;
           return GestureDetector(
             onTap: () => onChanged(index),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
-              padding: EdgeInsets.symmetric(horizontal: safeW(14), vertical: isDesktopWeb ? 10 : safeH(8)),
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: isDesktopWeb ? 10 : 8.h),
               decoration: BoxDecoration(
                 color: selected ? AppTheme.primaryColor : Colors.white,
                 border: Border.all(color: selected ? AppTheme.primaryColor : AppTheme.dividerColor, width: selected ? 1.6 : 1.2),
-                borderRadius: BorderRadius.circular(safeR(22)),
+                borderRadius: BorderRadius.circular(22.r),
                 boxShadow: selected ? [AppTheme.defaultShadow] : null,
               ),
               child: Center(
@@ -61,7 +60,7 @@ class SegmentedTabs extends StatelessWidget {
             ),
           );
         },
-        separatorBuilder: (_, __) => SizedBox(width: safeW(10)),
+        separatorBuilder: (_, __) => SizedBox(width: 10.w),
         itemCount: tabs.length,
       ),
     );

@@ -94,13 +94,13 @@ class ProfileScreen extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     return SizedBox(
-      height: safeH(56),
+      height: 56.h,
       child: ListTile(
         dense: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: safeW(16)),
-        leading: Icon(icon, color: AppTheme.textPrimary, size: safeSp(22)),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
+        leading: Icon(icon, color: AppTheme.textPrimary, size: 22.sp),
         title: Text(title, style: Theme.of(context).textTheme.titleMedium),
-        trailing: Icon(FeatherIcons.chevronRight, color: AppTheme.textTertiary, size: safeSp(18)),
+        trailing: Icon(FeatherIcons.chevronRight, color: AppTheme.textTertiary, size: 18.sp),
         onTap: onTap,
       ),
     );

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../utils/safe_size.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
 
@@ -19,16 +18,16 @@ class EntertainmentScreen extends ConsumerWidget {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(safeW(40)),
+          padding: EdgeInsets.all(40.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 FeatherIcons.smile,
-                size: safeSp(80),
+                size: 80.sp,
                 color: AppTheme.primaryColor,
               ),
-              SizedBox(height: safeH(24)),
+              SizedBox(height: 24.h),
               Text(
                 AppLocalizations.of(context)!.entertainment_coming_soon,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -36,7 +35,7 @@ class EntertainmentScreen extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: safeH(16)),
+              SizedBox(height: 16.h),
               Text(
                 '精彩内容正在筹备中，敬请期待！',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(

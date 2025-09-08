@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../utils/safe_size.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -73,7 +72,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     return SliverToBoxAdapter(
       child: Container(
         color: Colors.white,
-        padding: EdgeInsets.only(left: safeW(12), right: safeW(8), top: safeH(12), bottom: safeH(8)),
+        padding: EdgeInsets.only(left: 12.w, right: 8.w, top: 12.h, bottom: 8.h),
         child: Row(
           children: [
             // 横向标签
@@ -139,12 +138,12 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
       // 空态：无占位图片，给出清晰提示
       return SliverToBoxAdapter(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: safeH(60)),
+          padding: EdgeInsets.symmetric(vertical: 60.h),
           child: Center(
             child: Column(
               children: [
-                Icon(FeatherIcons.image, size: safeSp(40), color: AppTheme.textTertiary),
-                SizedBox(height: safeH(12)),
+                Icon(FeatherIcons.image, size: 40.sp, color: AppTheme.textTertiary),
+                SizedBox(height: 12.h),
                 Text(
                   AppLocalizations.of(context)!.common_empty,
                   style: Theme.of(context).textTheme.titleMedium,
@@ -158,12 +157,12 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
     // Instagram 风格：三列等高网格，纯白背景
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: safeW(8)),
+      padding: EdgeInsets.symmetric(horizontal: 8.w),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          mainAxisSpacing: safeW(8),
-          crossAxisSpacing: safeW(8),
+          mainAxisSpacing: 8.w,
+          crossAxisSpacing: 8.w,
           childAspectRatio: 1,
         ),
         delegate: SliverChildBuilderDelegate(
@@ -172,7 +171,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             return GestureDetector(
               onTap: () => context.go('/products/${product.id}'),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(safeR(8)),
+                borderRadius: BorderRadius.circular(8.r),
                 child: product.mainImage.isNotEmpty
                     ? CachedNetworkImage(
                         imageUrl: product.mainImage,
@@ -182,7 +181,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         color: AppTheme.backgroundColor,
                         child: Icon(
                           FeatherIcons.image,
-                          size: safeSp(20),
+                          size: 20.sp,
                           color: AppTheme.textTertiary,
                         ),
                       ),
@@ -201,7 +200,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(safeR(12)),
+          borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.06),
@@ -234,7 +233,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                           color: AppTheme.backgroundColor,
                           child: Icon(
                             FeatherIcons.image,
-                            size: safeSp(32),
+                            size: 32.sp,
                             color: AppTheme.textTertiary,
                           ),
                         ),
@@ -243,7 +242,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         color: AppTheme.backgroundColor,
                         child: Icon(
                           FeatherIcons.image,
-                          size: safeSp(32),
+                          size: 32.sp,
                           color: AppTheme.textTertiary,
                         ),
                       ),
@@ -252,7 +251,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             
             // 产品信息
             Padding(
-              padding: EdgeInsets.all(safeW(12)),
+              padding: EdgeInsets.all(12.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -265,12 +264,12 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   
-                  SizedBox(height: safeH(8)),
+                  SizedBox(height: 8.h),
                   
                   Row(
                     children: [
                       const QcCoin(size: 16),
-                      SizedBox(width: safeW(4)),
+                      SizedBox(width: 4.w),
                       Text(
                         '${product.priceInQiancaiDou}',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -281,7 +280,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                     ],
                   ),
                   
-                  SizedBox(height: safeH(8)),
+                  SizedBox(height: 8.h),
                   
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -297,16 +296,16 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                             ? () => _addToCart(product)
                             : null,
                         child: Container(
-                          padding: EdgeInsets.all(safeW(8)),
+                          padding: EdgeInsets.all(8.w),
                           decoration: BoxDecoration(
                             color: product.isInStock 
                                 ? AppTheme.primaryColor 
                                 : AppTheme.textTertiary,
-                            borderRadius: BorderRadius.circular(safeR(8)),
+                            borderRadius: BorderRadius.circular(8.r),
                           ),
                           child: Icon(
                             FeatherIcons.plus,
-                            size: safeSp(16),
+                            size: 16.sp,
                             color: Colors.white,
                           ),
                         ),
@@ -324,7 +323,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
   Widget _buildLoadingState(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(safeW(40)),
+      padding: EdgeInsets.all(40.w),
       child: const Center(
         child: CircularProgressIndicator(),
       ),
@@ -333,21 +332,21 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
   Widget _buildErrorState(BuildContext context, Object error) {
     return Padding(
-      padding: EdgeInsets.all(safeW(40)),
+      padding: EdgeInsets.all(40.w),
       child: Center(
         child: Column(
           children: [
             Icon(
               FeatherIcons.alertCircle,
-              size: safeSp(64),
+              size: 64.sp,
               color: AppTheme.errorColor,
             ),
-            SizedBox(height: safeH(16)),
+            SizedBox(height: 16.h),
             Text(
               AppLocalizations.of(context)!.common_error,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            SizedBox(height: safeH(8)),
+            SizedBox(height: 8.h),
             ElevatedButton(
               onPressed: () => ref.invalidate(productsProvider),
               child: Text(AppLocalizations.of(context)!.common_retry),

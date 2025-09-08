@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../utils/safe_size.dart';
 import '../../../api/dio_client.dart';
 import '../../../api/products_repository.dart';
 import '../../../models/product.dart';
@@ -37,7 +36,7 @@ class OrdersScreen extends ConsumerWidget {
               return InkWell(
                 onTap: () => _openOrderDetail(context, o),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: safeW(16), vertical: safeH(12)),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -48,17 +47,17 @@ class OrdersScreen extends ConsumerWidget {
                           Text(o.statusDisplay, style: Theme.of(context).textTheme.titleSmall),
                         ],
                       ),
-                      SizedBox(height: safeH(8)),
+                      SizedBox(height: 8.h),
                       Wrap(
-                        spacing: safeW(8),
-                        runSpacing: safeH(4),
+                        spacing: 8.w,
+                        runSpacing: 4.h,
                         children: o.items.map((it) => Text('×${it.quantity} ${it.product?.title ?? ''}')).toList(),
                       ),
-                      SizedBox(height: safeH(8)),
+                      SizedBox(height: 8.h),
                       Row(
                         children: [
                           const Icon(Icons.diamond, size: 16),
-                          SizedBox(width: safeW(4)),
+                          SizedBox(width: 4.w),
                           Text('${o.totalCost}', style: Theme.of(context).textTheme.titleMedium),
                         ],
                       ),

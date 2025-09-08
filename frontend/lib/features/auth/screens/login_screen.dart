@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../utils/safe_size.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lottie/lottie.dart';
 
@@ -103,28 +102,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: safeW(24)),
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: SlideTransition(
               position: _slideAnimation,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: safeH(60)),
+                  SizedBox(height: 60.h),
                   
                   // Logo 和标题
                   _buildHeader(context),
                   
-                  SizedBox(height: safeH(60)),
+                  SizedBox(height: 60.h),
                   
                   // 登录表单
                   _buildLoginForm(context),
                   
-                  SizedBox(height: safeH(40)),
+                  SizedBox(height: 40.h),
                   
                   // 注册链接
                   _buildRegisterLink(context),
                   
-                  SizedBox(height: safeH(40)),
+                  SizedBox(height: 40.h),
                 ],
               ),
             ),
@@ -138,8 +137,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     return Column(
       children: [
         SizedBox(
-          width: safeW(140),
-          height: safeW(140),
+          width: 140.w,
+          height: 140.w,
           child: Image.asset(
             'assets/images/Colorful Pinwheel Logo Design.png',
             fit: BoxFit.contain,
@@ -175,8 +174,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             },
           ),
           
-          SizedBox(height: safeH(16)),
-          SizedBox(height: safeH(16)),
+          SizedBox(height: 16.h),
           
           // 密码输入框
           TextFormField(
@@ -209,33 +207,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             },
           ),
           
-          SizedBox(height: safeH(32)),
+          SizedBox(height: 32.h),
           
           // 登录按钮
           ElevatedButton(
             onPressed: _isLoading ? null : _handleLogin,
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(double.infinity, safeH(56)),
+              minimumSize: Size(double.infinity, 56.h),
             ),
             child: _isLoading
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: safeW(20),
-                        height: safeW(20),
+                        width: 20.w,
+                        height: 20.w,
                         child: const CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       ),
-                      SizedBox(width: safeW(12)),
+                      SizedBox(width: 12.w),
                       Text(AppLocalizations.of(context)!.common_loading),
                     ],
                   )
                 : Text(
                     AppLocalizations.of(context)!.auth_login,
-                    style: TextStyle(fontSize: safeSp(16)),
+                    style: TextStyle(fontSize: 16.sp),
                   ),
           ),
         ],
