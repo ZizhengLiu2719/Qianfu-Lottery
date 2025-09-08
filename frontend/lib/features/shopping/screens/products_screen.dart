@@ -15,6 +15,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 import '../../../core/widgets/segmented_tabs.dart';
+import '../../../core/widgets/qc_coin.dart';
 
 // 产品列表 Provider
 final productsRepositoryProvider = Provider<ProductsRepository>((ref) {
@@ -267,11 +268,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                   
                   Row(
                     children: [
-                      Icon(
-                        Icons.diamond,
-                        size: 16.sp,
-                        color: AppTheme.primaryColor,
-                      ),
+                      const QcCoin(size: 16),
                       SizedBox(width: 4.w),
                       Text(
                         '${product.priceInQiancaiDou}',
