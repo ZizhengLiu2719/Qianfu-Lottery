@@ -88,7 +88,7 @@ class ProfileScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: AppTheme.borderColor.withOpacity(0.5)),
+            border: Border.all(color: AppTheme.dividerColor.withOpacity(0.5)),
           ),
           child: Text(
             title,
