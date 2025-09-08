@@ -5,7 +5,7 @@ import { createProductHandlers } from './handlers/products.handler'
 import { createTravelHandlers } from './handlers/travel.handler'
 import { corsMiddleware, createAuthMiddleware } from './middleware/auth.middleware'
 import { AuthService } from './services/auth'
-// Removed getPrismaClient import - services should use runWithPrisma instead
+import { getPrismaClient } from './services/db'
 import { QiancaiDouService } from './services/qiancaidou'
 
 // 创建 Hono 应用实例
@@ -38,15 +38,16 @@ function initializeServices(c: any) {
     throw new Error('JWT_SECRET environment variable is required')
   }
 
+  const prisma = getPrismaClient(databaseUrl)
   const authService = new AuthService(jwtSecret)
-  // QiancaiDouService now gets database URL instead of a shared client
-  const qiancaiDouService = new QiancaiDouService(databaseUrl)
+  const qiancaiDouService = new QiancaiDouService(prisma)
   const authMiddleware = createAuthMiddleware(authService)
 
   return {
     authService,
     qiancaiDouService,
-    authMiddleware
+    authMiddleware,
+    prisma
   }
 }
 

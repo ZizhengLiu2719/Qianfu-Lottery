@@ -1,5 +1,5 @@
 import { Context } from 'hono'
-import { runWithPrisma } from '../services/db'
+import { getPrismaClient } from '../services/db'
 import { QiancaiDouService } from '../services/qiancaidou'
 
 interface CreateAppointmentRequest {
@@ -19,17 +19,17 @@ export function createAppointmentHandlers(qiancaiDouService: QiancaiDouService) 
         throw new Error('DATABASE_URL not configured')
       }
 
-      const courses = await runWithPrisma(databaseUrl, async (prisma) => {
-        const category = c.req.query('category')
-        const where = {
-          isActive: true,
-          ...(category && { category })
-        }
+      const prisma = getPrismaClient(databaseUrl)
 
-        return await prisma.offlineCourse.findMany({
-          where,
-          orderBy: { createdAt: 'desc' }
-        })
+      const category = c.req.query('category')
+      const where = {
+        isActive: true,
+        ...(category && { category })
+      }
+
+      const courses = await prisma.offlineCourse.findMany({
+        where,
+        orderBy: { createdAt: 'desc' }
       })
 
       return c.json({
@@ -68,27 +68,27 @@ export function createAppointmentHandlers(qiancaiDouService: QiancaiDouService) 
         throw new Error('DATABASE_URL not configured')
       }
 
-      const schedules = await runWithPrisma(databaseUrl, async (prisma) => {
-        // 只获取未来的时间段
-        return await prisma.courseSchedule.findMany({
-          where: {
-            courseId,
-            isActive: true,
-            startTime: {
-              gte: new Date()
+      const prisma = getPrismaClient(databaseUrl)
+
+      // 只获取未来的时间段
+      const schedules = await prisma.courseSchedule.findMany({
+        where: {
+          courseId,
+          isActive: true,
+          startTime: {
+            gte: new Date()
+          }
+        },
+        include: {
+          course: {
+            select: {
+              id: true,
+              title: true,
+              instructor: true
             }
-          },
-          include: {
-            course: {
-              select: {
-                id: true,
-                title: true,
-                instructor: true
-              }
-            }
-          },
-          orderBy: { startTime: 'asc' }
-        })
+          }
+        },
+        orderBy: { startTime: 'asc' }
       })
 
       return c.json({
@@ -128,8 +128,10 @@ export function createAppointmentHandlers(qiancaiDouService: QiancaiDouService) 
         throw new Error('DATABASE_URL not configured')
       }
 
-      const result = await runWithPrisma(databaseUrl, async (prisma) => {
-        return await prisma.$transaction(async (tx) => {
+      const prisma = getPrismaClient(databaseUrl)
+
+      // 使用数据库事务确保数据一致性
+      const result = await prisma.$transaction(async (tx) => {
         // 获取时间段信息
         const schedule = await tx.courseSchedule.findUnique({
           where: { 
@@ -208,7 +210,6 @@ export function createAppointmentHandlers(qiancaiDouService: QiancaiDouService) 
         })
 
         return appointment
-        })
       })
 
       return c.json({
@@ -253,33 +254,33 @@ export function createAppointmentHandlers(qiancaiDouService: QiancaiDouService) 
         throw new Error('DATABASE_URL not configured')
       }
 
-      const appointments = await runWithPrisma(databaseUrl, async (prisma) => {
-        const where = {
-          userId: currentUser.id,
-          ...(status && { status })
-        }
+      const prisma = getPrismaClient(databaseUrl)
 
-        return await prisma.userAppointment.findMany({
-          where,
-          include: {
-            schedule: {
-              include: {
-                course: {
-                  select: {
-                    id: true,
-                    title: true,
-                    instructor: true,
-                    category: true
-                  }
+      const where = {
+        userId: currentUser.id,
+        ...(status && { status })
+      }
+
+      const appointments = await prisma.userAppointment.findMany({
+        where,
+        include: {
+          schedule: {
+            include: {
+              course: {
+                select: {
+                  id: true,
+                  title: true,
+                  instructor: true,
+                  category: true
                 }
               }
             }
-          },
-          orderBy: [
-            { schedule: { startTime: 'asc' } },
-            { createdAt: 'desc' }
-          ]
-        })
+          }
+        },
+        orderBy: [
+          { schedule: { startTime: 'asc' } },
+          { createdAt: 'desc' }
+        ]
       })
 
       return c.json({
@@ -319,8 +320,9 @@ export function createAppointmentHandlers(qiancaiDouService: QiancaiDouService) 
         throw new Error('DATABASE_URL not configured')
       }
 
-      const result = await runWithPrisma(databaseUrl, async (prisma) => {
-        return await prisma.$transaction(async (tx) => {
+      const prisma = getPrismaClient(databaseUrl)
+
+      const result = await prisma.$transaction(async (tx) => {
         // 获取预约信息
         const appointment = await tx.userAppointment.findUnique({
           where: { 
@@ -386,7 +388,6 @@ export function createAppointmentHandlers(qiancaiDouService: QiancaiDouService) 
         }
 
         return updatedAppointment
-        })
       })
 
       return c.json({

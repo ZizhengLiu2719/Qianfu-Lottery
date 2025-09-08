@@ -11,7 +11,7 @@ declare module 'hono' {
 }
 
 export function createAuthMiddleware(authService: AuthService) {
-  return async (c: Context, next: Next): Promise<Response | void> => {
+  return async (c: Context, next: Next) => {
     try {
       const authorization = c.req.header('Authorization')
       const token = authService.extractTokenFromHeader(authorization)
@@ -39,7 +39,7 @@ export function createAuthMiddleware(authService: AuthService) {
         email: payload.email
       })
 
-      return await next()
+      await next()
     } catch (error) {
       console.error('Auth middleware error:', error)
       return c.json({ 
@@ -53,7 +53,7 @@ export function createAuthMiddleware(authService: AuthService) {
 
 // CORS 中间件
 export function corsMiddleware() {
-  return async (c: Context, next: Next): Promise<Response | void> => {
+  return async (c: Context, next: Next) => {
     // 设置 CORS 头
     c.header('Access-Control-Allow-Origin', '*')
     c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
@@ -62,9 +62,9 @@ export function corsMiddleware() {
 
     // 处理预检请求
     if (c.req.method === 'OPTIONS') {
-      return new Response('', { status: 204 })
+      return c.text('', 204)
     }
 
-    return await next()
+    await next()
   }
 }
