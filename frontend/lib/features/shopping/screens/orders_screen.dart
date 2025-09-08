@@ -87,9 +87,9 @@ void _openOrderDetail(BuildContext context, Order order) {
       return Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(ctx).viewInsets.bottom,
-          left: safeW(16),
-          right: safeW(16),
-          top: safeW(16),
+          left: 16.w,
+          right: 16.w,
+          top: 16.w,
         ),
         child: _OrderDetailContent(order: order),
       );

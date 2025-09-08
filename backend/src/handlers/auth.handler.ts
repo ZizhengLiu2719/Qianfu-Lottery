@@ -1,6 +1,6 @@
 import { Context } from 'hono'
 import { AuthService } from '../services/auth'
-import { getPrismaClient, runWithPrisma } from '../services/db'
+import { getPrismaClient } from '../services/db'
 import { QiancaiDouService } from '../services/qiancaidou'
 
 interface RegisterRequest {
@@ -226,21 +226,21 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
         throw new Error('DATABASE_URL not configured')
       }
 
-      const user = await runWithPrisma(databaseUrl, async (prisma) => {
-        return prisma.user.findUnique({
-          where: { id: currentUser.id },
-          select: {
-            id: true,
-            email: true,
-            firstName: true,
-            lastName: true,
-            qiancaiDouBalance: true,
-            language: true,
-            avatarUrl: true,
-            createdAt: true,
-            updatedAt: true
-          }
-        })
+      const prisma = getPrismaClient(databaseUrl)
+
+      const user = await prisma.user.findUnique({
+        where: { id: currentUser.id },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          qiancaiDouBalance: true,
+          language: true,
+          avatarUrl: true,
+          createdAt: true,
+          updatedAt: true
+        }
       })
 
       if (!user) {
