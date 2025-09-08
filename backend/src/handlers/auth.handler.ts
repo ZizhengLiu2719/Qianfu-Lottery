@@ -171,6 +171,15 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
         }, 401)
       }
 
+      // 用户记录中缺少密码哈希（兼容旧数据）
+      if (!user.passwordHash) {
+        return c.json({
+          code: 401,
+          message: 'Invalid email or password',
+          data: null
+        }, 401)
+      }
+
       // 验证密码
       const isPasswordValid = await authService.verifyPassword(body.password, user.passwordHash)
       if (!isPasswordValid) {
@@ -204,11 +213,13 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
         }
       })
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login error:', error)
+      const env: Record<string, unknown> = (c.env as unknown as Record<string, unknown>) || {}
+      const isProd = env['ENVIRONMENT'] === 'production'
       return c.json({
         code: 500,
-        message: 'Internal server error',
+        message: isProd ? 'Internal server error' : `Login failed: ${String(error?.message || error)}`,
         data: null
       }, 500)
     }
