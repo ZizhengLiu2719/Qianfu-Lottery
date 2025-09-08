@@ -10,9 +10,7 @@ final dioClientProvider = Provider<DioClient>((ref) {
 });
 
 class DioClient {
-  static const String _baseUrl = kDebugMode 
-      ? 'http://localhost:8787'  // 本地开发
-      : 'https://qianfu-lottery-api.michaelliu2719.workers.dev'; // 生产环境 Cloudflare Worker URL
+  static const String _baseUrl = 'https://qianfu-lottery-api.michaelliu2719.workers.dev'; // 始终使用生产环境
 
   late final Dio _dio;
   final TokenManager _tokenManager = TokenManager();
@@ -61,8 +59,14 @@ class DioClient {
         if (kDebugMode) {
           print('❌ Error: ${error.message}');
           print('📍 Path: ${error.requestOptions.path}');
+          print('📍 Full URL: ${error.requestOptions.uri}');
+          print('📍 Error Type: ${error.type}');
+          print('📍 Error Code: ${error.error}');
           if (error.response?.data != null) {
             print('📥 Error response: ${error.response?.data}');
+          }
+          if (error.response?.statusCode != null) {
+            print('📥 Status Code: ${error.response?.statusCode}');
           }
         }
 
