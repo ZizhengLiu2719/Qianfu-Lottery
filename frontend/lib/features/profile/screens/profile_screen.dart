@@ -261,13 +261,13 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         size: bytes.length,
       );
 
-      if (result.isSuccess && result.data != null) {
+      if (result['code'] == 200 && result['data'] != null) {
         setState(() {
-          _avatarPath = result.data!['avatarUrl'];
+          _avatarPath = result['data']['user']['avatarUrl'];
         });
         _showSuccess('头像上传成功');
       } else {
-        _showError(result.message);
+        _showError(result['message'] ?? '上传失败');
       }
     } catch (e) {
       _showError('上传失败: $e');
