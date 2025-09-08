@@ -8,7 +8,6 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
-import '../../../core/widgets/qc_coin.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -332,7 +331,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
               ),
               Row(
                 children: [
-                  const QcCoin(size: 16),
+                  const Icon(Icons.diamond, size: 16, color: AppTheme.primaryColor),
                   SizedBox(width: 4.w),
                   Text('${widget.points}', style: TextStyle(color: AppTheme.primaryColor)),
                 ],

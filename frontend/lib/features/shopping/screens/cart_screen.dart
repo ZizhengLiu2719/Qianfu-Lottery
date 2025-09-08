@@ -13,7 +13,6 @@ import '../../../models/product.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
-import '../../../core/widgets/qc_coin.dart';
 
 class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
@@ -136,7 +135,11 @@ class CartScreen extends ConsumerWidget {
                 SizedBox(height: 4.h),
                 Row(
                   children: [
-                    const QcCoin(size: 14),
+                    Icon(
+                      Icons.diamond,
+                      size: 14.sp,
+                      color: AppTheme.primaryColor,
+                    ),
                     SizedBox(width: 4.w),
                     Text(
                       '${item.product.priceInQiancaiDou}',
@@ -225,7 +228,11 @@ class CartScreen extends ConsumerWidget {
                 ),
                 Row(
                   children: [
-                    const QcCoin(size: 20),
+                    Icon(
+                      Icons.diamond,
+                      size: 20.sp,
+                      color: AppTheme.primaryColor,
+                    ),
                     SizedBox(width: 4.w),
                     Text(
                       '$totalPrice',

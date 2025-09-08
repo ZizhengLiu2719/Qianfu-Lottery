@@ -136,12 +136,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   Widget _buildHeader(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          width: 140.w,
-          height: 140.w,
-          child: Image.asset(
-            'assets/images/Colorful Pinwheel Logo Design.png',
-            fit: BoxFit.contain,
+        // Logo 动画
+        Container(
+          width: 120.w,
+          height: 120.w,
+          decoration: BoxDecoration(
+            gradient: AppTheme.primaryGradient,
+            borderRadius: BorderRadius.circular(30.r),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.primaryColor.withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(14.w),
+            child: Image.asset(
+              'assets/images/Colorful Pinwheel Logo Design.png',
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        
+        SizedBox(height: 24.h),
+        
+        Text(
+          AppLocalizations.of(context)!.appName,
+          style: Theme.of(context).textTheme.displayMedium?.copyWith(
+            color: AppTheme.textPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        
+        SizedBox(height: 8.h),
+        
+        Text(
+          AppLocalizations.of(context)!.appTagline,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            color: AppTheme.textSecondary,
           ),
         ),
       ],
