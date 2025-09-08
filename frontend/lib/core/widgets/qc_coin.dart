@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 
-/// 仟彩豆图标（用系统图标替代，移除对本地图像的依赖）
+/// 仟彩豆图标（使用本地图像 assets/images/coin.png）
 class QcCoin extends StatelessWidget {
   final double size;
   final EdgeInsetsGeometry? padding;
-  final Color color;
 
-  const QcCoin({super.key, this.size = 16, this.padding, this.color = const Color(0xFFFFB300)});
+  const QcCoin({super.key, this.size = 16, this.padding});
 
   @override
   Widget build(BuildContext context) {
-    final icon = Icon(
-      Icons.diamond,
-      size: size,
-      color: color,
+    final image = Image.asset(
+      'assets/images/coin.png',
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      filterQuality: FilterQuality.high,
     );
 
     if (padding != null) {
-      return Padding(padding: padding!, child: icon);
+      return Padding(padding: padding!, child: image);
     }
-    return icon;
+    return image;
   }
 }
+
 
