@@ -36,6 +36,15 @@ class SegmentedTabs extends StatelessWidget {
                     color: selected ? Colors.white : AppTheme.textPrimary,
                     fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
                     fontSize: 14.sp,
+                    fontFamilyFallback: const [
+                      'PingFang SC',
+                      'Microsoft YaHei',
+                      'Noto Sans SC',
+                      'Source Han Sans SC',
+                      'Heiti SC',
+                      'Arial',
+                      'sans-serif'
+                    ],
                   ),
                 ),
               ),
