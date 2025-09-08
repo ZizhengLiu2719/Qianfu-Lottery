@@ -21,7 +21,7 @@ app.get('/api/health', (c) => {
     message: 'API is healthy',
     data: {
       timestamp: new Date().toISOString(),
-      environment: (c.env as any)?.ENVIRONMENT || 'development'
+      environment: c.env?.ENVIRONMENT || 'development'
     }
   })
 })

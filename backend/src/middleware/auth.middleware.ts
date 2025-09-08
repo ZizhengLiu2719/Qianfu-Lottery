@@ -40,7 +40,6 @@ export function createAuthMiddleware(authService: AuthService) {
       })
 
       await next()
-      return
     } catch (error) {
       console.error('Auth middleware error:', error)
       return c.json({ 
@@ -63,10 +62,9 @@ export function corsMiddleware() {
 
     // 处理预检请求
     if (c.req.method === 'OPTIONS') {
-      return new Response('', { status: 204 })
+      return c.text('', 204)
     }
 
     await next()
-    return
   }
 }
