@@ -35,6 +35,8 @@
   <script>
     // The value below is injected by flutter build, do not touch.
     var serviceWorkerVersion = null;
+    // Force HTML renderer to ensure system fonts (Chinese) are used on Web
+    window.flutterConfiguration = { renderer: 'html' };
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
@@ -48,7 +50,7 @@
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
+          engineInitializer.initializeEngine(window.flutterConfiguration).then(function(appRunner) {
             appRunner.runApp();
           });
         }
