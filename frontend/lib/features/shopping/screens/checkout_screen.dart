@@ -32,8 +32,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   }
 
   Future<void> _loadDefaultAddress() async {
-    // 等待地址加载完成
-    await ref.read(addressesProvider.future);
+    // 直接获取默认地址
     final defaultAddress = ref.read(defaultAddressProvider);
     if (defaultAddress != null) {
       setState(() {
