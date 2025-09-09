@@ -40,40 +40,38 @@ export class QiancaiDouService {
       throw new Error('Credit amount must be positive')
     }
 
-    return await this.prisma.$transaction(async (tx) => {
-      // 获取当前余额
-      const user = await tx.user.findUnique({
-        where: { id: transaction.userId },
-        select: { qiancaiDouBalance: true }
-      })
-
-      if (!user) {
-        throw new Error('User not found')
-      }
-
-      const newBalance = user.qiancaiDouBalance + transaction.amount
-
-      // 更新用户余额
-      await tx.user.update({
-        where: { id: transaction.userId },
-        data: { qiancaiDouBalance: newBalance }
-      })
-
-      // 记录交易
-      await tx.qiancaiDouTransaction.create({
-        data: {
-          userId: transaction.userId,
-          amount: transaction.amount,
-          newBalance,
-          reason: transaction.reason,
-          description: transaction.description,
-          refTable: transaction.refTable,
-          refId: transaction.refId
-        }
-      })
-
-      return newBalance
+    // 获取当前余额
+    const user = await this.prisma.user.findUnique({
+      where: { id: transaction.userId },
+      select: { qiancaiDouBalance: true }
     })
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const newBalance = user.qiancaiDouBalance + transaction.amount
+
+    // 更新用户余额
+    await this.prisma.user.update({
+      where: { id: transaction.userId },
+      data: { qiancaiDouBalance: newBalance }
+    })
+
+    // 记录交易
+    await this.prisma.qiancaiDouTransaction.create({
+      data: {
+        userId: transaction.userId,
+        amount: transaction.amount,
+        newBalance,
+        reason: transaction.reason,
+        description: transaction.description,
+        refTable: transaction.refTable,
+        refId: transaction.refId
+      }
+    })
+
+    return newBalance
   }
 
   /**
@@ -84,44 +82,42 @@ export class QiancaiDouService {
       throw new Error('Debit amount must be positive')
     }
 
-    return await this.prisma.$transaction(async (tx) => {
-      // 获取当前余额并锁定行
-      const user = await tx.user.findUnique({
-        where: { id: transaction.userId },
-        select: { qiancaiDouBalance: true }
-      })
-
-      if (!user) {
-        throw new Error('User not found')
-      }
-
-      const newBalance = user.qiancaiDouBalance - transaction.amount
-
-      if (newBalance < 0) {
-        throw new Error('Insufficient QiancaiDou balance')
-      }
-
-      // 更新用户余额
-      await tx.user.update({
-        where: { id: transaction.userId },
-        data: { qiancaiDouBalance: newBalance }
-      })
-
-      // 记录交易（以负数记录）
-      await tx.qiancaiDouTransaction.create({
-        data: {
-          userId: transaction.userId,
-          amount: -transaction.amount,
-          newBalance,
-          reason: transaction.reason,
-          description: transaction.description,
-          refTable: transaction.refTable,
-          refId: transaction.refId
-        }
-      })
-
-      return newBalance
+    // 获取当前余额
+    const user = await this.prisma.user.findUnique({
+      where: { id: transaction.userId },
+      select: { qiancaiDouBalance: true }
     })
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const newBalance = user.qiancaiDouBalance - transaction.amount
+
+    if (newBalance < 0) {
+      throw new Error('Insufficient QiancaiDou balance')
+    }
+
+    // 更新用户余额
+    await this.prisma.user.update({
+      where: { id: transaction.userId },
+      data: { qiancaiDouBalance: newBalance }
+    })
+
+    // 记录交易（以负数记录）
+    await this.prisma.qiancaiDouTransaction.create({
+      data: {
+        userId: transaction.userId,
+        amount: -transaction.amount,
+        newBalance,
+        reason: transaction.reason,
+        description: transaction.description,
+        refTable: transaction.refTable,
+        refId: transaction.refId
+      }
+    })
+
+    return newBalance
   }
 
   /**
