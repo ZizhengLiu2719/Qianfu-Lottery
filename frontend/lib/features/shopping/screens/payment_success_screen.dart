@@ -103,16 +103,16 @@ class PaymentSuccessScreen extends ConsumerWidget {
                   ),
                   SizedBox(height: 16.h),
                   
-                  _buildInfoRow('订单号', '#${order.id}'),
+                  _buildInfoRow('订单号', '#${order.id}', context),
                   SizedBox(height: 12.h),
                   
-                  _buildInfoRow('订单状态', order.statusText),
+                  _buildInfoRow('订单状态', order.statusText, context),
                   SizedBox(height: 12.h),
                   
-                  _buildInfoRow('支付时间', _formatDateTime(order.paidAt)),
+                  _buildInfoRow('支付时间', _formatDateTime(order.paidAt), context),
                   SizedBox(height: 12.h),
                   
-                  _buildInfoRow('订单总额', '', isPrice: true, price: order.totalCost),
+                  _buildInfoRow('订单总额', '', context, isPrice: true, price: order.totalCost),
                 ],
               ),
             ),
@@ -216,7 +216,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, {bool isPrice = false, int? price}) {
+  Widget _buildInfoRow(String label, String value, BuildContext context, {bool isPrice = false, int? price}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
