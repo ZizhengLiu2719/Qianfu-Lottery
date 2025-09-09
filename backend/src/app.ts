@@ -204,12 +204,7 @@ app.post('/api/checkout/preview', async (c) => {
   return handlers.preview(c)
 })
 
-app.post('/api/orders/from-cart', async (c) => {
-  const { authMiddleware, qiancaiDouService } = initializeServices(c)
-  await authMiddleware(c, async () => {})
-  const handlers = createCheckoutHandlers(qiancaiDouService)
-  return handlers.createOrderFromCart(c)
-})
+// 注意：统一在订单管理路由区块注册 `/api/orders/from-cart`，避免重复注册导致覆盖
 
 // 课程和预约相关路由
 app.get('/api/courses', async (c) => {
@@ -330,9 +325,9 @@ app.get('/api/orders/:id', async (c) => {
 })
 
 app.post('/api/orders/from-cart', async (c) => {
-  const { prisma, qiancaiDouService, authMiddleware } = initializeServices(c)
+  const { qiancaiDouService, authMiddleware } = initializeServices(c)
   await authMiddleware(c, async () => {})
-  const handlers = createOrderHandlers(prisma, qiancaiDouService)
+  const handlers = createCheckoutHandlers(qiancaiDouService)
   return handlers.createOrderFromCart(c)
 })
 

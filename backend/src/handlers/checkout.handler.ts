@@ -39,8 +39,8 @@ export function createCheckoutHandlers(qiancaiDouService: QiancaiDouService) {
         total += subtotal
         return { productId: i.productId, quantity: i.quantity, unitPrice: i.product.priceInQiancaiDou, totalPrice: subtotal }
       })
-      // 扣豆
-      await qiancaiDouService.debitQiancaiDou({ userId: currentUser.id, amount: total, reason: 'PRODUCT_REDEMPTION', refTable: 'orders' })
+      // 扣豆（确保使用同一事务客户端）
+      await qiancaiDouService.debitQiancaiDou({ userId: currentUser.id, amount: total, reason: 'PRODUCT_REDEMPTION', refTable: 'orders' }, tx)
       // 创建订单
       const order = await (tx as any).order.create({
         data: { userId: currentUser.id, totalCost: total, note: body?.note, items: { create: orderItems }, status: 'PAID', paidAt: new Date() },

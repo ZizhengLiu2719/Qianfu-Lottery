@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 
 export type TransactionReason = 
   | 'ADMIN_ADJUSTMENT'      // 管理员调整
@@ -23,8 +23,9 @@ export class QiancaiDouService {
   /**
    * 获取用户仟彩豆余额
    */
-  async getBalance(userId: number): Promise<number> {
-    const user = await this.prisma.user.findUnique({
+  async getBalance(userId: number, tx?: Prisma.TransactionClient | PrismaClient): Promise<number> {
+    const db = (tx as Prisma.TransactionClient) || this.prisma
+    const user = await db.user.findUnique({
       where: { id: userId },
       select: { qiancaiDouBalance: true }
     })
@@ -35,13 +36,14 @@ export class QiancaiDouService {
   /**
    * 增加仟彩豆
    */
-  async creditQiancaiDou(transaction: QiancaiDouTransaction): Promise<number> {
+  async creditQiancaiDou(transaction: QiancaiDouTransaction, tx?: Prisma.TransactionClient | PrismaClient): Promise<number> {
+    const db = (tx as Prisma.TransactionClient) || this.prisma
     if (transaction.amount <= 0) {
       throw new Error('Credit amount must be positive')
     }
 
     // 获取当前余额
-    const user = await this.prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: { id: transaction.userId },
       select: { qiancaiDouBalance: true }
     })
@@ -53,13 +55,13 @@ export class QiancaiDouService {
     const newBalance = user.qiancaiDouBalance + transaction.amount
 
     // 更新用户余额
-    await this.prisma.user.update({
+    await db.user.update({
       where: { id: transaction.userId },
       data: { qiancaiDouBalance: newBalance }
     })
 
     // 记录交易
-    await this.prisma.qiancaiDouTransaction.create({
+    await db.qiancaiDouTransaction.create({
       data: {
         userId: transaction.userId,
         amount: transaction.amount,
@@ -77,13 +79,14 @@ export class QiancaiDouService {
   /**
    * 扣除仟彩豆
    */
-  async debitQiancaiDou(transaction: QiancaiDouTransaction): Promise<number> {
+  async debitQiancaiDou(transaction: QiancaiDouTransaction, tx?: Prisma.TransactionClient | PrismaClient): Promise<number> {
+    const db = (tx as Prisma.TransactionClient) || this.prisma
     if (transaction.amount <= 0) {
       throw new Error('Debit amount must be positive')
     }
 
     // 获取当前余额
-    const user = await this.prisma.user.findUnique({
+    const user = await db.user.findUnique({
       where: { id: transaction.userId },
       select: { qiancaiDouBalance: true }
     })
@@ -99,13 +102,13 @@ export class QiancaiDouService {
     }
 
     // 更新用户余额
-    await this.prisma.user.update({
+    await db.user.update({
       where: { id: transaction.userId },
       data: { qiancaiDouBalance: newBalance }
     })
 
     // 记录交易（以负数记录）
-    await this.prisma.qiancaiDouTransaction.create({
+    await db.qiancaiDouTransaction.create({
       data: {
         userId: transaction.userId,
         amount: -transaction.amount,
