@@ -91,13 +91,35 @@ class _ResponsiveTagState extends State<ResponsiveTag>
     // 根据平台选择文字
     final displayText = isDesktop ? widget.text : (widget.mobileText ?? widget.text);
     
-    // 响应式尺寸 - 优化电脑端尺寸
-    final tagHeight = isDesktop ? 32.h : 30.h;  // 进一步减小电脑端高度
-    final horizontalPadding = isDesktop ? 10.w : 8.w;  // 进一步减小电脑端横向内边距
-    final verticalPadding = isDesktop ? 6.h : 5.h;  // 进一步减小电脑端纵向内边距
-    final fontSize = isDesktop ? 12.sp : 11.sp;  // 进一步减小电脑端字体
-    final borderRadius = isDesktop ? 16.r : 14.r;  // 进一步减小电脑端圆角
-    final iconSize = isDesktop ? 12.sp : 10.sp;  // 进一步减小电脑端图标
+    // 动态计算尺寸 - 根据内容自适应
+    final fontSize = isDesktop ? 12.sp : 11.sp;
+    final iconSize = isDesktop ? 14.sp : 12.sp;
+    final horizontalPadding = isDesktop ? 12.w : 10.w;
+    final verticalPadding = isDesktop ? 6.h : 5.h;
+    final borderRadius = isDesktop ? 16.r : 14.r;
+    
+    // 计算文字宽度
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: displayText,
+        style: TextStyle(
+          fontSize: fontSize,
+          fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w500,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    final textWidth = textPainter.size.width;
+    
+    // 计算图标宽度（如果有图标）
+    final iconWidth = widget.icon != null ? iconSize + (isDesktop ? 6.w : 4.w) : 0.0;
+    
+    // 计算总宽度
+    final totalWidth = textWidth + iconWidth + (horizontalPadding * 2);
+    
+    // 动态高度 - 确保有足够空间容纳内容
+    final tagHeight = (verticalPadding * 2) + fontSize + 4.h;
     
     return AnimatedBuilder(
       animation: _animationController,
@@ -106,6 +128,7 @@ class _ResponsiveTagState extends State<ResponsiveTag>
           scale: _scaleAnimation.value,
           child: Container(
             height: tagHeight,
+            width: totalWidth, // 使用动态计算的宽度
             margin: EdgeInsets.only(right: 8.w),
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
@@ -116,6 +139,8 @@ class _ResponsiveTagState extends State<ResponsiveTag>
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
+                  width: totalWidth, // 确保Container使用动态宽度
+                  height: tagHeight, // 确保Container使用动态高度
                   padding: EdgeInsets.symmetric(
                     horizontal: horizontalPadding,
                     vertical: verticalPadding,
@@ -214,12 +239,12 @@ class ResponsiveTagBar extends StatelessWidget {
       return Container(
         constraints: BoxConstraints(
           minHeight: 50.h,
-          maxHeight: 100.h, // 允许换行
+          maxHeight: 150.h, // 允许换行，增加最大高度
         ),
         padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         child: Wrap(
-          spacing: 6.w,  // 减小间距
-          runSpacing: 6.h,  // 减小行间距
+          spacing: 6.w,  // 适中的间距
+          runSpacing: 6.h,  // 适中的行间距
           alignment: WrapAlignment.start,
           children: tags.map((tag) {
             final isSelected = selectedTag == tag.key;

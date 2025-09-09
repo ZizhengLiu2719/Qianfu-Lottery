@@ -118,19 +118,23 @@ class _TravelExamples extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: posts.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
-      itemBuilder: (context, index) {
-        final p = posts[index];
-        return ListTile(
-          leading: const Icon(FeatherIcons.map, color: AppTheme.textPrimary),
-          title: Text(p['title']!),
-          subtitle: Text(p['summary']!),
-          trailing: const Icon(FeatherIcons.chevronRight, size: 18, color: AppTheme.textTertiary),
-          onTap: () {},
+    return Column(
+      children: posts.asMap().entries.map((entry) {
+        final index = entry.key;
+        final p = entry.value;
+        return Column(
+          children: [
+            ListTile(
+              leading: const Icon(FeatherIcons.map, color: AppTheme.textPrimary),
+              title: Text(p['title']!),
+              subtitle: Text(p['summary']!),
+              trailing: const Icon(FeatherIcons.chevronRight, size: 18, color: AppTheme.textTertiary),
+              onTap: () {},
+            ),
+            if (index < posts.length - 1) const Divider(height: 1),
+          ],
         );
-      },
+      }).toList(),
     );
   }
 }
