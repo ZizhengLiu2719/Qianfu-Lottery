@@ -45,7 +45,7 @@ class AddressRepository {
       });
       return ApiResponse.fromJson(
         response.data,
-        (json) => Address.fromJson(json),
+        (json) => Address.fromJson(json as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       throw Exception('创建地址失败: ${e.message}');
@@ -77,7 +77,7 @@ class AddressRepository {
       });
       return ApiResponse.fromJson(
         response.data,
-        (json) => Address.fromJson(json),
+        (json) => Address.fromJson(json as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       throw Exception('更新地址失败: ${e.message}');
@@ -103,7 +103,7 @@ class AddressRepository {
       final response = await _dioClient.dio.put('/addresses/$id/default');
       return ApiResponse.fromJson(
         response.data,
-        (json) => Address.fromJson(json),
+        (json) => Address.fromJson(json as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       throw Exception('设置默认地址失败: ${e.message}');

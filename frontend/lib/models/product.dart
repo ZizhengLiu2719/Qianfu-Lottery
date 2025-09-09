@@ -35,6 +35,7 @@ class Product {
   bool get isInStock => stock > 0;
   
   String get mainImage => images.isNotEmpty ? images.first : '';
+  String get imageUrl => mainImage;
 }
 
 @JsonSerializable()

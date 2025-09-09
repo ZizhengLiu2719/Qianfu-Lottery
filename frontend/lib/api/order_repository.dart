@@ -26,7 +26,7 @@ class OrderRepository {
       final response = await _dioClient.dio.get('/orders', queryParameters: queryParams);
       return ApiResponse.fromJson(
         response.data,
-        (json) => OrderListResponse.fromJson(json),
+        (json) => OrderListResponse.fromJson(json as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       throw Exception('获取订单列表失败: ${e.message}');
@@ -39,7 +39,7 @@ class OrderRepository {
       final response = await _dioClient.dio.get('/orders/$id');
       return ApiResponse.fromJson(
         response.data,
-        (json) => Order.fromJson(json),
+        (json) => Order.fromJson(json as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       throw Exception('获取订单详情失败: ${e.message}');
@@ -58,7 +58,7 @@ class OrderRepository {
       });
       return ApiResponse.fromJson(
         response.data,
-        (json) => Order.fromJson(json),
+        (json) => Order.fromJson(json as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       throw Exception('创建订单失败: ${e.message}');
@@ -71,7 +71,7 @@ class OrderRepository {
       final response = await _dioClient.dio.post('/orders/$id/pay');
       return ApiResponse.fromJson(
         response.data,
-        (json) => Order.fromJson(json),
+        (json) => Order.fromJson(json as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       throw Exception('支付订单失败: ${e.message}');
@@ -84,7 +84,7 @@ class OrderRepository {
       final response = await _dioClient.dio.post('/orders/$id/cancel');
       return ApiResponse.fromJson(
         response.data,
-        (json) => Order.fromJson(json),
+        (json) => Order.fromJson(json as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       throw Exception('取消订单失败: ${e.message}');
@@ -97,7 +97,7 @@ class OrderRepository {
       final response = await _dioClient.dio.post('/orders/$id/confirm-delivery');
       return ApiResponse.fromJson(
         response.data,
-        (json) => Order.fromJson(json),
+        (json) => Order.fromJson(json as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       throw Exception('确认收货失败: ${e.message}');
@@ -110,7 +110,7 @@ class OrderRepository {
       final response = await _dioClient.dio.get('/orders/$id/tracking');
       return ApiResponse.fromJson(
         response.data,
-        (json) => Order.fromJson(json),
+        (json) => Order.fromJson(json as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       throw Exception('获取物流信息失败: ${e.message}');

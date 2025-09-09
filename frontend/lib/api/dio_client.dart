@@ -15,6 +15,9 @@ class DioClient {
   late final Dio _dio;
   final TokenManager _tokenManager = TokenManager();
 
+  // 公开的dio getter
+  Dio get dio => _dio;
+
   DioClient() {
     _dio = Dio(BaseOptions(
       baseUrl: _baseUrl,

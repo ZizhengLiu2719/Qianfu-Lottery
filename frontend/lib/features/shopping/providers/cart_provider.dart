@@ -83,3 +83,7 @@ final cartIsEmptyProvider = Provider<bool>((ref) {
   final cartItems = ref.watch(cartProvider);
   return cartItems.isEmpty;
 });
+
+// 兼容性别名
+final cartItemsProvider = cartProvider;
+final cartTotalCostProvider = cartTotalPriceProvider;
