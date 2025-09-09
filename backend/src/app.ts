@@ -270,6 +270,11 @@ app.post('/api/dev/seed-products', async (c) => {
   return handlers.seedProducts(c)
 })
 
+app.post('/api/dev/update-product-images', async (c) => {
+  const handlers = createSeedHandlers()
+  return handlers.updateProductImages(c)
+})
+
 // 仟彩豆交易历史 (受保护)
 app.get('/api/me/qiancaidou/transactions', async (c) => {
   const { qiancaiDouService, authMiddleware } = initializeServices(c)

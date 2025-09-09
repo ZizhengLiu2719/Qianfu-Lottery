@@ -48,7 +48,7 @@ export function createSeedHandlers() {
           {
             title: '城市机能风夹克',
             description: '轻量防水 | 透气面料',
-            images: ['https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=400&auto=format&fit=crop'],
+            images: ['https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=400&auto=format&fit=crop'],
             priceInQiancaiDou: 899,
             stock: 40
           }
@@ -72,7 +72,7 @@ export function createSeedHandlers() {
           {
             title: '从 0 到 1：开启商业与未来的秘密',
             description: 'Peter Thiel 著 | 创业经典',
-            images: ['https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400&auto=format&fit=crop'],
+            images: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop'],
             priceInQiancaiDou: 79,
             stock: 60
           }
@@ -84,7 +84,7 @@ export function createSeedHandlers() {
           {
             title: '轻量跑步鞋',
             description: '缓震支撑 | 透气网面',
-            images: ['https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=400&auto=format&fit=crop'],
+            images: ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop'],
             priceInQiancaiDou: 699,
             stock: 35
           }
@@ -118,7 +118,53 @@ export function createSeedHandlers() {
     return c.json({ code: 200, message: 'Seeded', data: { created, total } })
   }
 
-  return { seedProducts }
+  const updateProductImages = async (c: Context) => {
+    const databaseUrl = c.env?.DATABASE_URL as string
+    const prisma = getPrismaClient(databaseUrl)
+    
+    const environment = (c.env as any)?.ENVIRONMENT || 'development'
+    const force = c.req.query('force') === '1'
+    const seedToken = c.req.header('X-Seed-Token')
+    const envSeedToken = (c.env as any)?.SEED_TOKEN
+    let dbTokenOk = false
+    if (seedToken) {
+      const databaseToken = await (prisma as any).appSetting.findUnique({ where: { key: 'SEED_TOKEN' } }).catch(() => null)
+      if (databaseToken && databaseToken.value === seedToken) dbTokenOk = true
+    }
+    const tokenOk = Boolean(seedToken && (envSeedToken === seedToken || dbTokenOk))
+    if (environment === 'production' && !force && !tokenOk) {
+      return c.json({ code: 403, message: 'Update disabled in production (use ?force=1 or X-Seed-Token)', data: null }, 403)
+    }
+
+    // 更新图片URL
+    const updates = [
+      {
+        title: '城市机能风夹克',
+        images: ['https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=400&auto=format&fit=crop']
+      },
+      {
+        title: '从 0 到 1：开启商业与未来的秘密',
+        images: ['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop']
+      },
+      {
+        title: '轻量跑步鞋',
+        images: ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop']
+      }
+    ]
+
+    let updated = 0
+    for (const update of updates) {
+      await prisma.product.updateMany({
+        where: { title: update.title },
+        data: { images: update.images as any }
+      })
+      updated += 1
+    }
+
+    return c.json({ code: 200, message: 'Images updated', data: { updated } })
+  }
+
+  return { seedProducts, updateProductImages }
 }
 
 
