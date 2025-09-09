@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
+import 'dart:html' as html;
 
 import '../../../core/theme/app_theme.dart';
 import '../../../routing/app_router.dart';
@@ -86,25 +88,9 @@ class ProfileScreen extends ConsumerWidget {
   }) {
     return Padding(
       padding: EdgeInsets.only(bottom: 12.h),
-      child: InkWell(
+      child: _HoverableMenuButton(
+        title: title,
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12.r),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: AppTheme.dividerColor.withOpacity(0.5)),
-          ),
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: AppTheme.textPrimary,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -297,18 +283,50 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
 
   // 简单的图片压缩 - 通过减少质量来压缩
   Future<Uint8List> _compressImage(Uint8List bytes) async {
-    // 这里使用简单的压缩策略：如果图片很大，我们限制最大尺寸
-    // 实际项目中可以使用 image 包进行更复杂的压缩
     const int maxSize = 500 * 1024; // 500KB
     
     if (bytes.length <= maxSize) {
       return bytes;
     }
     
-    // 简单的压缩：截取前500KB（这不是好的压缩方法，但可以快速解决问题）
-    // 在实际项目中，应该使用 image 包进行真正的图片压缩
-    final compressedBytes = bytes.take(maxSize).toList();
-    return Uint8List.fromList(compressedBytes);
+    // 对于 Web 平台，我们使用 Canvas API 进行图片压缩
+    if (kIsWeb) {
+      try {
+        // 创建一个临时的 Image 元素来获取图片尺寸
+        final html.ImageElement img = html.ImageElement();
+        img.src = 'data:image/png;base64,${base64Encode(bytes)}';
+        
+        // 等待图片加载
+        await img.onLoad.first;
+        
+        // 计算压缩比例
+        final double scale = math.sqrt(maxSize / bytes.length);
+        final int newWidth = (img.width! * scale).round();
+        final int newHeight = (img.height! * scale).round();
+        
+        // 使用 Canvas 进行压缩
+        final html.CanvasElement canvas = html.CanvasElement();
+        final html.CanvasRenderingContext2D ctx = canvas.context2D as html.CanvasRenderingContext2D;
+        
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+        
+        ctx.drawImageScaled(img, 0, 0, newWidth, newHeight);
+        
+        // 转换为 Blob 并获取字节
+        final html.Blob blob = await canvas.toBlob('image/jpeg', 0.8);
+        final Uint8List compressedBytes = Uint8List.fromList(await blob.arrayBuffer());
+        
+        return compressedBytes;
+      } catch (e) {
+        print('Canvas compression failed: $e');
+        // 如果压缩失败，返回原始字节
+        return bytes;
+      }
+    }
+    
+    // 对于移动平台，返回原始字节（移动端通常有更好的图片处理）
+    return bytes;
   }
 
   void _showError(String message) {
@@ -452,6 +470,143 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
           ),
         ),
       ],
+    );
+  }
+}
+
+// 可悬停的菜单按钮组件
+class _HoverableMenuButton extends StatefulWidget {
+  final String title;
+  final VoidCallback onTap;
+
+  const _HoverableMenuButton({
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  State<_HoverableMenuButton> createState() => _HoverableMenuButtonState();
+}
+
+class _HoverableMenuButtonState extends State<_HoverableMenuButton>
+    with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _elevationAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.02,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+    
+    _elevationAnimation = Tween<double>(
+      begin: 2.0,
+      end: 8.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _onHoverEnter() {
+    setState(() {
+      _isHovered = true;
+    });
+    _animationController.forward();
+  }
+
+  void _onHoverExit() {
+    setState(() {
+      _isHovered = false;
+    });
+    _animationController.reverse();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => _onHoverEnter(),
+      onExit: (_) => _onHoverExit(),
+      child: AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: InkWell(
+              onTap: widget.onTap,
+              borderRadius: BorderRadius.circular(12.r),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  color: _isHovered 
+                      ? AppTheme.primaryColor.withOpacity(0.05)
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: _isHovered 
+                        ? AppTheme.primaryColor.withOpacity(0.3)
+                        : AppTheme.dividerColor.withOpacity(0.5),
+                    width: _isHovered ? 1.5 : 1.0,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05 + (_elevationAnimation.value - 2) * 0.02),
+                      blurRadius: _elevationAnimation.value,
+                      offset: Offset(0, _elevationAnimation.value / 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.title,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: _isHovered 
+                              ? AppTheme.primaryColor
+                              : AppTheme.textPrimary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    AnimatedRotation(
+                      turns: _isHovered ? 0.25 : 0.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16.sp,
+                        color: _isHovered 
+                            ? AppTheme.primaryColor
+                            : AppTheme.textTertiary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

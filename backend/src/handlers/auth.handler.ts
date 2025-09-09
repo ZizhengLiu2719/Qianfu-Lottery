@@ -288,6 +288,7 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
    * 上传头像
    */
   const uploadAvatar = async (c: Context) => {
+    let prisma: any = null
     try {
       const currentUser = c.get('user')
       const body = await c.req.json() as UploadAvatarRequest
@@ -326,7 +327,7 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = getPrismaClient(databaseUrl)
+      prisma = getPrismaClient(databaseUrl)
 
       // 更新用户头像数据
       const updatedUser = await prisma.user.update({
@@ -367,6 +368,15 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
         message: 'Internal server error',
         data: null
       }, 500)
+    } finally {
+      // 确保在请求结束时清理 Prisma 连接
+      if (prisma) {
+        try {
+          await prisma.$disconnect()
+        } catch (disconnectError) {
+          console.error('Error disconnecting Prisma:', disconnectError)
+        }
+      }
     }
   }
 
