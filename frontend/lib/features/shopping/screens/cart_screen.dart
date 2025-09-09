@@ -32,6 +32,11 @@ class CartScreen extends ConsumerWidget {
         title: Text(AppLocalizations.of(context)!.cart_title),
         backgroundColor: Colors.white,
         actions: [
+          IconButton(
+            onPressed: () => context.push('/orders'),
+            icon: Icon(FeatherIcons.package),
+            tooltip: '我的订单',
+          ),
           if (!isEmpty)
             TextButton(
               onPressed: () => _showClearCartDialog(context, ref),

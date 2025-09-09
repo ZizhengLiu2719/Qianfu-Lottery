@@ -531,6 +531,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       );
 
       if (order != null && mounted) {
+        // 清空购物车
+        ref.read(cartProvider.notifier).clear();
+        
         Navigator.of(context).pop(); // 返回购物车页面
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
