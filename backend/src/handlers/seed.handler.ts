@@ -6,10 +6,20 @@ export function createSeedHandlers() {
     const databaseUrl = c.env?.DATABASE_URL as string
     const prisma = getPrismaClient(databaseUrl)
 
-    // 仅在非生产或显式允许时可用
+    // 允许：非生产；或 query.force=1；或携带正确的 X-Seed-Token（与环境变量 SEED_TOKEN 匹配）
     const environment = (c.env as any)?.ENVIRONMENT || 'development'
-    if (environment === 'production') {
-      return c.json({ code: 403, message: 'Seeding disabled in production', data: null }, 403)
+    const force = c.req.query('force') === '1'
+    const seedToken = c.req.header('X-Seed-Token')
+    const envSeedToken = (c.env as any)?.SEED_TOKEN
+    // 允许 DB 中的 SEED_TOKEN
+    let dbTokenOk = false
+    if (seedToken) {
+      const databaseToken = await (prisma as any).appSetting.findUnique({ where: { key: 'SEED_TOKEN' } }).catch(() => null)
+      if (databaseToken && databaseToken.value === seedToken) dbTokenOk = true
+    }
+    const tokenOk = Boolean(seedToken && (envSeedToken === seedToken || dbTokenOk))
+    if (environment === 'production' && !force && !tokenOk) {
+      return c.json({ code: 403, message: 'Seeding disabled in production (use ?force=1 or X-Seed-Token)', data: null }, 403)
     }
 
     const categories = [

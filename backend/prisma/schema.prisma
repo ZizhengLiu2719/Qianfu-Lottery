@@ -311,3 +311,12 @@ enum TransactionDirection {
   CREDIT
   DEBIT
 }
+
+// 应用设置（键值对存储），用于放置 SEED_TOKEN 等
+model AppSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @default(now())
+
+  @@map("app_settings")
+}
