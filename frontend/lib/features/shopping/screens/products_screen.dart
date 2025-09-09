@@ -363,7 +363,6 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                       SizedBox(width: 4.w),
                       QiancaiDouIcon(
                         size: 16.0,
-                        color: AppTheme.primaryColor,
                       ),
                     ],
                   ),

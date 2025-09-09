@@ -148,7 +148,6 @@ class CartScreen extends ConsumerWidget {
                     SizedBox(width: 4.w),
                     QiancaiDouIcon(
                       size: 14.0,
-                      color: AppTheme.primaryColor,
                     ),
                   ],
                 ),
@@ -242,7 +241,6 @@ class CartScreen extends ConsumerWidget {
                     SizedBox(width: 4.w),
                     QiancaiDouIcon(
                       size: 20.0,
-                      color: AppTheme.primaryColor,
                     ),
                   ],
                 ),

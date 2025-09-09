@@ -266,9 +266,14 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         });
         
         // 更新全局用户状态
-        ref.read(authProvider.notifier).refreshUser();
+        await ref.read(authProvider.notifier).refreshUser();
         
-        _showSuccess('头像上传成功');
+        // 延迟显示成功消息，确保状态更新完成
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (mounted) {
+            _showSuccess('头像上传成功');
+          }
+        });
       } else {
         _showError(result['message'] ?? '上传失败');
       }
@@ -337,6 +342,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         SnackBar(
           content: Text(message),
           backgroundColor: AppTheme.errorColor,
+          duration: const Duration(seconds: 3),
         ),
       );
     }
@@ -348,6 +354,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         SnackBar(
           content: Text(message),
           backgroundColor: AppTheme.successColor,
+          duration: const Duration(seconds: 2),
         ),
       );
     }
@@ -407,8 +414,39 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
     final avatarUrl = currentUser?.avatarUrl ?? _avatarPath;
     
     return Row(
+      mainAxisAlignment: MainAxisAlignment.end, // 将内容对齐到右侧
       children: [
-        Stack(
+        // 用户信息部分（名字 + 千彩豆）
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end, // 右对齐
+          children: [
+            TextField(
+              controller: _nameController,
+              textAlign: TextAlign.right, // 文本右对齐
+              decoration: const InputDecoration(
+                isDense: true,
+                border: InputBorder.none,
+              ),
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${widget.points} 仟彩豆',
+                  style: const TextStyle(color: AppTheme.primaryColor),
+                ),
+                SizedBox(width: 4.w),
+                QiancaiDouIcon(
+                  size: 16.0,
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(width: 12.w),
+        // 头像部分
+        Column(
           children: [
             CircleAvatar(
               radius: 32,
@@ -425,61 +463,37 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
                     )
                   : null,
             ),
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: TextButton(
-                onPressed: _isUploading ? null : _pickAvatar,
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  backgroundColor: _isUploading ? AppTheme.textTertiary : AppTheme.primaryColor,
-                  foregroundColor: Colors.white,
+            SizedBox(height: 8.h),
+            TextButton(
+              onPressed: _isUploading ? null : _pickAvatar,
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                minimumSize: Size(60.w, 32.h),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                backgroundColor: _isUploading ? AppTheme.textTertiary : AppTheme.primaryColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
-                child: _isUploading 
-                  ? SizedBox(
-                      width: 12.w,
-                      height: 12.w,
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : const Text('更换'),
               ),
+              child: _isUploading 
+                ? SizedBox(
+                    width: 16.w,
+                    height: 16.w,
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Text(
+                    '更换',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
             ),
           ],
-        ),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: InputBorder.none,
-                ),
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '${widget.points} 仟彩豆',
-                    style: const TextStyle(color: AppTheme.primaryColor),
-                  ),
-                  SizedBox(width: 4.w),
-                  QiancaiDouIcon(
-                    size: 16.0,
-                    color: AppTheme.primaryColor,
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ],
     );
