@@ -76,7 +76,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
         key: 'nature',
         text: '自然风光',
         mobileText: '自然',
-        icon: FeatherIcons.tree,
+        icon: FeatherIcons.mapPin,
       ),
       ResponsiveTagData(
         key: 'culture',
