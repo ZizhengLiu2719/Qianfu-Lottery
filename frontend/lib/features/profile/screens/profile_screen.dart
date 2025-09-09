@@ -273,9 +273,14 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
       print('上传结果: $result');
 
       if (result['code'] == 200 && result['data'] != null) {
+        // 更新本地状态
         setState(() {
           _avatarPath = result['data']['user']['avatarUrl'];
         });
+        
+        // 更新全局用户状态
+        ref.read(authProvider.notifier).refreshUser();
+        
         _showSuccess('头像上传成功');
       } else {
         _showError(result['message'] ?? '上传失败');
@@ -377,6 +382,10 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
 
   @override
   Widget build(BuildContext context) {
+    // 获取当前用户信息，优先使用全局状态中的头像
+    final currentUser = ref.watch(currentUserProvider);
+    final avatarUrl = currentUser?.avatarUrl ?? _avatarPath;
+    
     return Row(
       children: [
         Stack(
@@ -384,8 +393,8 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
             CircleAvatar(
               radius: 32,
               backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
-              backgroundImage: _avatarPath != null ? NetworkImage(_avatarPath!) : null,
-              child: _avatarPath == null
+              backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
+              child: avatarUrl == null
                   ? Text(
                       widget.initialName.isNotEmpty ? widget.initialName.characters.first : '-',
                       style: TextStyle(
