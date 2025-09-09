@@ -34,13 +34,9 @@ class ProfileScreen extends ConsumerWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
-              child: Row(
-                children: [
-                  _EditableAvatar(
-                    initialName: user?.displayName ?? '未命名',
-                    points: qiancaiDouBalance,
-                  ),
-                ],
+              child: _EditableAvatar(
+                initialName: user?.displayName ?? '未命名',
+                points: qiancaiDouBalance,
               ),
             ),
           ),
@@ -414,35 +410,36 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
     final avatarUrl = currentUser?.avatarUrl ?? _avatarPath;
     
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end, // 将内容对齐到右侧
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 使用spaceBetween确保内容可见
       children: [
         // 用户信息部分（名字 + 千彩豆）
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end, // 右对齐
-          children: [
-            TextField(
-              controller: _nameController,
-              textAlign: TextAlign.right, // 文本右对齐
-              decoration: const InputDecoration(
-                isDense: true,
-                border: InputBorder.none,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start, // 改为左对齐
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                ),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${widget.points} 仟彩豆',
-                  style: const TextStyle(color: AppTheme.primaryColor),
-                ),
-                SizedBox(width: 4.w),
-                QiancaiDouIcon(
-                  size: 16.0,
-                ),
-              ],
-            ),
-          ],
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${widget.points} 仟彩豆',
+                    style: const TextStyle(color: AppTheme.primaryColor),
+                  ),
+                  SizedBox(width: 4.w),
+                  QiancaiDouIcon(
+                    size: 16.0,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
         SizedBox(width: 12.w),
         // 头像部分
