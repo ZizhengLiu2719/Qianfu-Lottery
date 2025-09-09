@@ -1,0 +1,13 @@
+{
+  "name": "仟府集彩",
+  "short_name": "仟府集彩",
+  "description": "现代化积分商城与预约平台",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2196F3",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "education", "travel", "entertainment"],
+  "lang": "zh-CN",
+  "dir": "ltr"
+}
