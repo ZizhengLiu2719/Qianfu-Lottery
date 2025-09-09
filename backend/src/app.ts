@@ -26,7 +26,7 @@ app.get('/api/health', (c) => {
   })
 })
 
-// 诊断端点：检查环境变量与数据库连接
+// 诊断端点：检查环境变量配置
 app.get('/api/diag', async (c) => {
   try {
     const env: Record<string, unknown> = (c.env as unknown as Record<string, unknown>) || {}
@@ -37,29 +37,11 @@ app.get('/api/diag', async (c) => {
       environment: (c.env as any)?.ENVIRONMENT || 'development',
       hasDatabaseUrl: Boolean(databaseUrl),
       hasJwtSecret: Boolean(jwtSecret),
-      dbConnection: {
-        ok: false,
-        error: null as string | null
-      },
-      envKeys: Object.keys(env)
+      envKeys: Object.keys(env),
+      timestamp: new Date().toISOString()
     }
 
-    if (databaseUrl) {
-      try {
-        const prisma = getPrismaClient(databaseUrl)
-        // 简单查询：尝试读取用户数量，验证表是否存在
-        await prisma.user.count()
-        result.dbConnection.ok = true
-      } catch (err: any) {
-        result.dbConnection.ok = false
-        result.dbConnection.error = String(err?.message || err)
-        console.error('Database connection error:', err)
-      }
-    } else {
-      result.dbConnection.error = 'DATABASE_URL not configured'
-    }
-
-    return c.json({ code: 200, message: 'diag', data: result })
+    return c.json({ code: 200, message: 'Diagnostic completed', data: result })
   } catch (error) {
     console.error('Diagnostic endpoint error:', error)
     return c.json({

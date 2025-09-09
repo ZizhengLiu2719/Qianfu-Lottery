@@ -17,6 +17,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
    * 获取商品列表
    */
   const getProducts = async (c: Context) => {
+    let prisma: any = null
     try {
       const databaseUrl = c.env?.DATABASE_URL as string
       if (!databaseUrl) {
@@ -28,7 +29,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         }, 500)
       }
 
-      const prisma = getPrismaClient(databaseUrl)
+      prisma = getPrismaClient(databaseUrl)
 
       // 获取查询参数
       const page = Math.max(1, parseInt(c.req.query('page') || '1'))
@@ -73,6 +74,15 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         message: 'Internal server error',
         data: null
       }, 500)
+    } finally {
+      // 确保在请求结束时清理 Prisma 连接
+      if (prisma) {
+        try {
+          await prisma.$disconnect()
+        } catch (disconnectError) {
+          console.error('Error disconnecting Prisma:', disconnectError)
+        }
+      }
     }
   }
 
@@ -80,6 +90,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
    * 获取商品详情
    */
   const getProduct = async (c: Context) => {
+    let prisma: any = null
     try {
       const productId = parseInt(c.req.param('id'))
       
@@ -96,7 +107,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         throw new Error('DATABASE_URL not configured')
       }
 
-      const prisma = getPrismaClient(databaseUrl)
+      prisma = getPrismaClient(databaseUrl)
 
       const product = await prisma.product.findUnique({
         where: { 
@@ -126,6 +137,14 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         message: 'Internal server error',
         data: null
       }, 500)
+    } finally {
+      if (prisma) {
+        try {
+          await prisma.$disconnect()
+        } catch (disconnectError) {
+          console.error('Error disconnecting Prisma:', disconnectError)
+        }
+      }
     }
   }
 
