@@ -44,8 +44,8 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
     ];
 
     return Container(
-      height: 70.h, // 进一步增加纵向高度
-      padding: EdgeInsets.symmetric(vertical: 16.h),
+      height: 80.h, // 进一步增加高度，让标签更厚
+      padding: EdgeInsets.symmetric(vertical: 20.h),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -55,7 +55,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           final isSelected = _selectedCategory == category['key'];
           
           return Container(
-            margin: EdgeInsets.only(right: 10.w),
+            margin: EdgeInsets.only(right: 8.w),
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -66,31 +66,31 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 8.w,  // 进一步减少横向内边距
-                    vertical: 16.h,   // 进一步增加纵向内边距
+                    horizontal: 10.w, // 稍微增加横向内边距，给文字更多空间
+                    vertical: 20.h,   // 保持纵向内边距，让标签更厚
                   ),
                   decoration: BoxDecoration(
                     color: isSelected 
                         ? AppTheme.primaryColor 
                         : Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(30.r), // 进一步增加圆角
+                    borderRadius: BorderRadius.circular(35.r), // 增加圆角配合更厚的标签
                     border: Border.all(
                       color: isSelected 
                           ? AppTheme.primaryColor 
                           : Colors.grey.shade200,
-                      width: 1.5,
+                      width: 2.0, // 增加边框宽度
                     ),
                     boxShadow: isSelected ? [
                       BoxShadow(
-                        color: AppTheme.primaryColor.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+                        color: AppTheme.primaryColor.withOpacity(0.4),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
                       ),
                     ] : [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
@@ -100,14 +100,17 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
                       style: TextStyle(
                         color: isSelected 
                             ? Colors.white 
-                            : AppTheme.textPrimary,
-                        fontSize: 16.sp, // 进一步增加字体大小
+                            : Colors.black87,
+                        fontSize: 13.sp, // 减小字体大小，让文字完美嵌入
                         fontWeight: isSelected 
-                            ? FontWeight.w700 
-                            : FontWeight.w600,
-                        height: 1.1, // 稍微减少行高，让文字更紧凑
+                            ? FontWeight.w600 
+                            : FontWeight.w500, // 适中的字重
+                        height: 1.2, // 稍微增加行高，确保文字不重叠
+                        letterSpacing: 0.2, // 减少字间距
                       ),
                       textAlign: TextAlign.center,
+                      maxLines: 1, // 限制为单行
+                      overflow: TextOverflow.ellipsis, // 超出部分显示省略号
                     ),
                   ),
                 ),
