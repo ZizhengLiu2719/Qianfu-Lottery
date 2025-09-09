@@ -91,12 +91,12 @@ class _ResponsiveTagState extends State<ResponsiveTag>
     // 根据平台选择文字
     final displayText = isDesktop ? widget.text : (widget.mobileText ?? widget.text);
     
-    // 动态计算尺寸 - 根据内容自适应
-    final fontSize = isDesktop ? 12.sp : 11.sp;
-    final iconSize = isDesktop ? 14.sp : 12.sp;
-    final horizontalPadding = isDesktop ? 12.w : 10.w;
-    final verticalPadding = isDesktop ? 6.h : 5.h;
-    final borderRadius = isDesktop ? 16.r : 14.r;
+    // 动态计算尺寸 - 再次缩小电脑端尺寸一倍
+    final fontSize = isDesktop ? 7.sp : 11.sp;  // 电脑端字体再次缩小
+    final iconSize = isDesktop ? 8.sp : 12.sp;  // 电脑端图标再次缩小
+    final horizontalPadding = isDesktop ? 6.w : 10.w;  // 电脑端内边距再次缩小
+    final verticalPadding = isDesktop ? 3.h : 5.h;  // 电脑端内边距再次缩小
+    final borderRadius = isDesktop ? 10.r : 14.r;  // 电脑端圆角再次缩小
     
     // 计算文字宽度 - 使用更精确的字体样式
     final textPainter = TextPainter(
@@ -116,7 +116,7 @@ class _ResponsiveTagState extends State<ResponsiveTag>
     final textWidth = textPainter.size.width;
     
     // 计算图标宽度（如果有图标）
-    final iconWidth = widget.icon != null ? iconSize + (isDesktop ? 6.w : 4.w) : 0.0;
+    final iconWidth = widget.icon != null ? iconSize + (isDesktop ? 2.w : 4.w) : 0.0;
     
     // 计算总宽度 - 增加额外空间确保文字完全显示
     final totalWidth = textWidth + iconWidth + (horizontalPadding * 2) + (isDesktop ? 8.w : 4.w);
@@ -183,7 +183,7 @@ class _ResponsiveTagState extends State<ResponsiveTag>
                               ? (widget.selectedTextColor ?? Colors.white)
                               : (widget.unselectedTextColor ?? Colors.black87),
                         ),
-                        SizedBox(width: isDesktop ? 6.w : 4.w),
+                        SizedBox(width: isDesktop ? 2.w : 4.w),
                       ],
                       Text(
                         displayText,
@@ -240,13 +240,13 @@ class ResponsiveTagBar extends StatelessWidget {
     if (isDesktop) {
       return Container(
         constraints: BoxConstraints(
-          minHeight: 50.h,
-          maxHeight: 150.h, // 允许换行，增加最大高度
+          minHeight: 30.h,
+          maxHeight: 100.h, // 允许换行，进一步减少最大高度
         ),
-        padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
         child: Wrap(
-          spacing: 6.w,  // 适中的间距
-          runSpacing: 6.h,  // 适中的行间距
+          spacing: 3.w,  // 进一步减小间距
+          runSpacing: 3.h,  // 进一步减小行间距
           alignment: WrapAlignment.start,
           children: tags.map((tag) {
             final isSelected = selectedTag == tag.key;
