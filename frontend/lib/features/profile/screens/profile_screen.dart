@@ -446,7 +446,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         Column(
           children: [
             CircleAvatar(
-              radius: 32,
+              radius: 48, // 增大头像半径从32到48
               backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
               backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
               child: avatarUrl == null
@@ -454,38 +454,38 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
                       widget.initialName.isNotEmpty ? widget.initialName.characters.first : '-',
                       style: TextStyle(
                         color: AppTheme.textPrimary,
-                        fontSize: 20.sp,
+                        fontSize: 28.sp, // 增大字体从20到28
                         fontWeight: FontWeight.w600,
                       ),
                     )
                   : null,
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: 6.h), // 减少间距
             TextButton(
               onPressed: _isUploading ? null : _pickAvatar,
               style: TextButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                minimumSize: Size(60.w, 32.h),
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h), // 减少内边距
+                minimumSize: Size(40.w, 24.h), // 减小按钮尺寸
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 backgroundColor: _isUploading ? AppTheme.textTertiary : AppTheme.primaryColor,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.r),
+                  borderRadius: BorderRadius.circular(12.r), // 减小圆角
                 ),
               ),
               child: _isUploading 
                 ? SizedBox(
-                    width: 16.w,
-                    height: 16.w,
+                    width: 12.w, // 减小加载指示器尺寸
+                    height: 12.w,
                     child: const CircularProgressIndicator(
-                      strokeWidth: 2,
+                      strokeWidth: 1.5, // 减小线条宽度
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
                 : Text(
                     '更换',
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 10.sp, // 减小字体从12到10
                       fontWeight: FontWeight.w500,
                     ),
                   ),
