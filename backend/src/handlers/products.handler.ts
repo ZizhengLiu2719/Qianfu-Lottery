@@ -7,7 +7,7 @@ interface CreateOrderRequest {
     productId: number
     quantity: number
   }[]
-  shippingAddress?: string
+  shippingAddressId?: number
   note?: string
 }
 
@@ -176,7 +176,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
       const prisma = getPrismaClient(databaseUrl)
 
       // 使用数据库事务确保数据一致性
-      const result = await prisma.$transaction(async (tx) => {
+      const result = await prisma.$transaction(async (tx: any) => {
         // 验证所有商品存在且有库存
         const productIds = body.items.map(item => item.productId)
         const products = await tx.product.findMany({
@@ -195,7 +195,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
         const orderItems = []
 
         for (const item of body.items) {
-          const product = products.find(p => p.id === item.productId)
+          const product = products.find((p: any) => p.id === item.productId)
           if (!product) {
             throw new Error(`Product ${item.productId} not found`)
           }
@@ -229,7 +229,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
           data: {
             userId: currentUser.id,
             totalCost,
-            shippingAddress: body.shippingAddress,
+            shippingAddressId: body.shippingAddressId,
             note: body.note,
             items: {
               create: orderItems

@@ -7,6 +7,9 @@ import { createCartHandlers } from './handlers/cart.handler'
 import { createCheckoutHandlers } from './handlers/checkout.handler'
 import { createSeedHandlers } from './handlers/seed.handler'
 import { createTravelHandlers } from './handlers/travel.handler'
+import { createAddressHandlers } from './handlers/address.handler'
+import { createOrderHandlers } from './handlers/order.handler'
+import { createInventoryHandlers } from './handlers/inventory.handler'
 import { corsMiddleware, createAuthMiddleware } from './middleware/auth.middleware'
 import { AuthService } from './services/auth'
 import { getPrismaClient } from './services/db'
@@ -273,6 +276,135 @@ app.post('/api/dev/seed-products', async (c) => {
 app.post('/api/dev/update-product-images', async (c) => {
   const handlers = createSeedHandlers()
   return handlers.updateProductImages(c)
+})
+
+// 地址管理路由 (受保护)
+app.get('/api/addresses', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createAddressHandlers(prisma)
+  return handlers.getAddresses(c)
+})
+
+app.post('/api/addresses', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createAddressHandlers(prisma)
+  return handlers.createAddress(c)
+})
+
+app.put('/api/addresses/:id', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createAddressHandlers(prisma)
+  return handlers.updateAddress(c)
+})
+
+app.delete('/api/addresses/:id', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createAddressHandlers(prisma)
+  return handlers.deleteAddress(c)
+})
+
+app.put('/api/addresses/:id/default', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createAddressHandlers(prisma)
+  return handlers.setDefaultAddress(c)
+})
+
+// 订单管理路由 (受保护)
+app.get('/api/orders', async (c) => {
+  const { prisma, qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createOrderHandlers(prisma, qiancaiDouService)
+  return handlers.getOrders(c)
+})
+
+app.get('/api/orders/:id', async (c) => {
+  const { prisma, qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createOrderHandlers(prisma, qiancaiDouService)
+  return handlers.getOrder(c)
+})
+
+app.post('/api/orders/from-cart', async (c) => {
+  const { prisma, qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createOrderHandlers(prisma, qiancaiDouService)
+  return handlers.createOrderFromCart(c)
+})
+
+app.post('/api/orders/:id/pay', async (c) => {
+  const { prisma, qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createOrderHandlers(prisma, qiancaiDouService)
+  return handlers.payOrder(c)
+})
+
+app.post('/api/orders/:id/cancel', async (c) => {
+  const { prisma, qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createOrderHandlers(prisma, qiancaiDouService)
+  return handlers.cancelOrder(c)
+})
+
+app.post('/api/orders/:id/confirm-delivery', async (c) => {
+  const { prisma, qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createOrderHandlers(prisma, qiancaiDouService)
+  return handlers.confirmDelivery(c)
+})
+
+app.get('/api/orders/:id/tracking', async (c) => {
+  const { prisma, qiancaiDouService, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createOrderHandlers(prisma, qiancaiDouService)
+  return handlers.getTracking(c)
+})
+
+// 库存管理路由 (受保护)
+app.post('/api/inventory/check', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createInventoryHandlers(prisma)
+  return handlers.checkInventory(c)
+})
+
+app.post('/api/inventory/lock', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createInventoryHandlers(prisma)
+  return handlers.lockInventory(c)
+})
+
+app.post('/api/inventory/release', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createInventoryHandlers(prisma)
+  return handlers.releaseInventory(c)
+})
+
+app.post('/api/inventory/consume', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createInventoryHandlers(prisma)
+  return handlers.consumeInventory(c)
+})
+
+app.get('/api/inventory/:productId/status', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createInventoryHandlers(prisma)
+  return handlers.getInventoryStatus(c)
+})
+
+app.post('/api/inventory/cleanup-expired', async (c) => {
+  const { prisma, authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createInventoryHandlers(prisma)
+  return handlers.cleanupExpiredLocks(c)
 })
 
 // 仟彩豆交易历史 (受保护)

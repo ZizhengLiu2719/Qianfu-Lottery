@@ -12,6 +12,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/qiancai_dou_icon.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
+import 'checkout_screen.dart';
 
 class ProductDetailScreen extends ConsumerStatefulWidget {
   final int productId;
@@ -444,11 +445,13 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
       return;
     }
 
-    // TODO: 直接购买逻辑
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('直接购买功能开发中...'),
-        backgroundColor: AppTheme.primaryColor,
+    // 先添加到购物车
+    ref.read(cartProvider.notifier).addItem(product, quantity: _quantity);
+    
+    // 跳转到结账页面
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const CheckoutScreen(),
       ),
     );
   }

@@ -81,26 +81,30 @@ model Product {
 
 // 订单模型
 model Order {
-  id              Int         @id @default(autoincrement())
-  userId          Int
-  user            User        @relation(fields: [userId], references: [id])
-  totalCost       Int         // 总仟彩豆消费
-  status          String      @default("PENDING") // PENDING, PAID, CANCELLED, FULFILLED, REFUNDED
-  payMethod       PayMethod   @default(QIANCAIDOU)
-  shippingAddress String?
-  note            String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  paidAt          DateTime?
-  cancelledAt     DateTime?
-  fulfilledAt     DateTime?
-  refundedAt      DateTime?
+  id                  Int         @id @default(autoincrement())
+  userId              Int
+  user                User        @relation(fields: [userId], references: [id])
+  totalCost           Int         // 总仟彩豆消费
+  status              OrderStatus @default(PENDING) // PENDING, PAID, PROCESSING, SHIPPED, DELIVERED, CANCELLED, REFUNDED
+  payMethod           PayMethod   @default(QIANCAIDOU)
+  shippingAddressId   Int?        // 配送地址ID
+  trackingNumber      String?     // 物流单号
+  estimatedDelivery   DateTime?   // 预计送达时间
+  note                String?
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  paidAt              DateTime?
+  cancelledAt         DateTime?
+  fulfilledAt         DateTime?
+  refundedAt          DateTime?
   
   // 关联关系
-  items           OrderItem[]
-  inventoryLocks  InventoryLock[]
-  transactions    QiancaiDouTransaction[]
-  shipment        Shipment?
+  items               OrderItem[]
+  inventoryLocks      InventoryLock[]
+  transactions        QiancaiDouTransaction[]
+  shipment            Shipment?
+  shippingAddress     Address?    @relation("OrderShippingAddress", fields: [shippingAddressId], references: [id])
+  shippingTracks      ShippingTrack[]
   
   @@map("orders")
 }
@@ -240,6 +244,7 @@ model InventoryLock {
   product    Product             @relation(fields: [productId], references: [id])
   quantity   Int
   status     InventoryLockStatus @default(LOCKED)
+  expiresAt  DateTime?           // 锁定过期时间
   createdAt  DateTime            @default(now())
   updatedAt  DateTime            @updatedAt
 
@@ -261,6 +266,9 @@ model Address {
   isDefault     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  
+  // 关联关系
+  orders        Order[]  @relation("OrderShippingAddress")
 
   @@map("addresses")
 }
@@ -281,6 +289,19 @@ model Shipment {
   @@map("shipments")
 }
 
+// 物流跟踪
+model ShippingTrack {
+  id          Int      @id @default(autoincrement())
+  orderId     Int
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status      String    // 物流状态
+  description String?   // 状态描述
+  location    String?   // 当前位置
+  timestamp   DateTime  @default(now())
+
+  @@map("shipping_tracks")
+}
+
 // ===== Enums =====
 enum PayMethod {
   QIANCAIDOU
@@ -296,6 +317,16 @@ enum ShipmentStatus {
   PENDING
   SHIPPED
   DELIVERED
+}
+
+enum OrderStatus {
+  PENDING      // 待支付
+  PAID         // 已支付
+  PROCESSING   // 处理中
+  SHIPPED      // 已发货
+  DELIVERED    // 已送达
+  CANCELLED    // 已取消
+  REFUNDED     // 已退款
 }
 
 enum QiancaiDouTransactionType {

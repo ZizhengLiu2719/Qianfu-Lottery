@@ -14,6 +14,7 @@ import '../../../models/product.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
+import 'checkout_screen.dart';
 
 class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});
@@ -296,47 +297,11 @@ class CartScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _checkout(BuildContext context, WidgetRef ref) async {
-    try {
-      final cartItems = ref.read(cartProvider);
-      final repository = ref.read(productsRepositoryProvider);
-      
-      await repository.createOrder(items: cartItems);
-      
-      // 清空购物车
-      ref.read(cartProvider.notifier).clear();
-      
-      // 刷新用户信息（更新余额）
-      await ref.read(authProvider.notifier).refreshUser();
-      
-      // 显示成功消息
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.orders_create_success),
-            backgroundColor: AppTheme.successColor,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        );
-        
-        context.go(AppRoutes.orders);
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: AppTheme.errorColor,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        );
-      }
-    }
+  void _checkout(BuildContext context, WidgetRef ref) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const CheckoutScreen(),
+      ),
+    );
   }
 }

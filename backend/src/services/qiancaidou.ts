@@ -6,6 +6,7 @@ export type TransactionReason =
   | 'APPOINTMENT_FEE'       // 预约费用
   | 'TASK_REWARD'           // 任务奖励
   | 'REFUND'                // 退款
+  | 'ORDER_REFUND'          // 订单退款
 
 export interface QiancaiDouTransaction {
   userId: number
