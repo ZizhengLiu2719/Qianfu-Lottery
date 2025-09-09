@@ -46,8 +46,23 @@ export function createCheckoutHandlers(qiancaiDouService: QiancaiDouService) {
       await qiancaiDouService.debitQiancaiDou({ userId: currentUser.id, amount: total, reason: 'PRODUCT_REDEMPTION', refTable: 'orders' }, tx)
       // 创建订单
       const order = await (tx as any).order.create({
-        data: { userId: currentUser.id, totalCost: total, note: body?.note, items: { create: orderItems }, status: 'PAID', paidAt: new Date() },
-        include: { items: true }
+        data: { 
+          userId: currentUser.id, 
+          totalCost: total, 
+          note: body?.note, 
+          items: { create: orderItems }, 
+          status: 'PAID', 
+          payMethod: 'QIANCAIDOU',
+          paidAt: new Date() 
+        },
+        include: { 
+          items: {
+            include: {
+              product: true
+            }
+          },
+          shippingAddress: true
+        }
       })
       // 扣库存
       for (const i of items) {
