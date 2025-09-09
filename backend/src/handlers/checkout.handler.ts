@@ -27,19 +27,22 @@ export function createCheckoutHandlers(qiancaiDouService: QiancaiDouService) {
     const currentUser = c.get('user')
     const body = await c.req.json<{ addressId?: number; note?: string }>().catch(() => ({} as any))
 
+    // 预读取与校验放在事务外，缩短事务时间
+    const cart = await (prisma as any).cart.findUnique({ where: { userId: currentUser.id } })
+    if (!cart) throw new Error('EMPTY_CART')
+    const items = await (prisma as any).cartItem.findMany({ where: { cartId: cart.id }, include: { product: true } })
+    if (items.length === 0) throw new Error('EMPTY_CART')
+
+    let total = 0
+    const orderItems = items.map((i: any) => {
+      if (!i.product.isActive || i.product.stock < i.quantity) throw new Error('INSUFFICIENT_STOCK')
+      const subtotal = i.product.priceInQiancaiDou * i.quantity
+      total += subtotal
+      return { productId: i.productId, quantity: i.quantity, unitPrice: i.product.priceInQiancaiDou, totalPrice: subtotal }
+    })
+
     const result = await prisma.$transaction(async (tx) => {
-      const cart = await (tx as any).cart.findUnique({ where: { userId: currentUser.id } })
-      if (!cart) throw new Error('EMPTY_CART')
-      const items = await (tx as any).cartItem.findMany({ where: { cartId: cart.id }, include: { product: true } })
-      if (items.length === 0) throw new Error('EMPTY_CART')
-      let total = 0
-      const orderItems = items.map((i: any) => {
-        if (!i.product.isActive || i.product.stock < i.quantity) throw new Error('INSUFFICIENT_STOCK')
-        const subtotal = i.product.priceInQiancaiDou * i.quantity
-        total += subtotal
-        return { productId: i.productId, quantity: i.quantity, unitPrice: i.product.priceInQiancaiDou, totalPrice: subtotal }
-      })
-      // 扣豆（确保使用同一事务客户端）
+      // 扣豆（仅在事务中进行写操作）
       await qiancaiDouService.debitQiancaiDou({ userId: currentUser.id, amount: total, reason: 'PRODUCT_REDEMPTION', refTable: 'orders' }, tx)
       // 创建订单
       const order = await (tx as any).order.create({
