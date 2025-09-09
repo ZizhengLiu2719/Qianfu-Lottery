@@ -123,75 +123,98 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.h),
-      child: SingleChildScrollView(
+      height: 50.h, // 固定高度确保标签可见
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 16.w),
-        child: Row(
-          children: categories.map((category) {
-            final isSelected = _selectedCategory == category['key'];
-            
-            return Container(
-              margin: EdgeInsets.only(right: 8.w),
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () {
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          final isSelected = _selectedCategory == category['key'];
+          
+          return Container(
+            margin: EdgeInsets.only(right: 8.w),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                bool isHovered = false;
+                
+                return MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  onEnter: (_) {
                     setState(() {
-                      _selectedCategory = category['key'] as String?;
+                      isHovered = true;
                     });
                   },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 8.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isSelected 
-                          ? AppTheme.primaryColor 
-                          : Colors.grey.shade50,
-                      borderRadius: BorderRadius.circular(20.r),
-                      border: Border.all(
+                  onExit: (_) {
+                    setState(() {
+                      isHovered = false;
+                    });
+                  },
+                  child: GestureDetector(
+                    onTap: () {
+                      this.setState(() {
+                        _selectedCategory = category['key'] as String?;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
+                      decoration: BoxDecoration(
                         color: isSelected 
                             ? AppTheme.primaryColor 
-                            : Colors.grey.shade200,
-                        width: 1.0,
+                            : (isHovered ? Colors.grey.shade100 : Colors.grey.shade50),
+                        borderRadius: BorderRadius.circular(20.r),
+                        border: Border.all(
+                          color: isSelected 
+                              ? AppTheme.primaryColor 
+                              : (isHovered ? Colors.grey.shade300 : Colors.grey.shade200),
+                          width: isHovered ? 1.5 : 1.0,
+                        ),
+                        boxShadow: isSelected ? [
+                          BoxShadow(
+                            color: AppTheme.primaryColor.withOpacity(0.3),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ] : isHovered ? [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ] : [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
                       ),
-                      boxShadow: isSelected ? [
-                        BoxShadow(
-                          color: AppTheme.primaryColor.withOpacity(0.3),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
+                      child: Text(
+                        category['name'] as String,
+                        style: TextStyle(
+                          color: isSelected 
+                              ? Colors.white 
+                              : AppTheme.textPrimary,
+                          fontSize: 13.sp,
+                          fontWeight: isSelected 
+                              ? FontWeight.w600 
+                              : (isHovered ? FontWeight.w600 : FontWeight.w500),
+                          letterSpacing: 0.3,
                         ),
-                      ] : [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      category['name'] as String,
-                      style: TextStyle(
-                        color: isSelected 
-                            ? Colors.white 
-                            : AppTheme.textPrimary,
-                        fontSize: 13.sp,
-                        fontWeight: isSelected 
-                            ? FontWeight.w600 
-                            : FontWeight.w500,
-                        letterSpacing: 0.3,
                       ),
                     ),
                   ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
