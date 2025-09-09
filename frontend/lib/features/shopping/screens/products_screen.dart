@@ -133,7 +133,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         key: 'clothing',
         text: '服装配饰',
         mobileText: '服装',
-        icon: FeatherIcons.shirt,
+        icon: FeatherIcons.shoppingBag,
       ),
       ResponsiveTagData(
         key: 'food',

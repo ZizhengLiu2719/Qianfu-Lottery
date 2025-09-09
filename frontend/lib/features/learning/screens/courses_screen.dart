@@ -165,7 +165,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           context,
           title: '机器学习实战',
           subtitle: '从零开始构建AI模型',
-          icon: FeatherIcons.brain,
+          icon: FeatherIcons.cpu,
           category: 'AI编程',
         ),
         SizedBox(height: 12.h),

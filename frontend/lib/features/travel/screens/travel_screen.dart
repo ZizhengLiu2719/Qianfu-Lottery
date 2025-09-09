@@ -64,19 +64,19 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
         key: 'international',
         text: '国外旅游',
         mobileText: '国外游',
-        icon: FeatherIcons.plane,
+        icon: FeatherIcons.globe,
       ),
       ResponsiveTagData(
         key: 'city',
         text: '城市探索',
         mobileText: '城市',
-        icon: FeatherIcons.building,
+        icon: FeatherIcons.mapPin,
       ),
       ResponsiveTagData(
         key: 'nature',
         text: '自然风光',
         mobileText: '自然',
-        icon: FeatherIcons.mountain,
+        icon: FeatherIcons.tree,
       ),
       ResponsiveTagData(
         key: 'culture',
