@@ -91,12 +91,13 @@ class _ResponsiveTagState extends State<ResponsiveTag>
     // 根据平台选择文字
     final displayText = isDesktop ? widget.text : (widget.mobileText ?? widget.text);
     
-    // 响应式尺寸
-    final tagHeight = isDesktop ? 40.h : 36.h;
-    final horizontalPadding = isDesktop ? 16.w : 12.w;
-    final verticalPadding = isDesktop ? 12.h : 8.h;
-    final fontSize = isDesktop ? 14.sp : 12.sp;
-    final borderRadius = isDesktop ? 20.r : 18.r;
+    // 响应式尺寸 - 优化电脑端尺寸
+    final tagHeight = isDesktop ? 32.h : 30.h;  // 进一步减小电脑端高度
+    final horizontalPadding = isDesktop ? 10.w : 8.w;  // 进一步减小电脑端横向内边距
+    final verticalPadding = isDesktop ? 6.h : 5.h;  // 进一步减小电脑端纵向内边距
+    final fontSize = isDesktop ? 12.sp : 11.sp;  // 进一步减小电脑端字体
+    final borderRadius = isDesktop ? 16.r : 14.r;  // 进一步减小电脑端圆角
+    final iconSize = isDesktop ? 12.sp : 10.sp;  // 进一步减小电脑端图标
     
     return AnimatedBuilder(
       animation: _animationController,
@@ -149,12 +150,12 @@ class _ResponsiveTagState extends State<ResponsiveTag>
                       if (widget.icon != null) ...[
                         Icon(
                           widget.icon,
-                          size: isDesktop ? 16.sp : 14.sp,
+                          size: iconSize,
                           color: widget.isSelected
                               ? (widget.selectedTextColor ?? Colors.white)
                               : (widget.unselectedTextColor ?? Colors.black87),
                         ),
-                        SizedBox(width: 4.w),
+                        SizedBox(width: isDesktop ? 6.w : 4.w),
                       ],
                       Flexible(
                         child: Text(
@@ -206,9 +207,41 @@ class ResponsiveTagBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width > 768;
+    final screenWidth = MediaQuery.of(context).size.width;
     
+    // 电脑端使用Wrap布局确保所有标签都能显示
+    if (isDesktop) {
+      return Container(
+        constraints: BoxConstraints(
+          minHeight: 50.h,
+          maxHeight: 100.h, // 允许换行
+        ),
+        padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        child: Wrap(
+          spacing: 6.w,  // 减小间距
+          runSpacing: 6.h,  // 减小行间距
+          alignment: WrapAlignment.start,
+          children: tags.map((tag) {
+            final isSelected = selectedTag == tag.key;
+            return ResponsiveTag(
+              text: tag.text,
+              mobileText: tag.mobileText,
+              isSelected: isSelected,
+              onTap: () => onTagSelected(tag.key),
+              icon: tag.icon,
+              selectedColor: tag.selectedColor,
+              unselectedColor: tag.unselectedColor,
+              selectedTextColor: tag.selectedTextColor,
+              unselectedTextColor: tag.unselectedTextColor,
+            );
+          }).toList(),
+        ),
+      );
+    }
+    
+    // 手机端使用ListView布局
     return Container(
-      height: isDesktop ? 60.h : 50.h,
+      height: 50.h,
       padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
