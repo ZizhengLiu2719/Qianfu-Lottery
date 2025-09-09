@@ -173,44 +173,45 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         : products.where((p) => p.category == _selectedCategory).toList();
 
     if (filteredProducts.isEmpty) {
-      // 完全删除空状态显示
       return SliverToBoxAdapter(
-        child: SizedBox.shrink(),
+        child: Container(
+          padding: EdgeInsets.all(40.w),
+          child: Center(
+            child: Column(
+              children: [
+                Icon(
+                  FeatherIcons.package,
+                  size: 64.sp,
+                  color: AppTheme.textTertiary,
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  '暂无商品',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: AppTheme.textTertiary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       );
     }
 
-    // Instagram 风格：三列等高网格，纯白背景
+    // 卡片化展示：两列网格，每个商品独立卡片
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          mainAxisSpacing: 8.w,
-          crossAxisSpacing: 8.w,
-          childAspectRatio: 1,
+          crossAxisCount: 2,
+          mainAxisSpacing: 12.h,
+          crossAxisSpacing: 12.w,
+          childAspectRatio: 0.75, // 调整比例让卡片更高一些
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             final product = filteredProducts[index];
-            return GestureDetector(
-              onTap: () => context.go('/products/${product.id}'),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.r),
-                child: product.mainImage.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: product.mainImage,
-                        fit: BoxFit.cover,
-                      )
-                    : Container(
-                        color: AppTheme.backgroundColor,
-                        child: Icon(
-                          FeatherIcons.image,
-                          size: 20.sp,
-                          color: AppTheme.textTertiary,
-                        ),
-                      ),
-              ),
-            );
+            return _buildProductCard(context, product);
           },
           childCount: filteredProducts.length,
         ),
@@ -227,22 +228,22 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 产品图片
+            // 产品图片 - 更小的尺寸
             ClipRRect(
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(AppTheme.borderRadiusMedium),
+                top: Radius.circular(12.r),
               ),
               child: AspectRatio(
-                aspectRatio: 1,
+                aspectRatio: 1.2, // 稍微宽一些
                 child: product.mainImage.isNotEmpty
                     ? CachedNetworkImage(
                         imageUrl: product.mainImage,
@@ -257,7 +258,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                           color: AppTheme.backgroundColor,
                           child: Icon(
                             FeatherIcons.image,
-                            size: 32.sp,
+                            size: 24.sp,
                             color: AppTheme.textTertiary,
                           ),
                         ),
@@ -266,81 +267,63 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         color: AppTheme.backgroundColor,
                         child: Icon(
                           FeatherIcons.image,
-                          size: 32.sp,
+                          size: 24.sp,
                           color: AppTheme.textTertiary,
                         ),
                       ),
               ),
             ),
             
-            // 产品信息
-            Padding(
-              padding: EdgeInsets.all(12.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+            // 产品信息 - 紧凑布局
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(12.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // 商品名称
+                    Text(
+                      product.title,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  
-                  SizedBox(height: 8.h),
-                  
-                  Row(
-                    children: [
-                      Text(
-                        '${product.priceInQiancaiDou}',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.bold,
+                    
+                    // 价格和库存
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 4.h),
+                        // 价格
+                        Row(
+                          children: [
+                            Text(
+                              '${product.priceInQiancaiDou}',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: AppTheme.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 4.w),
+                            QiancaiDouIcon(size: 14.0),
+                          ],
                         ),
-                      ),
-                      SizedBox(width: 4.w),
-                      const Text('仟彩豆'),
-                      SizedBox(width: 4.w),
-                      QiancaiDouIcon(
-                        size: 16.0,
-                      ),
-                    ],
-                  ),
-                  
-                  SizedBox(height: 8.h),
-                  
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${AppLocalizations.of(context)!.products_stock}: ${product.stock}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: product.isInStock ? AppTheme.successColor : AppTheme.errorColor,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: product.isInStock 
-                            ? () => _addToCart(product)
-                            : null,
-                        child: Container(
-                          padding: EdgeInsets.all(8.w),
-                          decoration: BoxDecoration(
-                            color: product.isInStock 
-                                ? AppTheme.primaryColor 
-                                : AppTheme.textTertiary,
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Icon(
-                            FeatherIcons.plus,
-                            size: 16.sp,
-                            color: Colors.white,
+                        SizedBox(height: 4.h),
+                        // 库存状态
+                        Text(
+                          '库存: ${product.stock}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: product.isInStock ? AppTheme.successColor : AppTheme.errorColor,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

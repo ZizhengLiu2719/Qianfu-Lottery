@@ -29,14 +29,14 @@ export function createSeedHandlers() {
           {
             title: '无线蓝牙耳机 Pro',
             description: '降噪 | 续航 24h | 低延迟',
-            images: ['https://images.unsplash.com/photo-1518443895914-4d4b90c42252?q=80&w=1200&auto=format&fit=crop'],
+            images: ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=400&auto=format&fit=crop'],
             priceInQiancaiDou: 1299,
             stock: 50
           },
           {
             title: '智能手表 S1',
             description: '心率监测 | 50m 防水 | NFC',
-            images: ['https://images.unsplash.com/photo-1518443749048-3d393c514afc?q=80&w=1200&auto=format&fit=crop'],
+            images: ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop'],
             priceInQiancaiDou: 2199,
             stock: 30
           }
@@ -48,7 +48,7 @@ export function createSeedHandlers() {
           {
             title: '城市机能风夹克',
             description: '轻量防水 | 透气面料',
-            images: ['https://images.unsplash.com/photo-1520975954732-35dd222996f9?q=80&w=1200&auto=format&fit=crop'],
+            images: ['https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=400&auto=format&fit=crop'],
             priceInQiancaiDou: 899,
             stock: 40
           }
@@ -60,7 +60,7 @@ export function createSeedHandlers() {
           {
             title: '精品咖啡豆 500g',
             description: '产地拼配 | 中度烘焙',
-            images: ['https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1200&auto=format&fit=crop'],
+            images: ['https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=400&auto=format&fit=crop'],
             priceInQiancaiDou: 199,
             stock: 100
           }
@@ -72,7 +72,7 @@ export function createSeedHandlers() {
           {
             title: '从 0 到 1：开启商业与未来的秘密',
             description: 'Peter Thiel 著 | 创业经典',
-            images: ['https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1200&auto=format&fit=crop'],
+            images: ['https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=400&auto=format&fit=crop'],
             priceInQiancaiDou: 79,
             stock: 60
           }
@@ -84,7 +84,7 @@ export function createSeedHandlers() {
           {
             title: '轻量跑步鞋',
             description: '缓震支撑 | 透气网面',
-            images: ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop'],
+            images: ['https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=400&auto=format&fit=crop'],
             priceInQiancaiDou: 699,
             stock: 35
           }
