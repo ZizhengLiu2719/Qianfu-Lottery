@@ -1,26 +1,39 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/models.dart';
+import '../../../api/dio_client.dart';
 
 class CartNotifier extends StateNotifier<List<CartItem>> {
   CartNotifier() : super([]);
 
   // 添加商品到购物车
-  void addItem(Product product, {int quantity = 1}) {
-    final existingIndex = state.indexWhere((item) => item.product.id == product.id);
-    
-    if (existingIndex >= 0) {
-      // 如果商品已存在，增加数量
-      final existingItem = state[existingIndex];
-      final newQuantity = existingItem.quantity + quantity;
+  Future<void> addItem(Product product, {int quantity = 1}) async {
+    try {
+      final dioClient = DioClient();
+      await dioClient.dio.post('/api/cart/add', data: {
+        'productId': product.id,
+        'quantity': quantity,
+      });
       
-      state = [
-        ...state.sublist(0, existingIndex),
-        existingItem.copyWith(quantity: newQuantity),
-        ...state.sublist(existingIndex + 1),
-      ];
-    } else {
-      // 如果商品不存在，添加新商品
-      state = [...state, CartItem(product: product, quantity: quantity)];
+      // 更新本地状态
+      final existingIndex = state.indexWhere((item) => item.product.id == product.id);
+      
+      if (existingIndex >= 0) {
+        // 如果商品已存在，增加数量
+        final existingItem = state[existingIndex];
+        final newQuantity = existingItem.quantity + quantity;
+        
+        state = [
+          ...state.sublist(0, existingIndex),
+          existingItem.copyWith(quantity: newQuantity),
+          ...state.sublist(existingIndex + 1),
+        ];
+      } else {
+        // 如果商品不存在，添加新商品
+        state = [...state, CartItem(product: product, quantity: quantity)];
+      }
+    } catch (e) {
+      print('Error adding item to cart: $e');
+      rethrow;
     }
   }
 
@@ -60,6 +73,26 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
   // 获取总数量
   int get totalQuantity {
     return state.fold(0, (sum, item) => sum + item.quantity);
+  }
+
+  // 从后端加载购物车数据
+  Future<void> loadCart() async {
+    try {
+      final dioClient = DioClient();
+      final response = await dioClient.dio.get('/api/cart');
+      
+      if (response.statusCode == 200) {
+        final data = response.data['data'];
+        final items = (data['items'] as List).map((item) => CartItem(
+          product: Product.fromJson(item['product']),
+          quantity: item['quantity'],
+        )).toList();
+        
+        state = items;
+      }
+    } catch (e) {
+      print('Error loading cart: $e');
+    }
   }
 }
 

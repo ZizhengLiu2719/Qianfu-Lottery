@@ -415,26 +415,40 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
     );
   }
 
-  void _addToCart(Product product) {
-    ref.read(cartProvider.notifier).addItem(product, quantity: _quantity);
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${product.title} x$_quantity 已添加到购物车'),
-        backgroundColor: AppTheme.successColor,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: '查看购物车',
-          textColor: Colors.white,
-          onPressed: () {
-            // TODO: 跳转到购物车
-          },
-        ),
-      ),
-    );
+  Future<void> _addToCart(Product product) async {
+    try {
+      await ref.read(cartProvider.notifier).addItem(product, quantity: _quantity);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${product.title} x$_quantity 已添加到购物车'),
+            backgroundColor: AppTheme.successColor,
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(
+              label: '查看购物车',
+              textColor: Colors.white,
+              onPressed: () {
+                // TODO: 跳转到购物车
+              },
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('添加到购物车失败: $e'),
+            backgroundColor: AppTheme.errorColor,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
   }
 
-  void _buyNow(Product product) {
+  Future<void> _buyNow(Product product) async {
     if (!ref.read(isAuthenticatedProvider)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -445,14 +459,27 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
       return;
     }
 
-    // 先添加到购物车
-    ref.read(cartProvider.notifier).addItem(product, quantity: _quantity);
-    
-    // 跳转到结账页面
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const CheckoutScreen(),
-      ),
-    );
+    try {
+      // 先添加到购物车
+      await ref.read(cartProvider.notifier).addItem(product, quantity: _quantity);
+      
+      // 跳转到结账页面
+      if (mounted) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const CheckoutScreen(),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('购买失败: $e'),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+      }
+    }
   }
 }
