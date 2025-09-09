@@ -134,7 +134,7 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
           totalCost,
           shippingAddressId: body.shippingAddressId,
           note: body.note,
-          status: 'PENDING',
+          status: 'PENDING' as any,
           items: {
             create: orderItems
           }
@@ -150,14 +150,20 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
       })
 
       // 扣除千彩豆
-      await qiancaiDouService.deductBalance(
-        currentUser.id,
-        totalCost,
-        'PRODUCT_REDEMPTION',
-        `订单 #${order.id} 商品购买`,
-        'orders',
-        order.id.toString()
-      )
+      try {
+        await qiancaiDouService.debitQiancaiDou({
+          userId: currentUser.id,
+          amount: totalCost,
+          reason: 'PRODUCT_REDEMPTION',
+          description: `订单 #${order.id} 商品购买`,
+          refTable: 'orders',
+          refId: order.id.toString()
+        })
+      } catch (balanceError) {
+        // 如果扣除千彩豆失败，删除订单
+        await (prisma as any).order.delete({ where: { id: order.id } })
+        throw balanceError
+      }
 
       // 更新库存
       for (const item of cart.items) {
@@ -191,11 +197,11 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
 
   // 支付订单
   const payOrder = async (c: Context) => {
-    const currentUser = c.get('user')
-    const orderId = parseInt(c.req.param('id'))
+    try {
+      const currentUser = c.get('user')
+      const orderId = parseInt(c.req.param('id'))
 
-    const result = await prisma.$transaction(async (tx: any) => {
-      const order = await tx.order.findFirst({
+      const order = await (prisma as any).order.findFirst({
         where: { id: orderId, userId: currentUser.id },
         include: {
           items: {
@@ -207,23 +213,11 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
       })
 
       if (!order) {
-        throw new Error('ORDER_NOT_FOUND')
+        return c.json({ code: 404, message: 'Order not found', data: null }, 404)
       }
 
       if (order.status !== 'PENDING') {
-        throw new Error('INVALID_ORDER_STATUS')
-      }
-
-      // 检查库存锁定是否有效
-      const locks = await tx.inventoryLock.findMany({
-        where: { orderId: order.id, status: 'LOCKED' }
-      })
-
-      const now = new Date()
-      for (const lock of locks) {
-        if (lock.expiresAt && lock.expiresAt < now) {
-          throw new Error('INVENTORY_LOCK_EXPIRED')
-        }
+        return c.json({ code: 400, message: 'Invalid order status', data: null }, 400)
       }
 
       // 扣除千彩豆
@@ -231,59 +225,43 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
         userId: currentUser.id,
         amount: order.totalCost,
         reason: 'PRODUCT_REDEMPTION',
+        description: `订单 #${order.id} 支付`,
         refTable: 'orders',
         refId: order.id.toString()
       })
 
       // 更新订单状态
-      const updatedOrder = await tx.order.update({
+      const updatedOrder = await (prisma as any).order.update({
         where: { id: orderId },
         data: {
-          status: 'PAID',
+          status: 'PAID' as any,
           paidAt: new Date()
         }
       })
 
-      // 扣减库存
-      for (const item of order.items) {
-        await tx.product.update({
-          where: { id: item.productId },
-          data: {
-            stock: {
-              decrement: item.quantity
-            }
-          }
-        })
-      }
-
-      // 更新库存锁定状态
-      await tx.inventoryLock.updateMany({
-        where: { orderId: order.id },
-        data: { status: 'CONSUMED' }
-      })
-
-      return updatedOrder
-    })
-
-    return c.json({ code: 200, message: 'Order paid', data: result })
+      return c.json({ code: 200, message: 'Order paid', data: updatedOrder })
+    } catch (error) {
+      console.error('Pay order error:', error)
+      return c.json({ code: 500, message: 'Internal server error', data: null }, 500)
+    }
   }
 
   // 取消订单
   const cancelOrder = async (c: Context) => {
-    const currentUser = c.get('user')
-    const orderId = parseInt(c.req.param('id'))
+    try {
+      const currentUser = c.get('user')
+      const orderId = parseInt(c.req.param('id'))
 
-    const result = await prisma.$transaction(async (tx: any) => {
-      const order = await tx.order.findFirst({
+      const order = await (prisma as any).order.findFirst({
         where: { id: orderId, userId: currentUser.id }
       })
 
       if (!order) {
-        throw new Error('ORDER_NOT_FOUND')
+        return c.json({ code: 404, message: 'Order not found', data: null }, 404)
       }
 
       if (!['PENDING', 'PAID'].includes(order.status)) {
-        throw new Error('CANNOT_CANCEL_ORDER')
+        return c.json({ code: 400, message: 'Cannot cancel order', data: null }, 400)
       }
 
       // 如果已支付，需要退款
@@ -291,18 +269,19 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
         await qiancaiDouService.creditQiancaiDou({
           userId: currentUser.id,
           amount: order.totalCost,
-          reason: 'ORDER_REFUND',
+          reason: 'REFUND',
+          description: `订单 #${order.id} 退款`,
           refTable: 'orders',
           refId: order.id.toString()
         })
 
         // 恢复库存
-        const items = await tx.orderItem.findMany({
+        const items = await (prisma as any).orderItem.findMany({
           where: { orderId: order.id }
         })
 
         for (const item of items) {
-          await tx.product.update({
+          await (prisma as any).product.update({
             where: { id: item.productId },
             data: {
               stock: {
@@ -313,75 +292,80 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
         }
       }
 
-      // 释放库存锁定
-      await tx.inventoryLock.updateMany({
-        where: { orderId: order.id },
-        data: { status: 'RELEASED' }
-      })
-
       // 更新订单状态
-      const updatedOrder = await tx.order.update({
+      const updatedOrder = await (prisma as any).order.update({
         where: { id: orderId },
         data: {
-          status: 'CANCELLED',
+          status: 'CANCELLED' as any,
           cancelledAt: new Date()
         }
       })
 
-      return updatedOrder
-    })
-
-    return c.json({ code: 200, message: 'Order cancelled', data: result })
+      return c.json({ code: 200, message: 'Order cancelled', data: updatedOrder })
+    } catch (error) {
+      console.error('Cancel order error:', error)
+      return c.json({ code: 500, message: 'Internal server error', data: null }, 500)
+    }
   }
 
   // 确认收货
   const confirmDelivery = async (c: Context) => {
-    const currentUser = c.get('user')
-    const orderId = parseInt(c.req.param('id'))
+    try {
+      const currentUser = c.get('user')
+      const orderId = parseInt(c.req.param('id'))
 
-    const order = await prisma.order.findFirst({
-      where: { id: orderId, userId: currentUser.id }
-    })
+      const order = await (prisma as any).order.findFirst({
+        where: { id: orderId, userId: currentUser.id }
+      })
 
-    if (!order) {
-      return c.json({ code: 404, message: 'Order not found', data: null }, 404)
-    }
-
-    if (order.status !== 'SHIPPED') {
-      return c.json({ code: 400, message: 'Order not shipped', data: null }, 400)
-    }
-
-    const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: {
-        status: 'DELIVERED',
-        fulfilledAt: new Date()
+      if (!order) {
+        return c.json({ code: 404, message: 'Order not found', data: null }, 404)
       }
-    })
 
-    return c.json({ code: 200, message: 'Delivery confirmed', data: updatedOrder })
+      if (order.status !== 'SHIPPED') {
+        return c.json({ code: 400, message: 'Order not shipped', data: null }, 400)
+      }
+
+      const updatedOrder = await (prisma as any).order.update({
+        where: { id: orderId },
+        data: {
+          status: 'DELIVERED' as any,
+          fulfilledAt: new Date()
+        }
+      })
+
+      return c.json({ code: 200, message: 'Delivery confirmed', data: updatedOrder })
+    } catch (error) {
+      console.error('Confirm delivery error:', error)
+      return c.json({ code: 500, message: 'Internal server error', data: null }, 500)
+    }
   }
 
   // 获取物流跟踪
   const getTracking = async (c: Context) => {
-    const currentUser = c.get('user')
-    const orderId = parseInt(c.req.param('id'))
+    try {
+      const currentUser = c.get('user')
+      const orderId = parseInt(c.req.param('id'))
 
-    const order = await prisma.order.findFirst({
-      where: { id: orderId, userId: currentUser.id },
-      include: {
-        shippingTracks: {
-          orderBy: { timestamp: 'desc' }
-        },
-        shipment: true
+      const order = await (prisma as any).order.findFirst({
+        where: { id: orderId, userId: currentUser.id },
+        include: {
+          shippingTracks: {
+            orderBy: { timestamp: 'desc' }
+          },
+          shipment: true
+        }
+      })
+
+      if (!order) {
+        return c.json({ code: 404, message: 'Order not found', data: null }, 404)
       }
-    })
 
-    if (!order) {
-      return c.json({ code: 404, message: 'Order not found', data: null }, 404)
+      return c.json({ code: 200, message: 'Tracking retrieved', data: order })
+    } catch (error) {
+      console.error('Get tracking error:', error)
+      return c.json({ code: 500, message: 'Internal server error', data: null }, 500)
     }
-
-    return c.json({ code: 200, message: 'Tracking retrieved', data: order })
   }
 
   return {
