@@ -4,14 +4,17 @@
   "description": "仟府集彩后端 API",
   "main": "src/index.ts",
   "scripts": {
+    "predev": "prisma generate",
     "dev": "wrangler dev src/index.ts",
+    "predeploy": "prisma generate",
     "deploy": "wrangler deploy src/index.ts",
     "migrate:dev": "npx prisma migrate dev",
     "migrate:deploy": "npx prisma migrate deploy",
     "generate": "npx prisma generate",
     "start:server": "tsx src/server.ts",
     "build": "tsc",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
