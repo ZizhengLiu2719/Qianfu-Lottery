@@ -32,6 +32,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   }
 
   Future<void> _loadDefaultAddress() async {
+    // 等待地址加载完成
+    await ref.read(addressesProvider.future);
     final defaultAddress = ref.read(defaultAddressProvider);
     if (defaultAddress != null) {
       setState(() {
@@ -165,14 +167,15 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   onPressed: () async {
                     final result = await Navigator.of(context).push<Address>(
                       MaterialPageRoute(
-                        builder: (context) => const AddressListScreen(),
+                        builder: (context) => AddressListScreen(
+                          onAddressSelected: (address) {
+                            setState(() {
+                              _selectedAddress = address;
+                            });
+                          },
+                        ),
                       ),
                     );
-                    if (result != null) {
-                      setState(() {
-                        _selectedAddress = result;
-                      });
-                    }
                   },
                   child: Text(
                     _selectedAddress == null ? '选择地址' : '更换地址',
@@ -201,7 +204,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 child: Column(
                   children: [
                     Icon(
-                      FeatherIcons.plus,
+                      FeatherIcons.mapPin,
                       color: AppTheme.textTertiary,
                       size: 24.sp,
                     ),

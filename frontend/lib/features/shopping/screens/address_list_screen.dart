@@ -9,7 +9,9 @@ import '../../../models/address.dart';
 import 'address_form_screen.dart';
 
 class AddressListScreen extends ConsumerWidget {
-  const AddressListScreen({super.key});
+  final Function(Address)? onAddressSelected;
+  
+  const AddressListScreen({super.key, this.onAddressSelected});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -183,6 +185,29 @@ class AddressListScreen extends ConsumerWidget {
             SizedBox(height: 12.h),
             Row(
               children: [
+                if (onAddressSelected != null)
+                  ElevatedButton(
+                    onPressed: () {
+                      onAddressSelected!(address);
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.r),
+                      ),
+                    ),
+                    child: Text(
+                      '选择此地址',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                if (onAddressSelected != null) SizedBox(width: 8.w),
                 if (!address.isDefault)
                   TextButton(
                     onPressed: () {
