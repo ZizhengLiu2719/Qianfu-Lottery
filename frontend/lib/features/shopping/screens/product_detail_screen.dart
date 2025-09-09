@@ -30,7 +30,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   Widget build(BuildContext context) {
     final productsRepository = ref.watch(productsRepositoryProvider);
     final qiancaiDouBalance = ref.watch(qiancaiDouBalanceProvider);
-    final isLoggedIn = ref.watch(isLoggedInProvider);
+    final isLoggedIn = ref.watch(isAuthenticatedProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -256,7 +256,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     ),
                     child: Row(
                       children: [
-                        Icon(FeatherIcons.wallet, color: AppTheme.primaryColor, size: 20.sp),
+                        Icon(FeatherIcons.creditCard, color: AppTheme.primaryColor, size: 20.sp),
                         SizedBox(width: 8.w),
                         Text(
                           '我的千彩豆余额: ',
@@ -415,7 +415,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   }
 
   void _addToCart(Product product) {
-    ref.read(cartProvider.notifier).addItem(product, _quantity);
+    ref.read(cartProvider.notifier).addItem(product, quantity: _quantity);
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -434,7 +434,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   }
 
   void _buyNow(Product product) {
-    if (!ref.read(isLoggedInProvider)) {
+    if (!ref.read(isAuthenticatedProvider)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('请先登录'),
