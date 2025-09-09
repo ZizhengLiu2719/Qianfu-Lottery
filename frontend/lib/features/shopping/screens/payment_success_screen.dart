@@ -106,7 +106,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
                   _buildInfoRow('订单号', '#${order.id}'),
                   SizedBox(height: 12.h),
                   
-                  _buildInfoRow('订单状态', _getStatusText(order.status)),
+                  _buildInfoRow('订单状态', order.statusText),
                   SizedBox(height: 12.h),
                   
                   _buildInfoRow('支付时间', _formatDateTime(order.paidAt)),
@@ -151,7 +151,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
                     ),
                     SizedBox(height: 16.h),
                     
-                    ...order.items.map((item) => _buildOrderItem(item)).toList(),
+                    ...order.items.map((item) => _buildOrderItem(item, context)).toList(),
                   ],
                 ),
               ),
@@ -253,7 +253,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildOrderItem(OrderItem item) {
+  Widget _buildOrderItem(OrderItem item, BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       child: Row(
@@ -316,22 +316,6 @@ class PaymentSuccessScreen extends ConsumerWidget {
     );
   }
 
-  String _getStatusText(String status) {
-    switch (status) {
-      case 'PENDING':
-        return '待支付';
-      case 'PAID':
-        return '已支付';
-      case 'SHIPPED':
-        return '已发货';
-      case 'DELIVERED':
-        return '已送达';
-      case 'CANCELLED':
-        return '已取消';
-      default:
-        return status;
-    }
-  }
 
   String _formatDateTime(DateTime? dateTime) {
     if (dateTime == null) return '-';
