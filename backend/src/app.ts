@@ -2,6 +2,10 @@ import { Hono } from 'hono'
 import { createAppointmentHandlers } from './handlers/appointments.handler'
 import { createAuthHandlers } from './handlers/auth.handler'
 import { createProductHandlers } from './handlers/products.handler'
+import { createAccountHandlers } from './handlers/account.handler'
+import { createCartHandlers } from './handlers/cart.handler'
+import { createCheckoutHandlers } from './handlers/checkout.handler'
+import { createSeedHandlers } from './handlers/seed.handler'
 import { createTravelHandlers } from './handlers/travel.handler'
 import { corsMiddleware, createAuthMiddleware } from './middleware/auth.middleware'
 import { AuthService } from './services/auth'
@@ -145,6 +149,65 @@ app.get('/api/me/orders', async (c) => {
   return handlers.getUserOrders(c)
 })
 
+// 账户与千彩豆（受保护）
+app.get('/api/account', async (c) => {
+  const { authMiddleware, qiancaiDouService } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createAccountHandlers(qiancaiDouService)
+  return handlers.getAccount(c)
+})
+
+app.post('/api/qiancaidou/grant', async (c) => {
+  const { authMiddleware, qiancaiDouService } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createAccountHandlers(qiancaiDouService)
+  return handlers.grantQiancaiDou(c)
+})
+
+// 购物车（受保护）
+app.get('/api/cart', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createCartHandlers()
+  return handlers.getCart(c)
+})
+
+app.post('/api/cart/items', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createCartHandlers()
+  return handlers.addItem(c)
+})
+
+app.patch('/api/cart/items/:itemId', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createCartHandlers()
+  return handlers.updateItem(c)
+})
+
+app.delete('/api/cart/items/:itemId', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createCartHandlers()
+  return handlers.removeItem(c)
+})
+
+// 结算/下单（受保护）
+app.post('/api/checkout/preview', async (c) => {
+  const { authMiddleware, qiancaiDouService } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createCheckoutHandlers(qiancaiDouService)
+  return handlers.preview(c)
+})
+
+app.post('/api/orders/from-cart', async (c) => {
+  const { authMiddleware, qiancaiDouService } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createCheckoutHandlers(qiancaiDouService)
+  return handlers.createOrderFromCart(c)
+})
+
 // 课程和预约相关路由
 app.get('/api/courses', async (c) => {
   const { qiancaiDouService } = initializeServices(c)
@@ -199,6 +262,12 @@ app.get('/api/travel/tags', async (c) => {
 app.get('/api/travel/search', async (c) => {
   const handlers = createTravelHandlers()
   return handlers.searchTravelPosts(c)
+})
+
+// 开发环境：种子产品（按分类填充示例）
+app.post('/api/dev/seed-products', async (c) => {
+  const handlers = createSeedHandlers()
+  return handlers.seedProducts(c)
 })
 
 // 仟彩豆交易历史 (受保护)

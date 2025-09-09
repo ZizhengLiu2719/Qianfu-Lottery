@@ -28,6 +28,7 @@ model User {
   qiancaiDouTransactions  QiancaiDouTransaction[]
   orders                  Order[]
   appointments            UserAppointment[]
+  account                 Account?
   
   @@map("users")
 }
@@ -44,6 +45,13 @@ model QiancaiDouTransaction {
   refTable    String?  // 关联表名
   refId       String?  // 关联记录ID
   createdAt   DateTime @default(now())
+  // 新增字段（向后兼容，可为空）
+  type        QiancaiDouTransactionType?
+  direction   TransactionDirection?
+  balanceBefore Int?
+  balanceAfter  Int?
+  orderId     Int?
+  order       Order?   @relation(fields: [orderId], references: [id])
   
   @@map("qiancaidou_transactions")
 }
@@ -73,14 +81,21 @@ model Order {
   userId          Int
   user            User        @relation(fields: [userId], references: [id])
   totalCost       Int         // 总仟彩豆消费
-  status          String      @default("PENDING") // PENDING, PROCESSING, SHIPPED, COMPLETED, CANCELLED
+  status          String      @default("PENDING") // PENDING, PAID, CANCELLED, FULFILLED, REFUNDED
+  payMethod       PayMethod   @default(QIANCAIDOU)
   shippingAddress String?
   note            String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  paidAt          DateTime?
+  cancelledAt     DateTime?
+  fulfilledAt     DateTime?
+  refundedAt      DateTime?
   
   // 关联关系
   items           OrderItem[]
+  inventoryLocks  InventoryLock[]
+  transactions    QiancaiDouTransaction[]
   
   @@map("orders")
 }
@@ -171,4 +186,123 @@ model TravelPost {
   updatedAt   DateTime @updatedAt
   
   @@map("travel_posts")
+}
+
+// 账户：仟彩豆可用/锁定余额
+model Account {
+  id               Int      @id @default(autoincrement())
+  userId           Int      @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  availableBalance Int      @default(0)
+  lockedBalance    Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("accounts")
+}
+
+// 服务器购物车
+model Cart {
+  id          Int         @id @default(autoincrement())
+  userId      Int         @unique
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       CartItem[]
+  itemsCount  Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("carts")
+}
+
+model CartItem {
+  id         Int     @id @default(autoincrement())
+  cartId     Int
+  cart       Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId  Int
+  product    Product @relation(fields: [productId], references: [id])
+  quantity   Int
+
+  @@unique([cartId, productId])
+  @@map("cart_items")
+}
+
+// 库存锁
+model InventoryLock {
+  id         Int                 @id @default(autoincrement())
+  orderId    Int
+  order      Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  Int
+  product    Product             @relation(fields: [productId], references: [id])
+  quantity   Int
+  status     InventoryLockStatus @default(LOCKED)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+
+  @@map("inventory_locks")
+}
+
+// 地址簿
+model Address {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  receiverName  String
+  phone         String
+  province      String
+  city          String
+  district      String?
+  detail        String
+  zip           String?
+  isDefault     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("addresses")
+}
+
+// 发货信息
+model Shipment {
+  id          Int            @id @default(autoincrement())
+  orderId     Int            @unique
+  order       Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  carrier     String?
+  trackingNo  String?
+  status      ShipmentStatus @default(PENDING)
+  shippedAt   DateTime?
+  deliveredAt DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("shipments")
+}
+
+// ===== Enums =====
+enum PayMethod {
+  QIANCAIDOU
+}
+
+enum InventoryLockStatus {
+  LOCKED
+  RELEASED
+  CONSUMED
+}
+
+enum ShipmentStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
+}
+
+enum QiancaiDouTransactionType {
+  EARN
+  SPEND
+  REFUND
+  LOCK
+  UNLOCK
+  ADJUST
+}
+
+enum TransactionDirection {
+  CREDIT
+  DEBIT
 }
