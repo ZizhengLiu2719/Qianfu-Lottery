@@ -78,7 +78,9 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
       // 确保在请求结束时清理 Prisma 连接
       if (prisma) {
         try {
-          await prisma.$disconnect()
+          // 在 Cloudflare Workers 环境中，我们不需要显式断开连接
+          // Prisma 会自动管理连接池
+          // await prisma.$disconnect()
         } catch (disconnectError) {
           console.error('Error disconnecting Prisma:', disconnectError)
         }
@@ -140,7 +142,9 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
     } finally {
       if (prisma) {
         try {
-          await prisma.$disconnect()
+          // 在 Cloudflare Workers 环境中，我们不需要显式断开连接
+          // Prisma 会自动管理连接池
+          // await prisma.$disconnect()
         } catch (disconnectError) {
           console.error('Error disconnecting Prisma:', disconnectError)
         }

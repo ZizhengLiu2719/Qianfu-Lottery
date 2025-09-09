@@ -17,6 +17,8 @@ export function getPrismaClient(databaseUrl: string): PrismaClient {
 // 用于清理连接（主要在测试中使用）
 export async function closePrismaClient(prisma: PrismaClient): Promise<void> {
   if (prisma) {
-    await prisma.$disconnect()
+    // 在 Cloudflare Workers 环境中，我们不需要显式断开连接
+    // Prisma 会自动管理连接池
+    // await prisma.$disconnect()
   }
 }
