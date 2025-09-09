@@ -44,7 +44,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 16.h),
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -53,43 +53,58 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
             final isSelected = _selectedCategory == category['key'];
             
             return Container(
-              margin: EdgeInsets.only(right: 12.w),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
+              margin: EdgeInsets.only(right: 8.w),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
                   onTap: () {
                     setState(() {
                       _selectedCategory = category['key'] as String?;
                     });
                   },
-                  borderRadius: BorderRadius.circular(20.r),
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
                     padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 10.h,
+                      horizontal: 16.w,
+                      vertical: 8.h,
                     ),
                     decoration: BoxDecoration(
-                      color: isSelected ? AppTheme.primaryColor : Colors.white,
+                      color: isSelected 
+                          ? AppTheme.primaryColor 
+                          : Colors.grey.shade50,
                       borderRadius: BorderRadius.circular(20.r),
                       border: Border.all(
-                        color: isSelected ? AppTheme.primaryColor : Colors.grey.shade300,
-                        width: 1.5,
+                        color: isSelected 
+                            ? AppTheme.primaryColor 
+                            : Colors.grey.shade200,
+                        width: 1.0,
                       ),
-                      boxShadow: [
+                      boxShadow: isSelected ? [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 4,
+                          color: AppTheme.primaryColor.withOpacity(0.3),
+                          blurRadius: 6,
                           offset: const Offset(0, 2),
+                        ),
+                      ] : [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 3,
+                          offset: const Offset(0, 1),
                         ),
                       ],
                     ),
                     child: Text(
                       category['name'] as String,
                       style: TextStyle(
-                        color: isSelected ? Colors.white : AppTheme.textPrimary,
-                        fontSize: 14.sp,
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                        height: 1.2,
+                        color: isSelected 
+                            ? Colors.white 
+                            : AppTheme.textPrimary,
+                        fontSize: 13.sp,
+                        fontWeight: isSelected 
+                            ? FontWeight.w600 
+                            : FontWeight.w500,
+                        letterSpacing: 0.3,
                       ),
                     ),
                   ),
