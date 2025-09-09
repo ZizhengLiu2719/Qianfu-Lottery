@@ -20,7 +20,12 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
     try {
       const databaseUrl = c.env?.DATABASE_URL as string
       if (!databaseUrl) {
-        throw new Error('DATABASE_URL not configured')
+        console.error('DATABASE_URL not configured in environment variables')
+        return c.json({
+          code: 500,
+          message: 'Database configuration error: DATABASE_URL not set',
+          data: null
+        }, 500)
       }
 
       const prisma = getPrismaClient(databaseUrl)
