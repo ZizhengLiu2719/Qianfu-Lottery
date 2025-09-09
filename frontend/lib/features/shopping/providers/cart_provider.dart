@@ -9,7 +9,7 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
   Future<void> addItem(Product product, {int quantity = 1}) async {
     try {
       final dioClient = DioClient();
-      await dioClient.dio.post('/api/cart/add', data: {
+      await dioClient.dio.post('/api/cart/items', data: {
         'productId': product.id,
         'quantity': quantity,
       });
