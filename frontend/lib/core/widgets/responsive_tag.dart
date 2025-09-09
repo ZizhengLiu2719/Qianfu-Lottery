@@ -98,16 +98,19 @@ class _ResponsiveTagState extends State<ResponsiveTag>
     final verticalPadding = isDesktop ? 6.h : 5.h;
     final borderRadius = isDesktop ? 16.r : 14.r;
     
-    // 计算文字宽度
+    // 计算文字宽度 - 使用更精确的字体样式
     final textPainter = TextPainter(
       text: TextSpan(
         text: displayText,
         style: TextStyle(
           fontSize: fontSize,
           fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w500,
+          height: 1.2,
+          letterSpacing: 0.3,
         ),
       ),
       textDirection: TextDirection.ltr,
+      maxLines: 1,
     );
     textPainter.layout();
     final textWidth = textPainter.size.width;
@@ -115,8 +118,8 @@ class _ResponsiveTagState extends State<ResponsiveTag>
     // 计算图标宽度（如果有图标）
     final iconWidth = widget.icon != null ? iconSize + (isDesktop ? 6.w : 4.w) : 0.0;
     
-    // 计算总宽度
-    final totalWidth = textWidth + iconWidth + (horizontalPadding * 2);
+    // 计算总宽度 - 增加额外空间确保文字完全显示
+    final totalWidth = textWidth + iconWidth + (horizontalPadding * 2) + (isDesktop ? 8.w : 4.w);
     
     // 动态高度 - 确保有足够空间容纳内容
     final tagHeight = (verticalPadding * 2) + fontSize + 4.h;
@@ -182,24 +185,23 @@ class _ResponsiveTagState extends State<ResponsiveTag>
                         ),
                         SizedBox(width: isDesktop ? 6.w : 4.w),
                       ],
-                      Flexible(
-                        child: Text(
-                          displayText,
-                          style: TextStyle(
-                            color: widget.isSelected
-                                ? (widget.selectedTextColor ?? Colors.white)
-                                : (widget.unselectedTextColor ?? Colors.black87),
-                            fontSize: fontSize,
-                            fontWeight: widget.isSelected
-                                ? FontWeight.w600
-                                : FontWeight.w500,
-                            height: 1.2,
-                            letterSpacing: 0.3,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                      Text(
+                        displayText,
+                        style: TextStyle(
+                          color: widget.isSelected
+                              ? (widget.selectedTextColor ?? Colors.white)
+                              : (widget.unselectedTextColor ?? Colors.black87),
+                          fontSize: fontSize,
+                          fontWeight: widget.isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
+                          height: 1.2,
+                          letterSpacing: 0.3,
                         ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.visible,
+                        softWrap: false,
                       ),
                     ],
                   ),
