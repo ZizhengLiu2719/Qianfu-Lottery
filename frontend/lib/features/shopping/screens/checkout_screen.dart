@@ -9,7 +9,9 @@ import '../providers/address_provider.dart';
 import '../providers/order_provider.dart';
 import '../../../models/address.dart';
 import '../../../models/product.dart';
+import '../../../models/order.dart';
 import 'address_list_screen.dart';
+import 'payment_success_screen.dart';
 
 class CheckoutScreen extends ConsumerStatefulWidget {
   const CheckoutScreen({super.key});
@@ -534,17 +536,25 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         // 清空购物车
         ref.read(cartProvider.notifier).clear();
         
-        Navigator.of(context).pop(); // 返回购物车页面
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('订单创建成功'),
-            backgroundColor: AppTheme.successColor,
+        // 跳转到支付成功页面
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => PaymentSuccessScreen(order: order),
           ),
         );
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('订单创建失败，请重试'),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('订单创建失败：${e.toString()}'),
             backgroundColor: AppTheme.errorColor,
           ),
         );
