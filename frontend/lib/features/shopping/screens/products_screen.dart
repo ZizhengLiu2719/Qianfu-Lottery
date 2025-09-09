@@ -12,6 +12,7 @@ import '../../../api/dio_client.dart';
 import '../../../api/products_repository.dart';
 import '../../../routing/app_router.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/qiancai_dou_icon.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 
