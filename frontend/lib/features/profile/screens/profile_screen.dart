@@ -13,6 +13,7 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:html' as html;
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/qiancai_dou_icon.dart';
 import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../../api/auth_repository.dart';
@@ -463,9 +464,19 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
                 ),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              Text(
-                '${widget.points} 仟彩豆',
-                style: const TextStyle(color: AppTheme.primaryColor),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${widget.points} 仟彩豆',
+                    style: const TextStyle(color: AppTheme.primaryColor),
+                  ),
+                  SizedBox(width: 4.w),
+                  QiancaiDouIcon(
+                    size: 16.0,
+                    color: AppTheme.primaryColor,
+                  ),
+                ],
               ),
             ],
           ),

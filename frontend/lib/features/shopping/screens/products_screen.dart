@@ -350,18 +350,19 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                   
                   Row(
                     children: [
-                      Icon(
-                        Icons.diamond,
-                        size: 16.sp,
-                        color: AppTheme.primaryColor,
-                      ),
-                      SizedBox(width: 4.w),
                       Text(
                         '${product.priceInQiancaiDou}',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: AppTheme.primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      SizedBox(width: 4.w),
+                      const Text('仟彩豆'),
+                      SizedBox(width: 4.w),
+                      QiancaiDouIcon(
+                        size: 16.0,
+                        color: AppTheme.primaryColor,
                       ),
                     ],
                   ),

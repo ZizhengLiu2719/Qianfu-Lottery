@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/qiancai_dou_icon.dart';
 import '../../../api/dio_client.dart';
 import '../../../api/products_repository.dart';
 import '../../../models/product.dart';
@@ -135,18 +136,19 @@ class CartScreen extends ConsumerWidget {
                 SizedBox(height: 4.h),
                 Row(
                   children: [
-                    Icon(
-                      Icons.diamond,
-                      size: 14.sp,
-                      color: AppTheme.primaryColor,
-                    ),
-                    SizedBox(width: 4.w),
                     Text(
                       '${item.product.priceInQiancaiDou}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppTheme.primaryColor,
                         fontWeight: FontWeight.w600,
                       ),
+                    ),
+                    SizedBox(width: 4.w),
+                    const Text('仟彩豆'),
+                    SizedBox(width: 4.w),
+                    QiancaiDouIcon(
+                      size: 14.0,
+                      color: AppTheme.primaryColor,
                     ),
                   ],
                 ),
@@ -228,18 +230,19 @@ class CartScreen extends ConsumerWidget {
                 ),
                 Row(
                   children: [
-                    Icon(
-                      Icons.diamond,
-                      size: 20.sp,
-                      color: AppTheme.primaryColor,
-                    ),
-                    SizedBox(width: 4.w),
                     Text(
                       '$totalPrice',
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: AppTheme.primaryColor,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    SizedBox(width: 4.w),
+                    const Text('仟彩豆'),
+                    SizedBox(width: 4.w),
+                    QiancaiDouIcon(
+                      size: 20.0,
+                      color: AppTheme.primaryColor,
                     ),
                   ],
                 ),
