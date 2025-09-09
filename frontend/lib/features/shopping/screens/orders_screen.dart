@@ -162,7 +162,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                   ),
                 ),
                 const Spacer(),
-                _buildStatusChip(order.status),
+                _buildStatusChip(order.status.name.toUpperCase()),
               ],
             ),
             SizedBox(height: 12.h),
@@ -201,7 +201,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                 ),
               ],
             ),
-            if (order.status == 'PENDING') ...[
+            if (order.status == OrderStatus.pending) ...[
               SizedBox(height: 12.h),
               Row(
                 children: [
@@ -374,10 +374,10 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
         SnackBar(
           content: Text(success ? '支付成功' : '支付失败'),
           backgroundColor: success ? AppTheme.successColor : AppTheme.errorColor,
-        ),
-      );
-    }
+      ),
+    );
   }
+}
 
   Future<void> _cancelOrder(int orderId) async {
     final success = await ref.read(ordersProvider.notifier).cancelOrder(orderId);
