@@ -23,7 +23,7 @@ class OrderRepository {
         queryParams['status'] = status;
       }
 
-      final response = await _dioClient.dio.get('/orders', queryParameters: queryParams);
+      final response = await _dioClient.dio.get('/api/orders', queryParameters: queryParams);
       return ApiResponse.fromJson(
         response.data,
         (json) => OrderListResponse.fromJson(json as Map<String, dynamic>),
@@ -36,7 +36,7 @@ class OrderRepository {
   // 获取订单详情
   Future<ApiResponse<Order>> getOrder(int id) async {
     try {
-      final response = await _dioClient.dio.get('/orders/$id');
+      final response = await _dioClient.dio.get('/api/orders/$id');
       return ApiResponse.fromJson(
         response.data,
         (json) => Order.fromJson(json as Map<String, dynamic>),
@@ -52,7 +52,7 @@ class OrderRepository {
     String? note,
   }) async {
     try {
-      final response = await _dioClient.dio.post('/orders/from-cart', data: {
+      final response = await _dioClient.dio.post('/api/orders/from-cart', data: {
         'shippingAddressId': shippingAddressId,
         'note': note,
       });
@@ -68,7 +68,7 @@ class OrderRepository {
   // 支付订单
   Future<ApiResponse<Order>> payOrder(int id) async {
     try {
-      final response = await _dioClient.dio.post('/orders/$id/pay');
+      final response = await _dioClient.dio.post('/api/orders/$id/pay');
       return ApiResponse.fromJson(
         response.data,
         (json) => Order.fromJson(json as Map<String, dynamic>),
@@ -81,7 +81,7 @@ class OrderRepository {
   // 取消订单
   Future<ApiResponse<Order>> cancelOrder(int id) async {
     try {
-      final response = await _dioClient.dio.post('/orders/$id/cancel');
+      final response = await _dioClient.dio.post('/api/orders/$id/cancel');
       return ApiResponse.fromJson(
         response.data,
         (json) => Order.fromJson(json as Map<String, dynamic>),
@@ -94,7 +94,7 @@ class OrderRepository {
   // 确认收货
   Future<ApiResponse<Order>> confirmDelivery(int id) async {
     try {
-      final response = await _dioClient.dio.post('/orders/$id/confirm-delivery');
+      final response = await _dioClient.dio.post('/api/orders/$id/confirm-delivery');
       return ApiResponse.fromJson(
         response.data,
         (json) => Order.fromJson(json as Map<String, dynamic>),
@@ -107,7 +107,7 @@ class OrderRepository {
   // 获取物流跟踪
   Future<ApiResponse<Order>> getTracking(int id) async {
     try {
-      final response = await _dioClient.dio.get('/orders/$id/tracking');
+      final response = await _dioClient.dio.get('/api/orders/$id/tracking');
       return ApiResponse.fromJson(
         response.data,
         (json) => Order.fromJson(json as Map<String, dynamic>),

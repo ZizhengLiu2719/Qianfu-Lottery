@@ -11,7 +11,7 @@ class AddressRepository {
   // 获取地址列表
   Future<ApiResponse<List<Address>>> getAddresses() async {
     try {
-      final response = await _dioClient.dio.get('/addresses');
+      final response = await _dioClient.dio.get('/api/addresses');
       return ApiResponse.fromJson(
         response.data,
         (json) => (json as List).map((e) => Address.fromJson(e)).toList(),
@@ -33,7 +33,7 @@ class AddressRepository {
     bool isDefault = false,
   }) async {
     try {
-      final response = await _dioClient.dio.post('/addresses', data: {
+      final response = await _dioClient.dio.post('/api/addresses', data: {
         'receiverName': receiverName,
         'phone': phone,
         'province': province,
@@ -65,7 +65,7 @@ class AddressRepository {
     bool? isDefault,
   }) async {
     try {
-      final response = await _dioClient.dio.put('/addresses/$id', data: {
+      final response = await _dioClient.dio.put('/api/addresses/$id', data: {
         if (receiverName != null) 'receiverName': receiverName,
         if (phone != null) 'phone': phone,
         if (province != null) 'province': province,
@@ -87,7 +87,7 @@ class AddressRepository {
   // 删除地址
   Future<ApiResponse<void>> deleteAddress(int id) async {
     try {
-      final response = await _dioClient.dio.delete('/addresses/$id');
+      final response = await _dioClient.dio.delete('/api/addresses/$id');
       return ApiResponse.fromJson(
         response.data,
         (json) => null,
@@ -100,7 +100,7 @@ class AddressRepository {
   // 设为默认地址
   Future<ApiResponse<Address>> setDefaultAddress(int id) async {
     try {
-      final response = await _dioClient.dio.put('/addresses/$id/default');
+      final response = await _dioClient.dio.put('/api/addresses/$id/default');
       return ApiResponse.fromJson(
         response.data,
         (json) => Address.fromJson(json as Map<String, dynamic>),
