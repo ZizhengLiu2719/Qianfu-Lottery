@@ -123,9 +123,9 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 16.h),
+      padding: EdgeInsets.symmetric(vertical: 24.h), // 进一步增加垂直间距
       child: SizedBox(
-        height: 40.h,
+        height: 60.h, // 进一步增加高度
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -135,26 +135,41 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             final isSelected = _selectedCategory == category['key'];
 
             return Container(
-              margin: EdgeInsets.only(right: 12.w),
-              child: FilterChip(
-                label: Text(category['name'] as String),
-                selected: isSelected,
-                onSelected: (selected) {
+              margin: EdgeInsets.only(right: 20.w), // 进一步增加间距
+              child: GestureDetector(
+                onTap: () {
                   setState(() {
-                    _selectedCategory = selected ? category['key'] as String? : null;
+                    _selectedCategory = category['key'] as String?;
                   });
                 },
-                backgroundColor: Colors.white,
-                selectedColor: AppTheme.primaryColor.withOpacity(0.1),
-                checkmarkColor: AppTheme.primaryColor,
-                labelStyle: TextStyle(
-                  color: isSelected ? AppTheme.primaryColor : AppTheme.textSecondary,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.r),
-                  side: BorderSide(
-                    color: isSelected ? AppTheme.primaryColor : AppTheme.dividerColor,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h), // 进一步增加内边距
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppTheme.primaryColor : Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(30.r), // 进一步增加圆角
+                    border: Border.all(
+                      color: isSelected ? AppTheme.primaryColor : Colors.grey.shade300,
+                      width: 3, // 进一步增加边框宽度
+                    ),
+                    boxShadow: isSelected ? [
+                      BoxShadow(
+                        color: AppTheme.primaryColor.withOpacity(0.4),
+                        blurRadius: 12,
+                        offset: const Offset(0, 3),
+                      ),
+                    ] : null,
+                  ),
+                  child: Center( // 确保文字居中
+                    child: Text(
+                      category['name'] as String,
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : AppTheme.textSecondary,
+                        fontSize: 18.sp, // 进一步增加字体大小
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700, // 进一步增加字重
+                        height: 1.0, // 设置行高为1，确保字体贴合
+                      ),
+                      textAlign: TextAlign.center, // 确保文字居中对齐
+                    ),
                   ),
                 ),
               ),
