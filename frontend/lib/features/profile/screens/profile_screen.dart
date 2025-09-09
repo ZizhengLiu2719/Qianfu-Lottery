@@ -313,9 +313,10 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         
         ctx.drawImageScaled(img, 0, 0, newWidth, newHeight);
         
-        // 转换为 Blob 并获取字节
-        final html.Blob blob = await canvas.toBlob('image/jpeg', 0.8);
-        final Uint8List compressedBytes = Uint8List.fromList(await blob.arrayBuffer());
+        // 转换为 data URL 并解析为字节
+        final String dataUrl = canvas.toDataUrl('image/jpeg', 0.8);
+        final String base64Data = dataUrl.split(',')[1];
+        final Uint8List compressedBytes = base64Decode(base64Data);
         
         return compressedBytes;
       } catch (e) {
