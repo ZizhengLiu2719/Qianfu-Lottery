@@ -149,6 +149,14 @@ export function createSeedHandlers() {
       {
         title: '轻量跑步鞋',
         images: ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop']
+      },
+      {
+        title: '智能手表 S1',
+        images: ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop']
+      },
+      {
+        title: '无线蓝牙耳机 Pro',
+        images: ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=400&auto=format&fit=crop']
       }
     ]
 
