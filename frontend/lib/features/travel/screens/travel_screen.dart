@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/responsive_tag.dart';
 
 class TravelScreen extends ConsumerStatefulWidget {
   const TravelScreen({super.key});
@@ -18,107 +19,81 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.travel_title),
-        backgroundColor: Colors.white,
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          children: [
-            _buildCategoryFilter(context),
-            SizedBox(height: 16.h),
-            Expanded(child: _TravelExamples()),
-          ],
-        ),
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          // 顶部标题栏
+          SliverAppBar(
+            title: Text(AppLocalizations.of(context)!.travel_title),
+            backgroundColor: Colors.white,
+            foregroundColor: AppTheme.textPrimary,
+            elevation: 0,
+            pinned: true,
+          ),
+          // 标签栏
+          SliverToBoxAdapter(
+            child: _buildCategoryFilter(context),
+          ),
+          // 内容区域
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            sliver: SliverToBoxAdapter(
+              child: _TravelExamples(),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildCategoryFilter(BuildContext context) {
     final categories = [
-      {'key': null, 'name': '全部'},
-      {'key': 'domestic', 'name': '国内游'},
-      {'key': 'international', 'name': '国外游'},
+      ResponsiveTagData(
+        key: null,
+        text: '全部攻略',
+        mobileText: '全部',
+        icon: FeatherIcons.globe,
+      ),
+      ResponsiveTagData(
+        key: 'domestic',
+        text: '国内旅游',
+        mobileText: '国内游',
+        icon: FeatherIcons.mapPin,
+      ),
+      ResponsiveTagData(
+        key: 'international',
+        text: '国外旅游',
+        mobileText: '国外游',
+        icon: FeatherIcons.plane,
+      ),
+      ResponsiveTagData(
+        key: 'city',
+        text: '城市探索',
+        mobileText: '城市',
+        icon: FeatherIcons.building,
+      ),
+      ResponsiveTagData(
+        key: 'nature',
+        text: '自然风光',
+        mobileText: '自然',
+        icon: FeatherIcons.mountain,
+      ),
+      ResponsiveTagData(
+        key: 'culture',
+        text: '文化体验',
+        mobileText: '文化',
+        icon: FeatherIcons.bookOpen,
+      ),
     ];
 
-    return Container(
-      height: 80.h, // 进一步增加高度，让标签更厚
-      padding: EdgeInsets.symmetric(vertical: 20.h),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          final category = categories[index];
-          final isSelected = _selectedCategory == category['key'];
-          
-          return Container(
-            margin: EdgeInsets.only(right: 8.w),
-            child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedCategory = category['key'] as String?;
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w, // 稍微增加横向内边距，给文字更多空间
-                    vertical: 20.h,   // 保持纵向内边距，让标签更厚
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected 
-                        ? AppTheme.primaryColor 
-                        : Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(35.r), // 增加圆角配合更厚的标签
-                    border: Border.all(
-                      color: isSelected 
-                          ? AppTheme.primaryColor 
-                          : Colors.grey.shade200,
-                      width: 2.0, // 增加边框宽度
-                    ),
-                    boxShadow: isSelected ? [
-                      BoxShadow(
-                        color: AppTheme.primaryColor.withOpacity(0.4),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ] : [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      category['name'] as String,
-                      style: TextStyle(
-                        color: isSelected 
-                            ? Colors.white 
-                            : Colors.black87,
-                        fontSize: 13.sp, // 减小字体大小，让文字完美嵌入
-                        fontWeight: isSelected 
-                            ? FontWeight.w600 
-                            : FontWeight.w500, // 适中的字重
-                        height: 1.2, // 稍微增加行高，确保文字不重叠
-                        letterSpacing: 0.2, // 减少字间距
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1, // 限制为单行
-                      overflow: TextOverflow.ellipsis, // 超出部分显示省略号
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+    return ResponsiveTagBar(
+      tags: categories,
+      selectedTag: _selectedCategory,
+      onTagSelected: (key) {
+        setState(() {
+          _selectedCategory = key;
+        });
+      },
     );
   }
 }

@@ -13,6 +13,7 @@ import '../../../api/products_repository.dart';
 import '../../../routing/app_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/qiancai_dou_icon.dart';
+import '../../../core/widgets/responsive_tag.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 
@@ -69,43 +70,45 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     return SliverToBoxAdapter(
       child: Container(
         color: Colors.white,
-        padding: EdgeInsets.only(left: 12.w, right: 8.w, top: 12.h, bottom: 8.h),
-        child: Row(
+        child: Column(
           children: [
-            // 横向标签
-            Expanded(
-              child: SizedBox(
-                height: 36.h,
-                child: _buildCategoryFilter(context),
+            // 标签栏
+            _buildCategoryFilter(context),
+            // 购物车按钮行
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Stack(
+                    children: [
+                      IconButton(
+                        icon: const Icon(FeatherIcons.shoppingCart, color: AppTheme.textPrimary),
+                        onPressed: () => context.go(AppRoutes.cart),
+                      ),
+                      if (cartCount > 0)
+                        Positioned(
+                          right: 6,
+                          top: 6,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: AppTheme.primaryColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                            child: Text(
+                              cartCount > 99 ? '99+' : cartCount.toString(),
+                              style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            // 购物车
-            Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(FeatherIcons.shoppingCart, color: AppTheme.textPrimary),
-                  onPressed: () => context.go(AppRoutes.cart),
-                ),
-                if (cartCount > 0)
-                  Positioned(
-                    right: 6,
-                    top: 6,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                      child: Text(
-                        cartCount > 99 ? '99+' : cartCount.toString(),
-                        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
-            )
           ],
         ),
       ),
@@ -114,90 +117,52 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
   Widget _buildCategoryFilter(BuildContext context) {
     final categories = [
-      {'key': null, 'name': '全部'},
-      {'key': 'electronics', 'name': '数码'},
-      {'key': 'clothing', 'name': '服装'},
-      {'key': 'food', 'name': '食品'},
-      {'key': 'books', 'name': '图书'},
-      {'key': 'sports', 'name': '运动'},
+      ResponsiveTagData(
+        key: null,
+        text: '全部商品',
+        mobileText: '全部',
+        icon: FeatherIcons.grid,
+      ),
+      ResponsiveTagData(
+        key: 'electronics',
+        text: '数码电子',
+        mobileText: '数码',
+        icon: FeatherIcons.smartphone,
+      ),
+      ResponsiveTagData(
+        key: 'clothing',
+        text: '服装配饰',
+        mobileText: '服装',
+        icon: FeatherIcons.shirt,
+      ),
+      ResponsiveTagData(
+        key: 'food',
+        text: '美食饮品',
+        mobileText: '食品',
+        icon: FeatherIcons.coffee,
+      ),
+      ResponsiveTagData(
+        key: 'books',
+        text: '图书文具',
+        mobileText: '图书',
+        icon: FeatherIcons.book,
+      ),
+      ResponsiveTagData(
+        key: 'sports',
+        text: '运动健身',
+        mobileText: '运动',
+        icon: FeatherIcons.activity,
+      ),
     ];
 
-    return Container(
-      height: 80.h, // 进一步增加高度，让标签更厚
-      padding: EdgeInsets.symmetric(vertical: 20.h),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          final category = categories[index];
-          final isSelected = _selectedCategory == category['key'];
-          
-          return Container(
-            margin: EdgeInsets.only(right: 8.w),
-            child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedCategory = category['key'] as String?;
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w, // 稍微增加横向内边距，给文字更多空间
-                    vertical: 20.h,   // 保持纵向内边距，让标签更厚
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected 
-                        ? AppTheme.primaryColor 
-                        : Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(35.r), // 增加圆角配合更厚的标签
-                    border: Border.all(
-                      color: isSelected 
-                          ? AppTheme.primaryColor 
-                          : Colors.grey.shade200,
-                      width: 2.0, // 增加边框宽度
-                    ),
-                    boxShadow: isSelected ? [
-                      BoxShadow(
-                        color: AppTheme.primaryColor.withOpacity(0.4),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ] : [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      category['name'] as String,
-                      style: TextStyle(
-                        color: isSelected 
-                            ? Colors.white 
-                            : Colors.black87,
-                        fontSize: 13.sp, // 减小字体大小，让文字完美嵌入
-                        fontWeight: isSelected 
-                            ? FontWeight.w600 
-                            : FontWeight.w500, // 适中的字重
-                        height: 1.2, // 稍微增加行高，确保文字不重叠
-                        letterSpacing: 0.2, // 减少字间距
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1, // 限制为单行
-                      overflow: TextOverflow.ellipsis, // 超出部分显示省略号
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+    return ResponsiveTagBar(
+      tags: categories,
+      selectedTag: _selectedCategory,
+      onTagSelected: (key) {
+        setState(() {
+          _selectedCategory = key;
+        });
+      },
     );
   }
 
