@@ -1,17 +1,23 @@
 import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
 
-// 为每个请求创建新的 Prisma 客户端实例
+// 全局 Prisma 客户端实例
+let prismaClient: PrismaClient | null = null
+
+// 获取 Prisma 客户端实例
 export function getPrismaClient(databaseUrl: string): PrismaClient {
-  // 使用 PrismaNeon 适配器并传入连接配置
-  const adapter = new PrismaNeon({ connectionString: databaseUrl })
+  if (!prismaClient) {
+    // 使用 PrismaNeon 适配器并传入连接配置
+    const adapter = new PrismaNeon({ connectionString: databaseUrl })
+    
+    // 创建全局 Prisma 客户端实例
+    prismaClient = new PrismaClient({ 
+      adapter,
+      log: ['error', 'warn']
+    })
+  }
   
-  // 为每个请求创建新的 Prisma 客户端实例
-  // 这样可以避免 Cloudflare Workers 中的 I/O 对象跨请求访问问题
-  return new PrismaClient({ 
-    adapter,
-    log: ['error', 'warn']
-  })
+  return prismaClient
 }
 
 // 用于清理连接（主要在测试中使用）

@@ -134,11 +134,26 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
           totalCost,
           shippingAddressId: body.shippingAddressId,
           note: body.note,
-          status: 'PENDING' as any,
-          items: {
-            create: orderItems
+          status: 'PENDING' as any
+        }
+      })
+
+      // 创建订单项
+      for (const item of orderItems) {
+        await (prisma as any).orderItem.create({
+          data: {
+            orderId: order.id,
+            productId: item.productId,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            totalPrice: item.totalPrice
           }
-        },
+        })
+      }
+
+      // 获取完整的订单信息
+      const fullOrder = await (prisma as any).order.findUnique({
+        where: { id: order.id },
         include: {
           items: {
             include: {
@@ -186,9 +201,7 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
         data: { itemsCount: 0 }
       })
 
-      const result = order
-
-      return c.json({ code: 200, message: 'Order created', data: result })
+      return c.json({ code: 200, message: 'Order created', data: fullOrder })
     } catch (error) {
       console.error('Create order from cart error:', error)
       return c.json({ code: 500, message: 'Internal server error', data: null }, 500)
