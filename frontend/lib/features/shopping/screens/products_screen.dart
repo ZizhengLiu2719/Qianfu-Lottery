@@ -123,8 +123,8 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     ];
 
     return Container(
-      height: 50.h,
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      height: 70.h, // 进一步增加纵向高度
+      padding: EdgeInsets.symmetric(vertical: 16.h),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -134,7 +134,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
           final isSelected = _selectedCategory == category['key'];
           
           return Container(
-            margin: EdgeInsets.only(right: 8.w),
+            margin: EdgeInsets.only(right: 10.w),
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
@@ -145,44 +145,48 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 8.h,
+                    horizontal: 8.w,  // 进一步减少横向内边距
+                    vertical: 16.h,   // 进一步增加纵向内边距
                   ),
                   decoration: BoxDecoration(
                     color: isSelected 
                         ? AppTheme.primaryColor 
                         : Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(20.r),
+                    borderRadius: BorderRadius.circular(30.r), // 进一步增加圆角
                     border: Border.all(
                       color: isSelected 
                           ? AppTheme.primaryColor 
                           : Colors.grey.shade200,
-                      width: 1.0,
+                      width: 1.5,
                     ),
                     boxShadow: isSelected ? [
                       BoxShadow(
                         color: AppTheme.primaryColor.withOpacity(0.3),
-                        blurRadius: 6,
+                        blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
                     ] : [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 3,
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 4,
                         offset: const Offset(0, 1),
                       ),
                     ],
                   ),
-                  child: Text(
-                    category['name'] as String,
-                    style: TextStyle(
-                      color: isSelected 
-                          ? Colors.white 
-                          : AppTheme.textPrimary,
-                      fontSize: 14.sp,
-                      fontWeight: isSelected 
-                          ? FontWeight.w600 
-                          : FontWeight.w500,
+                  child: Center(
+                    child: Text(
+                      category['name'] as String,
+                      style: TextStyle(
+                        color: isSelected 
+                            ? Colors.white 
+                            : AppTheme.textPrimary,
+                        fontSize: 16.sp, // 进一步增加字体大小
+                        fontWeight: isSelected 
+                            ? FontWeight.w700 
+                            : FontWeight.w600,
+                        height: 1.1, // 稍微减少行高，让文字更紧凑
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
