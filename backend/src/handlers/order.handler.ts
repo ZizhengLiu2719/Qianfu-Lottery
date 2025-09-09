@@ -87,9 +87,8 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
         note?: string
       }>()
 
-      const result = await prisma.$transaction(async (tx: any) => {
       // 获取购物车
-      const cart = await tx.cart.findUnique({
+      const cart = await (prisma as any).cart.findUnique({
         where: { userId: currentUser.id },
         include: {
           items: {
@@ -101,7 +100,7 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
       })
 
       if (!cart || cart.items.length === 0) {
-        throw new Error('EMPTY_CART')
+        return c.json({ code: 400, message: '购物车为空', data: null }, 400)
       }
 
       // 检查库存
@@ -110,7 +109,7 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
       
       for (const item of cart.items) {
         if (!item.product.isActive || item.product.stock < item.quantity) {
-          throw new Error('INSUFFICIENT_STOCK')
+          return c.json({ code: 400, message: '库存不足', data: null }, 400)
         }
         const subtotal = item.product.priceInQiancaiDou * item.quantity
         totalCost += subtotal
@@ -125,11 +124,11 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
       // 检查千彩豆余额
       const balance = await qiancaiDouService.getBalance(currentUser.id)
       if (balance < totalCost) {
-        throw new Error('INSUFFICIENT_BALANCE')
+        return c.json({ code: 400, message: '千彩豆余额不足', data: null }, 400)
       }
 
       // 创建订单
-      const order = await tx.order.create({
+      const order = await (prisma as any).order.create({
         data: {
           userId: currentUser.id,
           totalCost,
@@ -150,46 +149,42 @@ export function createOrderHandlers(prisma: any, qiancaiDouService: QiancaiDouSe
         }
       })
 
-      // 锁定库存
+      // 扣除千彩豆
+      await qiancaiDouService.deductBalance(
+        currentUser.id,
+        totalCost,
+        'PRODUCT_REDEMPTION',
+        `订单 #${order.id} 商品购买`,
+        'orders',
+        order.id.toString()
+      )
+
+      // 更新库存
       for (const item of cart.items) {
-        await tx.inventoryLock.create({
+        await (prisma as any).product.update({
+          where: { id: item.productId },
           data: {
-            orderId: order.id,
-            productId: item.productId,
-            quantity: item.quantity,
-            expiresAt: new Date(Date.now() + 15 * 60 * 1000) // 15分钟后过期
+            stock: {
+              decrement: item.quantity
+            }
           }
         })
       }
 
       // 清空购物车
-      await tx.cartItem.deleteMany({
+      await (prisma as any).cartItem.deleteMany({
         where: { cartId: cart.id }
       })
-      await tx.cart.update({
+      await (prisma as any).cart.update({
         where: { id: cart.id },
         data: { itemsCount: 0 }
       })
 
-      return order
-    })
+      const result = order
 
-    return c.json({ code: 200, message: 'Order created', data: result })
+      return c.json({ code: 200, message: 'Order created', data: result })
     } catch (error) {
       console.error('Create order from cart error:', error)
-      
-      if (error instanceof Error) {
-        if (error.message === 'EMPTY_CART') {
-          return c.json({ code: 400, message: '购物车为空', data: null }, 400)
-        }
-        if (error.message === 'INSUFFICIENT_STOCK') {
-          return c.json({ code: 400, message: '库存不足', data: null }, 400)
-        }
-        if (error.message === 'INSUFFICIENT_BALANCE') {
-          return c.json({ code: 400, message: '千彩豆余额不足', data: null }, 400)
-        }
-      }
-      
       return c.json({ code: 500, message: 'Internal server error', data: null }, 500)
     }
   }
