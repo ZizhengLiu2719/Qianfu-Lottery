@@ -123,58 +123,59 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 24.h), // 进一步增加垂直间距
-      child: SizedBox(
-        height: 60.h, // 进一步增加高度
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          itemCount: categories.length,
-          itemBuilder: (context, index) {
-            final category = categories[index];
+      padding: EdgeInsets.symmetric(vertical: 16.h),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Row(
+          children: categories.map((category) {
             final isSelected = _selectedCategory == category['key'];
-
+            
             return Container(
-              margin: EdgeInsets.only(right: 20.w), // 进一步增加间距
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedCategory = category['key'] as String?;
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h), // 进一步增加内边距
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppTheme.primaryColor : Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(30.r), // 进一步增加圆角
-                    border: Border.all(
-                      color: isSelected ? AppTheme.primaryColor : Colors.grey.shade300,
-                      width: 3, // 进一步增加边框宽度
+              margin: EdgeInsets.only(right: 12.w),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _selectedCategory = category['key'] as String?;
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(20.r),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 10.h,
                     ),
-                    boxShadow: isSelected ? [
-                      BoxShadow(
-                        color: AppTheme.primaryColor.withOpacity(0.4),
-                        blurRadius: 12,
-                        offset: const Offset(0, 3),
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppTheme.primaryColor : Colors.white,
+                      borderRadius: BorderRadius.circular(20.r),
+                      border: Border.all(
+                        color: isSelected ? AppTheme.primaryColor : Colors.grey.shade300,
+                        width: 1.5,
                       ),
-                    ] : null,
-                  ),
-                  child: Center( // 确保文字居中
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
                     child: Text(
                       category['name'] as String,
                       style: TextStyle(
-                        color: isSelected ? Colors.white : AppTheme.textSecondary,
-                        fontSize: 18.sp, // 进一步增加字体大小
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700, // 进一步增加字重
-                        height: 1.0, // 设置行高为1，确保字体贴合
+                        color: isSelected ? Colors.white : AppTheme.textPrimary,
+                        fontSize: 14.sp,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                        height: 1.2,
                       ),
-                      textAlign: TextAlign.center, // 确保文字居中对齐
                     ),
                   ),
                 ),
               ),
             );
-          },
+          }).toList(),
         ),
       ),
     );
@@ -187,67 +188,34 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         : products.where((p) => p.category == _selectedCategory).toList();
 
     if (filteredProducts.isEmpty) {
-      // 展示示例
-      final examples = [
-        Product(
-          id: 1,
-          title: '蓝牙耳机',
-          description: '降噪/长续航',
-          images: const ['https://picsum.photos/seed/earbuds/600/600'],
-          priceInQiancaiDou: 399,
-          stock: 10,
-          category: 'electronics',
-          isActive: true,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ),
-        Product(
-          id: 2,
-          title: '运动水杯',
-          description: '便携耐用',
-          images: const ['https://picsum.photos/seed/bottle/600/600'],
-          priceInQiancaiDou: 99,
-          stock: 8,
-          category: 'sports',
-          isActive: true,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ),
-        Product(
-          id: 3,
-          title: '畅销图书',
-          description: '经典必读',
-          images: const ['https://picsum.photos/seed/book/600/600'],
-          priceInQiancaiDou: 59,
-          stock: 15,
-          category: 'books',
-          isActive: true,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ),
-      ];
-
-      return SliverPadding(
-        padding: EdgeInsets.symmetric(horizontal: 8.w),
-        sliver: SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 8.w,
-            crossAxisSpacing: 8.w,
-            childAspectRatio: 1,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final product = examples[index];
-              return GestureDetector(
-                onTap: () {},
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.r),
-                  child: Image.network(product.mainImage, fit: BoxFit.cover),
+      // 显示空状态
+      return SliverToBoxAdapter(
+        child: Container(
+          padding: EdgeInsets.all(40.w),
+          child: Column(
+            children: [
+              Icon(
+                Icons.shopping_bag_outlined,
+                size: 64.sp,
+                color: AppTheme.textTertiary,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                '暂无商品',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: AppTheme.textSecondary,
                 ),
-              );
-            },
-            childCount: examples.length,
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                '请选择其他分类查看',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: AppTheme.textTertiary,
+                ),
+              ),
+            ],
           ),
         ),
       );

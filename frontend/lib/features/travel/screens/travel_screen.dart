@@ -44,58 +44,59 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
     ];
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 24.h), // 进一步增加垂直间距
-      child: SizedBox(
-        height: 60.h, // 进一步增加高度
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          itemCount: categories.length,
-          itemBuilder: (context, index) {
-            final category = categories[index];
+      padding: EdgeInsets.symmetric(vertical: 16.h),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Row(
+          children: categories.map((category) {
             final isSelected = _selectedCategory == category['key'];
-
+            
             return Container(
-              margin: EdgeInsets.only(right: 20.w), // 进一步增加间距
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedCategory = category['key'] as String?;
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h), // 进一步增加内边距
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppTheme.primaryColor : Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(30.r), // 进一步增加圆角
-                    border: Border.all(
-                      color: isSelected ? AppTheme.primaryColor : Colors.grey.shade300,
-                      width: 3, // 进一步增加边框宽度
+              margin: EdgeInsets.only(right: 12.w),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _selectedCategory = category['key'] as String?;
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(20.r),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 10.h,
                     ),
-                    boxShadow: isSelected ? [
-                      BoxShadow(
-                        color: AppTheme.primaryColor.withOpacity(0.4),
-                        blurRadius: 12,
-                        offset: const Offset(0, 3),
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppTheme.primaryColor : Colors.white,
+                      borderRadius: BorderRadius.circular(20.r),
+                      border: Border.all(
+                        color: isSelected ? AppTheme.primaryColor : Colors.grey.shade300,
+                        width: 1.5,
                       ),
-                    ] : null,
-                  ),
-                  child: Center( // 确保文字居中
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
                     child: Text(
                       category['name'] as String,
                       style: TextStyle(
-                        color: isSelected ? Colors.white : AppTheme.textSecondary,
-                        fontSize: 18.sp, // 进一步增加字体大小
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700, // 进一步增加字重
-                        height: 1.0, // 设置行高为1，确保字体贴合
+                        color: isSelected ? Colors.white : AppTheme.textPrimary,
+                        fontSize: 14.sp,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                        height: 1.2,
                       ),
-                      textAlign: TextAlign.center, // 确保文字居中对齐
                     ),
                   ),
                 ),
               ),
             );
-          },
+          }).toList(),
         ),
       ),
     );
