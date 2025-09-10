@@ -91,12 +91,12 @@ class _ResponsiveTagState extends State<ResponsiveTag>
     // 根据平台选择文字
     final displayText = isDesktop ? widget.text : (widget.mobileText ?? widget.text);
     
-    // 动态计算尺寸 - 再次缩小电脑端尺寸一倍
-    final fontSize = isDesktop ? 7.sp : 11.sp;  // 电脑端字体再次缩小
-    final iconSize = isDesktop ? 8.sp : 12.sp;  // 电脑端图标再次缩小
-    final horizontalPadding = isDesktop ? 6.w : 10.w;  // 电脑端内边距再次缩小
-    final verticalPadding = isDesktop ? 3.h : 5.h;  // 电脑端内边距再次缩小
-    final borderRadius = isDesktop ? 10.r : 14.r;  // 电脑端圆角再次缩小
+    // 动态计算尺寸 - 进一步缩小电脑端尺寸
+    final fontSize = isDesktop ? 6.sp : 11.sp;  // 电脑端字体进一步缩小
+    final iconSize = isDesktop ? 7.sp : 12.sp;  // 电脑端图标进一步缩小
+    final horizontalPadding = isDesktop ? 5.w : 10.w;  // 电脑端内边距进一步缩小
+    final verticalPadding = isDesktop ? 2.h : 5.h;  // 电脑端内边距进一步缩小
+    final borderRadius = isDesktop ? 8.r : 14.r;  // 电脑端圆角进一步缩小
     
     // 计算文字宽度 - 使用更精确的字体样式
     final textPainter = TextPainter(
@@ -240,13 +240,13 @@ class ResponsiveTagBar extends StatelessWidget {
     if (isDesktop) {
       return Container(
         constraints: BoxConstraints(
-          minHeight: 30.h,
-          maxHeight: 100.h, // 允许换行，进一步减少最大高度
+          minHeight: 25.h,
+          maxHeight: 80.h, // 允许换行，进一步减少最大高度
         ),
-        padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+        padding: padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 3.h),
         child: Wrap(
-          spacing: 3.w,  // 进一步减小间距
-          runSpacing: 3.h,  // 进一步减小行间距
+          spacing: 2.w,  // 进一步减小间距
+          runSpacing: 2.h,  // 进一步减小行间距
           alignment: WrapAlignment.start,
           children: tags.map((tag) {
             final isSelected = selectedTag == tag.key;

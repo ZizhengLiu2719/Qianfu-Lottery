@@ -15,6 +15,7 @@ class CoursesScreen extends ConsumerStatefulWidget {
 
 class _CoursesScreenState extends ConsumerState<CoursesScreen> {
   String? _selectedCategory;
+  Set<String> _registeredCourses = {};
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +50,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
   Widget _buildCategoryFilter(BuildContext context) {
     final categories = [
       ResponsiveTagData(
-        key: null,
-        text: '全部课程',
-        mobileText: '全部',
-        icon: FeatherIcons.bookOpen,
-      ),
-      ResponsiveTagData(
         key: 'ai',
         text: 'AI编程学习',
         mobileText: 'AI编程',
@@ -65,6 +60,18 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         text: '英语学习',
         mobileText: '英语',
         icon: FeatherIcons.mic,
+      ),
+      ResponsiveTagData(
+        key: 'study_abroad',
+        text: '留学咨询',
+        mobileText: '留学',
+        icon: FeatherIcons.globe,
+      ),
+      ResponsiveTagData(
+        key: 'summer_camp',
+        text: '夏令营',
+        mobileText: '夏令营',
+        icon: FeatherIcons.sun,
       ),
     ];
 
@@ -85,12 +92,16 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
       return _buildAICourses(context);
     } else if (_selectedCategory == 'english') {
       return _buildEnglishCourses(context);
+    } else if (_selectedCategory == 'study_abroad') {
+      return _buildStudyAbroadServices(context);
+    } else if (_selectedCategory == 'summer_camp') {
+      return _buildSummerCamps(context);
     } else {
-      return _buildAllCourses(context);
+      return _buildWelcomeContent(context);
     }
   }
 
-  Widget _buildAllCourses(BuildContext context) {
+  Widget _buildWelcomeContent(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -112,20 +123,40 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           ),
         ),
         SizedBox(height: 24.h),
-        _buildCourseCard(
+        _buildCategoryCard(
           context,
-          title: 'AI 编程入门（直播课）',
-          subtitle: '每周二/四 晚 20:00 · 60 分钟',
+          title: 'AI编程学习',
+          subtitle: '掌握人工智能编程技能，开启未来职业道路',
           icon: FeatherIcons.cpu,
-          category: 'AI编程',
+          category: 'AI编程学习',
+          onTap: () => setState(() => _selectedCategory = 'ai'),
         ),
         SizedBox(height: 12.h),
-        _buildCourseCard(
+        _buildCategoryCard(
           context,
-          title: '英语口语提升（录播+答疑）',
-          subtitle: '随时观看 · 每周一次答疑',
+          title: '英语学习',
+          subtitle: '提升英语水平，拓展国际视野',
           icon: FeatherIcons.mic,
           category: '英语学习',
+          onTap: () => setState(() => _selectedCategory = 'english'),
+        ),
+        SizedBox(height: 12.h),
+        _buildCategoryCard(
+          context,
+          title: '留学咨询',
+          subtitle: '专业留学规划，助力海外求学梦想',
+          icon: FeatherIcons.globe,
+          category: '留学咨询',
+          onTap: () => setState(() => _selectedCategory = 'study_abroad'),
+        ),
+        SizedBox(height: 12.h),
+        _buildCategoryCard(
+          context,
+          title: '夏令营',
+          subtitle: '美国顶级夏令营，体验国际化教育',
+          icon: FeatherIcons.sun,
+          category: '夏令营',
+          onTap: () => setState(() => _selectedCategory = 'summer_camp'),
         ),
       ],
     );
@@ -159,6 +190,8 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '每周二/四 晚 20:00 · 60 分钟',
           icon: FeatherIcons.cpu,
           category: 'AI编程',
+          isRegistered: _registeredCourses.contains('ai_course_1'),
+          onRegister: () => _handleCourseRegistration('ai_course_1'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
@@ -167,6 +200,8 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '从零开始构建AI模型',
           icon: FeatherIcons.cpu,
           category: 'AI编程',
+          isRegistered: _registeredCourses.contains('ai_course_2'),
+          onRegister: () => _handleCourseRegistration('ai_course_2'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
@@ -175,6 +210,8 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '神经网络与深度学习应用',
           icon: FeatherIcons.layers,
           category: 'AI编程',
+          isRegistered: _registeredCourses.contains('ai_course_3'),
+          onRegister: () => _handleCourseRegistration('ai_course_3'),
         ),
       ],
     );
@@ -208,6 +245,8 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '随时观看 · 每周一次答疑',
           icon: FeatherIcons.mic,
           category: '英语学习',
+          isRegistered: _registeredCourses.contains('english_course_1'),
+          onRegister: () => _handleCourseRegistration('english_course_1'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
@@ -216,6 +255,8 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '专业商务邮件与报告写作',
           icon: FeatherIcons.edit,
           category: '英语学习',
+          isRegistered: _registeredCourses.contains('english_course_2'),
+          onRegister: () => _handleCourseRegistration('english_course_2'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
@@ -224,6 +265,130 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '系统化备考，高分通过',
           icon: FeatherIcons.award,
           category: '英语学习',
+          isRegistered: _registeredCourses.contains('english_course_3'),
+          onRegister: () => _handleCourseRegistration('english_course_3'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStudyAbroadServices(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 16.h),
+        Text(
+          '留学咨询',
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          '专业留学规划，助力海外求学梦想',
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: AppTheme.textSecondary,
+          ),
+        ),
+        SizedBox(height: 24.h),
+        _buildServiceCard(
+          context,
+          title: '留学规划与定位',
+          subtitle: '根据学术背景和职业目标提供个性化留学计划',
+          icon: FeatherIcons.target,
+          price: '¥500',
+          duration: '4周',
+        ),
+        SizedBox(height: 12.h),
+        _buildServiceCard(
+          context,
+          title: '院校选择与专业推荐',
+          subtitle: '推荐适合的学校和专业，提供详细信息',
+          icon: FeatherIcons.book,
+          price: '¥300',
+          duration: '2周',
+        ),
+        SizedBox(height: 12.h),
+        _buildServiceCard(
+          context,
+          title: '申请材料准备指导',
+          subtitle: '协助准备个人陈述、推荐信等申请材料',
+          icon: FeatherIcons.edit,
+          price: '¥800',
+          duration: '6周',
+        ),
+        SizedBox(height: 12.h),
+        _buildServiceCard(
+          context,
+          title: '语言培训与考试指导',
+          subtitle: '提供语言培训课程和考试指导',
+          icon: FeatherIcons.award,
+          price: '¥1200',
+          duration: '8周',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSummerCamps(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 16.h),
+        Text(
+          '夏令营',
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          '美国顶级夏令营，体验国际化教育',
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: AppTheme.textSecondary,
+          ),
+        ),
+        SizedBox(height: 24.h),
+        _buildCampCard(
+          context,
+          title: '哈佛西湖辩论赛夏令营',
+          subtitle: '马萨诸塞州 · 14-18岁',
+          icon: FeatherIcons.messageCircle,
+          price: '\$2500',
+          duration: '7月1日-14日',
+        ),
+        SizedBox(height: 12.h),
+        _buildCampCard(
+          context,
+          title: '麻省理工STEAM沉浸式夏令营',
+          subtitle: '马萨诸塞州 · 15-18岁',
+          icon: FeatherIcons.cpu,
+          price: '\$3000',
+          duration: '7月15日-28日',
+        ),
+        SizedBox(height: 12.h),
+        _buildCampCard(
+          context,
+          title: 'Wonder Valley度假村夏令营',
+          subtitle: '加利福尼亚州 · 10-16岁',
+          icon: FeatherIcons.mountain,
+          price: '\$2000',
+          duration: '8月1日-14日',
+        ),
+        SizedBox(height: 12.h),
+        _buildCampCard(
+          context,
+          title: 'Rocking Horse牧场夏令营',
+          subtitle: '纽约州 · 12-17岁',
+          icon: FeatherIcons.heart,
+          price: '\$2200',
+          duration: '8月15日-28日',
         ),
       ],
     );
@@ -235,6 +400,254 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
     required String subtitle,
     required IconData icon,
     required String category,
+    bool isRegistered = false,
+    VoidCallback? onRegister,
+  }) {
+    final isDesktop = MediaQuery.of(context).size.width > 768;
+    
+    return Container(
+      padding: EdgeInsets.all(isDesktop ? 12.w : 16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(isDesktop ? 8.r : 12.r),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: isDesktop ? 6 : 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(isDesktop ? 8.w : 12.w),
+            decoration: BoxDecoration(
+              color: AppTheme.primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(isDesktop ? 6.r : 8.r),
+            ),
+            child: Icon(
+              icon,
+              color: AppTheme.primaryColor,
+              size: isDesktop ? 18.sp : 24.sp,
+            ),
+          ),
+          SizedBox(width: isDesktop ? 12.w : 16.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: isDesktop ? 14.sp : 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
+                SizedBox(height: isDesktop ? 3.h : 4.h),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: isDesktop ? 12.sp : 14.sp,
+                    color: AppTheme.textSecondary,
+                  ),
+                ),
+                SizedBox(height: isDesktop ? 6.h : 8.h),
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isDesktop ? 6.w : 8.w, 
+                        vertical: isDesktop ? 3.h : 4.h
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(isDesktop ? 8.r : 12.r),
+                      ),
+                      child: Text(
+                        category,
+                        style: TextStyle(
+                          fontSize: isDesktop ? 10.sp : 12.sp,
+                          color: AppTheme.primaryColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    if (isRegistered)
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isDesktop ? 6.w : 8.w, 
+                          vertical: isDesktop ? 3.h : 4.h
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(isDesktop ? 8.r : 12.r),
+                        ),
+                        child: Text(
+                          '已注册',
+                          style: TextStyle(
+                            fontSize: isDesktop ? 10.sp : 12.sp,
+                            color: Colors.green,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          if (isRegistered)
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: isDesktop ? 8.w : 12.w, 
+                vertical: isDesktop ? 4.h : 6.h
+              ),
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(isDesktop ? 6.r : 8.r),
+              ),
+              child: Text(
+                '已注册',
+                style: TextStyle(
+                  fontSize: isDesktop ? 10.sp : 12.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            )
+          else
+            GestureDetector(
+              onTap: onRegister,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isDesktop ? 8.w : 12.w, 
+                  vertical: isDesktop ? 4.h : 6.h
+                ),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor,
+                  borderRadius: BorderRadius.circular(isDesktop ? 6.r : 8.r),
+                ),
+                child: Text(
+                  '注册',
+                  style: TextStyle(
+                    fontSize: isDesktop ? 10.sp : 12.sp,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void _handleCourseRegistration(String courseId) {
+    setState(() {
+      if (_registeredCourses.contains(courseId)) {
+        _registeredCourses.remove(courseId);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('已取消注册'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      } else {
+        _registeredCourses.add(courseId);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('注册成功！'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    });
+  }
+
+  Widget _buildCategoryCard(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required String category,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Icon(
+                icon,
+                color: AppTheme.primaryColor,
+                size: 24.sp,
+              ),
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: AppTheme.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              FeatherIcons.chevronRight,
+              size: 20.sp,
+              color: AppTheme.textTertiary,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildServiceCard(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required String price,
+    required String duration,
   }) {
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -286,20 +699,146 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
                   ),
                 ),
                 SizedBox(height: 8.h),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Text(
-                    category,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: AppTheme.primaryColor,
-                      fontWeight: FontWeight.w500,
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        price,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.green,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
+                    SizedBox(width: 8.w),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        duration,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppTheme.primaryColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            FeatherIcons.chevronRight,
+            size: 20.sp,
+            color: AppTheme.textTertiary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCampCard(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required String price,
+    required String duration,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              color: Colors.orange.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Icon(
+              icon,
+              color: Colors.orange,
+              size: 24.sp,
+            ),
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textPrimary,
                   ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppTheme.textSecondary,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        price,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.orange,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        duration,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppTheme.primaryColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

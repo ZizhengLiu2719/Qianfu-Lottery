@@ -31,6 +31,8 @@ model User {
   account                 Account?
   carts                   Cart[]
   addresses               Address[]
+  studyAbroadRegistrations UserStudyAbroadRegistration[]
+  summerCampRegistrations  UserSummerCampRegistration[]
   
   @@map("users")
 }
@@ -129,7 +131,7 @@ model OfflineCourse {
   title        String
   description  String
   instructor   String?
-  category     String            // ENGLISH_ORAL, AI_PROGRAMMING
+  category     String            // AI编程学习, 英语学习, 留学咨询, 夏令营
   duration     Int?              // 课程时长（分钟）
   imageUrl     String?
   isActive     Boolean           @default(true)
@@ -152,7 +154,7 @@ model CourseSchedule {
   location     String?           // 上课地点
   capacity     Int               @default(10)
   bookedSlots  Int               @default(0)
-  feeInQiancaiDou Int            @default(0) // 预约费用
+  feeInQiancaiDou Int            @default(0) // 预约费用（保留但不再使用）
   isActive     Boolean           @default(true)
   createdAt    DateTime          @default(now())
   
@@ -162,14 +164,14 @@ model CourseSchedule {
   @@map("course_schedules")
 }
 
-// 用户预约
+// 用户预约/注册
 model UserAppointment {
   id          Int            @id @default(autoincrement())
   userId      Int
   user        User           @relation(fields: [userId], references: [id])
   scheduleId  Int
   schedule    CourseSchedule @relation(fields: [scheduleId], references: [id])
-  status      String         @default("BOOKED") // BOOKED, CANCELLED, COMPLETED, NO_SHOW
+  status      String         @default("REGISTERED") // REGISTERED, CANCELLED, COMPLETED, NO_SHOW
   note        String?        // 用户备注
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -350,4 +352,74 @@ model AppSetting {
   updatedAt DateTime @default(now())
 
   @@map("app_settings")
+}
+
+// 留学咨询服务
+model StudyAbroadService {
+  id                Int       @id @default(autoincrement())
+  serviceName       String
+  description       String?
+  serviceType       String    // PLANNING, APPLICATION, VISA, PREPARATION, SUPPORT
+  durationWeeks     Int?
+  priceUsd          Decimal?
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  
+  // 关联关系
+  registrations     UserStudyAbroadRegistration[]
+  
+  @@map("study_abroad_services")
+}
+
+// 夏令营
+model SummerCamp {
+  id                Int       @id @default(autoincrement())
+  name              String
+  location          String?
+  description       String?
+  imageUrl          String?
+  startDate         DateTime?
+  endDate           DateTime?
+  ageRange          String?
+  priceUsd          Decimal?
+  maxParticipants   Int       @default(30)
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  
+  // 关联关系
+  registrations     UserSummerCampRegistration[]
+  
+  @@map("summer_camps")
+}
+
+// 用户留学咨询注册
+model UserStudyAbroadRegistration {
+  id                Int       @id @default(autoincrement())
+  userId            Int
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceId         Int
+  service           StudyAbroadService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  registrationStatus String   @default("REGISTERED") // REGISTERED, CANCELLED, COMPLETED
+  registeredAt      DateTime  @default(now())
+  cancelledAt       DateTime?
+  completedAt       DateTime?
+  
+  @@unique([userId, serviceId])
+  @@map("user_study_abroad_registrations")
+}
+
+// 用户夏令营注册
+model UserSummerCampRegistration {
+  id                Int       @id @default(autoincrement())
+  userId            Int
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  summerCampId      Int
+  summerCamp        SummerCamp @relation(fields: [summerCampId], references: [id], onDelete: Cascade)
+  registrationStatus String   @default("REGISTERED") // REGISTERED, CANCELLED, COMPLETED
+  registeredAt      DateTime  @default(now())
+  cancelledAt       DateTime?
+  completedAt       DateTime?
+  
+  @@unique([userId, summerCampId])
+  @@map("user_summer_camp_registrations")
 }
