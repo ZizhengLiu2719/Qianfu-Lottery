@@ -170,7 +170,7 @@ model UserAppointment {
   userId      Int
   user        User           @relation(fields: [userId], references: [id])
   scheduleId  Int
-  schedule    CourseSchedule @relation(fields: [scheduleId], references: [id])
+  schedule    CourseSchedule? @relation(fields: [scheduleId], references: [id]) // 改为可选，支持学习彩注册
   status      String         @default("REGISTERED") // REGISTERED, CANCELLED, COMPLETED, NO_SHOW
   note        String?        // 用户备注
   createdAt   DateTime       @default(now())

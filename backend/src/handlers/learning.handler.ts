@@ -37,19 +37,18 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 创建学习彩注册记录
+      // 使用courseId的哈希值作为scheduleId，避免外键约束问题
+      const virtualScheduleId = Math.abs(body.courseId.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0)) % 1000000 + 900000; // 生成900000-999999之间的ID
+      
       const registration = await prisma.userAppointment.create({
         data: {
           userId: currentUser.id,
-          scheduleId: parseInt(body.courseId), // 使用courseId作为scheduleId
+          scheduleId: virtualScheduleId,
           status: 'REGISTERED',
           note: `学习彩课程注册: ${body.title}`,
-        },
-        include: {
-          schedule: {
-            include: {
-              course: true
-            }
-          }
         }
       })
 
@@ -101,10 +100,16 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 创建学习彩注册记录
+      // 使用serviceId的哈希值作为scheduleId，避免外键约束问题
+      const virtualScheduleId = Math.abs(body.serviceId.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0)) % 1000000 + 800000; // 生成800000-899999之间的ID
+      
       const registration = await prisma.userAppointment.create({
         data: {
           userId: currentUser.id,
-          scheduleId: parseInt(body.serviceId), // 使用serviceId作为scheduleId
+          scheduleId: virtualScheduleId,
           status: 'REGISTERED',
           note: `学习彩留学咨询注册: ${body.title}`,
         }
@@ -158,10 +163,16 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 创建学习彩注册记录
+      // 使用campId的哈希值作为scheduleId，避免外键约束问题
+      const virtualScheduleId = Math.abs(body.campId.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0)) % 1000000 + 700000; // 生成700000-799999之间的ID
+      
       const registration = await prisma.userAppointment.create({
         data: {
           userId: currentUser.id,
-          scheduleId: parseInt(body.campId), // 使用campId作为scheduleId
+          scheduleId: virtualScheduleId,
           status: 'REGISTERED',
           note: `学习彩夏令营注册: ${body.title}`,
         }
