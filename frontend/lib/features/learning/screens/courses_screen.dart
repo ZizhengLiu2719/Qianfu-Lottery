@@ -5,6 +5,8 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/responsive_tag.dart';
+import 'course_detail_screen.dart';
+import 'my_appointments_screen.dart';
 
 class CoursesScreen extends ConsumerStatefulWidget {
   const CoursesScreen({super.key});
@@ -30,6 +32,13 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
             foregroundColor: AppTheme.textPrimary,
             elevation: 0,
             pinned: true,
+            actions: [
+              IconButton(
+                icon: Icon(FeatherIcons.calendar),
+                onPressed: () => _navigateToMyAppointments(),
+                tooltip: '我的预约',
+              ),
+            ],
           ),
           // 标签栏
           SliverToBoxAdapter(
@@ -190,8 +199,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '每周二/四 晚 20:00 · 60 分钟',
           icon: FeatherIcons.cpu,
           category: 'AI编程',
-          isRegistered: _registeredCourses.contains('ai_course_1'),
-          onRegister: () => _handleCourseRegistration('ai_course_1'),
+          onTap: () => _navigateToCourseDetail('ai_course_1'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
@@ -200,8 +208,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '从零开始构建AI模型',
           icon: FeatherIcons.cpu,
           category: 'AI编程',
-          isRegistered: _registeredCourses.contains('ai_course_2'),
-          onRegister: () => _handleCourseRegistration('ai_course_2'),
+          onTap: () => _navigateToCourseDetail('ai_course_2'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
@@ -210,8 +217,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '神经网络与深度学习应用',
           icon: FeatherIcons.layers,
           category: 'AI编程',
-          isRegistered: _registeredCourses.contains('ai_course_3'),
-          onRegister: () => _handleCourseRegistration('ai_course_3'),
+          onTap: () => _navigateToCourseDetail('ai_course_3'),
         ),
       ],
     );
@@ -245,8 +251,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '随时观看 · 每周一次答疑',
           icon: FeatherIcons.mic,
           category: '英语学习',
-          isRegistered: _registeredCourses.contains('english_course_1'),
-          onRegister: () => _handleCourseRegistration('english_course_1'),
+          onTap: () => _navigateToCourseDetail('english_course_1'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
@@ -255,8 +260,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '专业商务邮件与报告写作',
           icon: FeatherIcons.edit,
           category: '英语学习',
-          isRegistered: _registeredCourses.contains('english_course_2'),
-          onRegister: () => _handleCourseRegistration('english_course_2'),
+          onTap: () => _navigateToCourseDetail('english_course_2'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
@@ -265,8 +269,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           subtitle: '系统化备考，高分通过',
           icon: FeatherIcons.award,
           category: '英语学习',
-          isRegistered: _registeredCourses.contains('english_course_3'),
-          onRegister: () => _handleCourseRegistration('english_course_3'),
+          onTap: () => _navigateToCourseDetail('english_course_3'),
         ),
       ],
     );
@@ -299,7 +302,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: '留学规划与定位',
           subtitle: '根据学术背景和职业目标提供个性化留学计划',
           icon: FeatherIcons.crosshair,
-          price: '¥500',
           duration: '4周',
         ),
         SizedBox(height: 12.h),
@@ -308,7 +310,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: '院校选择与专业推荐',
           subtitle: '推荐适合的学校和专业，提供详细信息',
           icon: FeatherIcons.bookOpen,
-          price: '¥300',
           duration: '2周',
         ),
         SizedBox(height: 12.h),
@@ -317,7 +318,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: '申请材料准备指导',
           subtitle: '协助准备个人陈述、推荐信等申请材料',
           icon: FeatherIcons.edit,
-          price: '¥800',
           duration: '6周',
         ),
         SizedBox(height: 12.h),
@@ -326,7 +326,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: '语言培训与考试指导',
           subtitle: '提供语言培训课程和考试指导',
           icon: FeatherIcons.award,
-          price: '¥1200',
           duration: '8周',
         ),
       ],
@@ -360,7 +359,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: '哈佛西湖辩论赛夏令营',
           subtitle: '马萨诸塞州 · 14-18岁',
           icon: FeatherIcons.messageSquare,
-          price: '\$2500',
           duration: '7月1日-14日',
         ),
         SizedBox(height: 12.h),
@@ -369,7 +367,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: '麻省理工STEAM沉浸式夏令营',
           subtitle: '马萨诸塞州 · 15-18岁',
           icon: FeatherIcons.cpu,
-          price: '\$3000',
           duration: '7月15日-28日',
         ),
         SizedBox(height: 12.h),
@@ -378,7 +375,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: 'Wonder Valley度假村夏令营',
           subtitle: '加利福尼亚州 · 10-16岁',
           icon: FeatherIcons.mapPin,
-          price: '\$2000',
           duration: '8月1日-14日',
         ),
         SizedBox(height: 12.h),
@@ -387,7 +383,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: 'Rocking Horse牧场夏令营',
           subtitle: '纽约州 · 12-17岁',
           icon: FeatherIcons.heart,
-          price: '\$2200',
           duration: '8月15日-28日',
         ),
       ],
@@ -400,25 +395,26 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
     required String subtitle,
     required IconData icon,
     required String category,
-    bool isRegistered = false,
-    VoidCallback? onRegister,
+    VoidCallback? onTap,
   }) {
     final isDesktop = MediaQuery.of(context).size.width > 768;
     
-    return Container(
-      padding: EdgeInsets.all(isDesktop ? 12.w : 16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(isDesktop ? 8.r : 12.r),
-        border: Border.all(color: Colors.grey.shade200),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: isDesktop ? 6 : 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(isDesktop ? 12.w : 16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(isDesktop ? 8.r : 12.r),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: isDesktop ? 6 : 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
       child: Row(
         children: [
           Container(
@@ -455,117 +451,115 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
                   ),
                 ),
                 SizedBox(height: isDesktop ? 6.h : 8.h),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isDesktop ? 6.w : 8.w, 
-                        vertical: isDesktop ? 3.h : 4.h
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(isDesktop ? 8.r : 12.r),
-                      ),
-                      child: Text(
-                        category,
-                        style: TextStyle(
-                          fontSize: isDesktop ? 10.sp : 12.sp,
-                          color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isDesktop ? 6.w : 8.w, 
+                    vertical: isDesktop ? 3.h : 4.h
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(isDesktop ? 8.r : 12.r),
+                  ),
+                  child: Text(
+                    category,
+                    style: TextStyle(
+                      fontSize: isDesktop ? 10.sp : 12.sp,
+                      color: AppTheme.primaryColor,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(width: 8.w),
-                    if (isRegistered)
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: isDesktop ? 6.w : 8.w, 
-                          vertical: isDesktop ? 3.h : 4.h
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(isDesktop ? 8.r : 12.r),
-                        ),
-                        child: Text(
-                          '已注册',
-                          style: TextStyle(
-                            fontSize: isDesktop ? 10.sp : 12.sp,
-                            color: Colors.green,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
-          if (isRegistered)
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: isDesktop ? 8.w : 12.w, 
-                vertical: isDesktop ? 4.h : 6.h
-              ),
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(isDesktop ? 6.r : 8.r),
-              ),
-              child: Text(
-                '已注册',
-                style: TextStyle(
-                  fontSize: isDesktop ? 10.sp : 12.sp,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            )
-          else
-            GestureDetector(
-              onTap: onRegister,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isDesktop ? 8.w : 12.w, 
-                  vertical: isDesktop ? 4.h : 6.h
-                ),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor,
-                  borderRadius: BorderRadius.circular(isDesktop ? 6.r : 8.r),
-                ),
-                child: Text(
-                  '注册',
-                  style: TextStyle(
-                    fontSize: isDesktop ? 10.sp : 12.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
+          Icon(
+            FeatherIcons.chevronRight,
+            size: isDesktop ? 16.sp : 20.sp,
+            color: AppTheme.textTertiary,
+          ),
         ],
+      ),
       ),
     );
   }
 
-  void _handleCourseRegistration(String courseId) {
-    setState(() {
-      if (_registeredCourses.contains(courseId)) {
-        _registeredCourses.remove(courseId);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('已取消注册'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      } else {
-        _registeredCourses.add(courseId);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('注册成功！'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-    });
+  void _navigateToCourseDetail(String courseId) {
+    // 根据courseId获取课程信息
+    Map<String, dynamic> courseInfo = _getCourseInfo(courseId);
+    
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CourseDetailScreen(
+          courseId: courseId,
+          title: courseInfo['title'],
+          subtitle: courseInfo['subtitle'],
+          category: courseInfo['category'],
+          icon: courseInfo['icon'],
+        ),
+      ),
+    );
+  }
+
+  Map<String, dynamic> _getCourseInfo(String courseId) {
+    switch (courseId) {
+      case 'ai_course_1':
+        return {
+          'title': 'AI 编程入门（直播课）',
+          'subtitle': '每周二/四 晚 20:00 · 60 分钟',
+          'category': 'AI编程',
+          'icon': FeatherIcons.cpu,
+        };
+      case 'ai_course_2':
+        return {
+          'title': '机器学习实战',
+          'subtitle': '从零开始构建AI模型',
+          'category': 'AI编程',
+          'icon': FeatherIcons.cpu,
+        };
+      case 'ai_course_3':
+        return {
+          'title': '深度学习进阶',
+          'subtitle': '神经网络与深度学习应用',
+          'category': 'AI编程',
+          'icon': FeatherIcons.layers,
+        };
+      case 'english_course_1':
+        return {
+          'title': '英语口语提升（录播+答疑）',
+          'subtitle': '随时观看 · 每周一次答疑',
+          'category': '英语学习',
+          'icon': FeatherIcons.mic,
+        };
+      case 'english_course_2':
+        return {
+          'title': '商务英语写作',
+          'subtitle': '专业商务邮件与报告写作',
+          'category': '英语学习',
+          'icon': FeatherIcons.edit,
+        };
+      case 'english_course_3':
+        return {
+          'title': '雅思托福备考',
+          'subtitle': '系统化备考，高分通过',
+          'category': '英语学习',
+          'icon': FeatherIcons.award,
+        };
+      default:
+        return {
+          'title': '未知课程',
+          'subtitle': '课程信息不可用',
+          'category': '其他',
+          'icon': FeatherIcons.helpCircle,
+        };
+    }
+  }
+
+  void _navigateToMyAppointments() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const MyAppointmentsScreen(),
+      ),
+    );
   }
 
   Widget _buildCategoryCard(
@@ -646,7 +640,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
     required String title,
     required String subtitle,
     required IconData icon,
-    required String price,
     required String duration,
   }) {
     return Container(
@@ -699,40 +692,20 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
                   ),
                 ),
                 SizedBox(height: 8.h),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Text(
-                        price,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.green,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Text(
+                    duration,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: AppTheme.primaryColor,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(width: 8.w),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Text(
-                        duration,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -752,7 +725,6 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
     required String title,
     required String subtitle,
     required IconData icon,
-    required String price,
     required String duration,
   }) {
     return Container(
@@ -805,40 +777,20 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
                   ),
                 ),
                 SizedBox(height: 8.h),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Text(
-                        price,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.orange,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Text(
+                    duration,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: AppTheme.primaryColor,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(width: 8.w),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Text(
-                        duration,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),

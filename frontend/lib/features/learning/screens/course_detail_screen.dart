@@ -1,17 +1,376 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import '../../../core/theme/app_theme.dart';
 
-class CourseDetailScreen extends ConsumerWidget {
-  final int courseId;
+class CourseDetailScreen extends ConsumerStatefulWidget {
+  final String courseId;
+  final String title;
+  final String subtitle;
+  final String category;
+  final IconData icon;
 
-  const CourseDetailScreen({super.key, required this.courseId});
+  const CourseDetailScreen({
+    super.key,
+    required this.courseId,
+    required this.title,
+    required this.subtitle,
+    required this.category,
+    required this.icon,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CourseDetailScreen> createState() => _CourseDetailScreenState();
+}
+
+class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
+  bool _isRegistered = false;
+  bool _isHovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width > 768;
+    
     return Scaffold(
-      appBar: AppBar(title: Text('课程详情')),
-      body: Center(
-        child: Text('课程详情页面 - ID: $courseId'),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text('课程详情'),
+        backgroundColor: Colors.white,
+        foregroundColor: AppTheme.textPrimary,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(FeatherIcons.arrowLeft),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 课程卡片
+            _buildCourseCard(context, isDesktop),
+            SizedBox(height: 24.h),
+            
+            // 课程详情
+            _buildCourseDetails(context, isDesktop),
+            SizedBox(height: 24.h),
+            
+            // 注册按钮区域
+            _buildRegistrationSection(context, isDesktop),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCourseCard(BuildContext context, bool isDesktop) {
+    return Container(
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: AppTheme.primaryColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Icon(
+              widget.icon,
+              color: AppTheme.primaryColor,
+              size: isDesktop ? 32.sp : 40.sp,
+            ),
+          ),
+          SizedBox(width: 20.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.title,
+                  style: TextStyle(
+                    fontSize: isDesktop ? 20.sp : 24.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  widget.subtitle,
+                  style: TextStyle(
+                    fontSize: isDesktop ? 14.sp : 16.sp,
+                    color: AppTheme.textSecondary,
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    widget.category,
+                    style: TextStyle(
+                      fontSize: isDesktop ? 12.sp : 14.sp,
+                      color: AppTheme.primaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCourseDetails(BuildContext context, bool isDesktop) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '课程详情',
+          style: TextStyle(
+            fontSize: isDesktop ? 18.sp : 20.sp,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        _buildDetailItem(
+          context,
+          icon: FeatherIcons.clock,
+          title: '课程时长',
+          content: '60分钟',
+          isDesktop: isDesktop,
+        ),
+        SizedBox(height: 12.h),
+        _buildDetailItem(
+          context,
+          icon: FeatherIcons.calendar,
+          title: '上课时间',
+          content: '每周二/四 晚 20:00',
+          isDesktop: isDesktop,
+        ),
+        SizedBox(height: 12.h),
+        _buildDetailItem(
+          context,
+          icon: FeatherIcons.users,
+          title: '适合人群',
+          content: '编程初学者，对AI感兴趣的学生',
+          isDesktop: isDesktop,
+        ),
+        SizedBox(height: 12.h),
+        _buildDetailItem(
+          context,
+          icon: FeatherIcons.bookOpen,
+          title: '课程内容',
+          content: 'Python基础、机器学习入门、深度学习概念',
+          isDesktop: isDesktop,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailItem(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String content,
+    required bool isDesktop,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          size: isDesktop ? 16.sp : 18.sp,
+          color: AppTheme.primaryColor,
+        ),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: isDesktop ? 14.sp : 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                content,
+                style: TextStyle(
+                  fontSize: isDesktop ? 12.sp : 14.sp,
+                  color: AppTheme.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRegistrationSection(BuildContext context, bool isDesktop) {
+    return Container(
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        children: [
+          Text(
+            _isRegistered ? '已注册此课程' : '立即注册课程',
+            style: TextStyle(
+              fontSize: isDesktop ? 16.sp : 18.sp,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Row(
+            children: [
+              Expanded(
+                child: MouseRegion(
+                  onEnter: (_) => setState(() => _isHovering = true),
+                  onExit: (_) => setState(() => _isHovering = false),
+                  child: GestureDetector(
+                    onTap: _handleRegistration,
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24.w,
+                        vertical: isDesktop ? 12.h : 16.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _isRegistered 
+                          ? Colors.green 
+                          : (_isHovering ? AppTheme.primaryColor.withOpacity(0.8) : AppTheme.primaryColor),
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow: _isHovering ? [
+                          BoxShadow(
+                            color: AppTheme.primaryColor.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ] : null,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            _isRegistered ? FeatherIcons.check : FeatherIcons.userPlus,
+                            color: Colors.white,
+                            size: isDesktop ? 16.sp : 18.sp,
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            _isRegistered ? '已注册' : '注册课程',
+                            style: TextStyle(
+                              fontSize: isDesktop ? 14.sp : 16.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              if (_isRegistered) ...[
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: _handleCancelRegistration,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24.w,
+                        vertical: isDesktop ? 12.h : 16.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(color: Colors.red.withOpacity(0.3)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            FeatherIcons.x,
+                            color: Colors.red,
+                            size: isDesktop ? 16.sp : 18.sp,
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            '取消注册',
+                            style: TextStyle(
+                              fontSize: isDesktop ? 14.sp : 16.sp,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleRegistration() {
+    setState(() {
+      _isRegistered = true;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('注册成功！'),
+        backgroundColor: Colors.green,
+        action: SnackBarAction(
+          label: '查看我的预约',
+          textColor: Colors.white,
+          onPressed: () {
+            // TODO: 导航到我的预约页面
+          },
+        ),
+      ),
+    );
+  }
+
+  void _handleCancelRegistration() {
+    setState(() {
+      _isRegistered = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('已取消注册'),
+        backgroundColor: Colors.orange,
       ),
     );
   }
