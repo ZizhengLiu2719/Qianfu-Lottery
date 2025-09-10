@@ -97,18 +97,9 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
 
   // 移除旅游预约
   void removeTravel(String travelId) {
-    final travel = state.firstWhere(
-      (item) => item.id == travelId || item.title == travelId,
-      orElse: () => state.firstWhere((item) => item.id == travelId,
-          orElse: () => state.isNotEmpty ? state.first : throw Exception('Travel not found')),
-    );
-    state = state.where((item) => item.id != travel.id).toList();
-    if (travel.registrationId.isNotEmpty) {
-      _removeTravelFromBackend(travel.registrationId);
-    } else {
-      // 如果本地没有registrationId，回退到拉取一次服务端
-      loadUserTravels();
-    }
+    final travel = state.firstWhere((item) => item.id == travelId);
+    state = state.where((item) => item.id != travelId).toList();
+    _removeTravelFromBackend(travel.registrationId);
   }
 
   // 清空所有旅游预约
@@ -193,12 +184,7 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
         });
       }).toList();
       
-      // 防止把已有列表覆盖为空（网络抖动/解析异常），只有当服务端返回非空时才覆盖
-      if (travels.isNotEmpty) {
-        state = travels;
-      } else {
-        print('API returned 0 registrations, keep current state (${state.length}).');
-      }
+      state = travels;
       print('Successfully loaded ${travels.length} travels from backend');
     } catch (e) {
       print('Error loading travels: $e');
