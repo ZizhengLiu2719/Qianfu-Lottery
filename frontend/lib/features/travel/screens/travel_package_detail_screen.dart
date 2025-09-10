@@ -396,6 +396,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
       // 注册成功后添加到前端状态（不重复调用API）
       final travel = TravelItem(
         id: widget.packageId,
+        registrationId: '',
         title: widget.title,
         subtitle: widget.subtitle,
         category: widget.category,
