@@ -100,7 +100,7 @@ class LearningRepository {
       '/api/learning/registrations',
       fromJson: (json) {
         final data = json as Map<String, dynamic>;
-        final registrations = data['data']['registrations'] as List;
+        final registrations = data['registrations'] as List;
         return registrations.cast<Map<String, dynamic>>();
       },
     );
