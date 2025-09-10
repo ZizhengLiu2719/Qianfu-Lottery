@@ -33,25 +33,25 @@ export function createTravelPackageHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
-      // 检查套餐是否存在 - 根据 packageId 或 title+category 查找
+      // 使用原生 SQL 查询避免 Prisma 问题
       let packageExists = null
       
       // 如果 packageId 是数字，直接查找
       if (!isNaN(parseInt(body.packageId))) {
-        packageExists = await (prisma as any).travelPackage.findUnique({
-          where: { id: parseInt(body.packageId) }
-        })
+        const result = await prisma.$queryRaw`
+          SELECT * FROM travel_packages 
+          WHERE id = ${parseInt(body.packageId)} AND is_active = true
+        `
+        packageExists = Array.isArray(result) ? result[0] : result
       }
       
       // 如果没找到，尝试根据 title 和 category 查找
       if (!packageExists) {
-        const allPackages = await (prisma as any).travelPackage.findMany({
-          where: { isActive: true }
-        })
-        
-        packageExists = allPackages.find((pkg: any) => 
-          pkg.title === body.title && pkg.category === body.category
-        )
+        const result = await prisma.$queryRaw`
+          SELECT * FROM travel_packages 
+          WHERE title = ${body.title} AND category = ${body.category} AND is_active = true
+        `
+        packageExists = Array.isArray(result) ? result[0] : result
       }
 
       if (!packageExists) {
@@ -63,13 +63,11 @@ export function createTravelPackageHandlers() {
       }
 
       // 检查是否已经注册
-      const existingRegistration = await (prisma as any).travelRegistration.findFirst({
-        where: {
-          userId: currentUser.id,
-          packageId: packageExists.id,
-          status: 'REGISTERED'
-        }
-      })
+      const existingRegistrations = await prisma.$queryRaw`
+        SELECT * FROM travel_registrations 
+        WHERE user_id = ${currentUser.id} AND package_id = ${packageExists.id} AND status = 'REGISTERED'
+      `
+      const existingRegistration = Array.isArray(existingRegistrations) ? existingRegistrations[0] : existingRegistrations
 
       if (existingRegistration) {
         return c.json({
@@ -80,26 +78,19 @@ export function createTravelPackageHandlers() {
       }
 
       // 创建旅游注册记录
-      const registration = await (prisma as any).travelRegistration.create({
-        data: {
-          userId: currentUser.id,
-          packageId: packageExists.id,
-          title: body.title,
-          subtitle: body.subtitle,
-          category: body.category,
-          status: 'REGISTERED',
-        }
-      })
+      const registrationResult = await prisma.$queryRaw`
+        INSERT INTO travel_registrations (user_id, package_id, title, subtitle, category, status, created_at, updated_at)
+        VALUES (${currentUser.id}, ${packageExists.id}, ${body.title}, ${body.subtitle || null}, ${body.category}, 'REGISTERED', NOW(), NOW())
+        RETURNING *
+      `
+      const registration = Array.isArray(registrationResult) ? registrationResult[0] : registrationResult
 
       // 更新套餐参与人数
-      await (prisma as any).travelPackage.update({
-        where: { id: packageExists.id },
-        data: {
-          currentParticipants: {
-            increment: 1
-          }
-        }
-      })
+      await prisma.$queryRaw`
+        UPDATE travel_packages 
+        SET current_participants = current_participants + 1, updated_at = NOW()
+        WHERE id = ${packageExists.id}
+      `
 
       return c.json({
         code: 200,
