@@ -196,7 +196,8 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
 // 提供者
 final travelsProvider = StateNotifierProvider<TravelsNotifier, List<TravelItem>>(
   (ref) {
-    final dioClient = ref.watch(dioClientProvider);
+    // 使用 ref.read 而不是 ref.watch 来避免重复创建
+    final dioClient = ref.read(dioClientProvider);
     final travelPackagesRepository = TravelPackagesRepository(dioClient);
     return TravelsNotifier(travelPackagesRepository);
   },

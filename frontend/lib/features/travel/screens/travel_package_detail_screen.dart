@@ -35,9 +35,12 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
   @override
   void initState() {
     super.initState();
-    // 页面加载时从后端获取用户注册数据
+    // 页面加载时从后端获取用户注册数据（仅在状态为空时）
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(travelsProvider.notifier).loadUserTravels();
+      final currentTravels = ref.read(travelsProvider);
+      if (currentTravels.isEmpty) {
+        ref.read(travelsProvider.notifier).loadUserTravels();
+      }
     });
   }
 
@@ -276,7 +279,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
                   onEnter: (_) => setState(() => _isHovering = true),
                   onExit: (_) => setState(() => _isHovering = false),
                   child: GestureDetector(
-                    onTap: _handleRegistration,
+                    onTap: isTravelRegistered ? null : _handleRegistration,
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 200),
                       padding: EdgeInsets.symmetric(
@@ -376,6 +379,19 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
   void _handleRegistration() async {
     // 防止重复点击
     if (_isRegistering) return;
+    
+    // 检查是否已经注册
+    final travels = ref.read(travelsProvider);
+    final isAlreadyRegistered = travels.any((item) => item.id == widget.packageId);
+    if (isAlreadyRegistered) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('您已经注册过此旅游套餐！'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
     
     setState(() {
       _isRegistering = true;

@@ -16,9 +16,12 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
   @override
   void initState() {
     super.initState();
-    // 加载用户的旅游预约
+    // 加载用户的旅游预约（仅在状态为空时）
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(travelsProvider.notifier).loadUserTravels();
+      final currentTravels = ref.read(travelsProvider);
+      if (currentTravels.isEmpty) {
+        ref.read(travelsProvider.notifier).loadUserTravels();
+      }
     });
   }
 
