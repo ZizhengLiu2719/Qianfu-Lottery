@@ -44,7 +44,7 @@ class TravelItem {
   factory TravelItem.fromJson(Map<String, dynamic> json) {
     return TravelItem(
       id: json['id'] ?? json['packageId'] ?? '',
-      registrationId: json['registrationId'] ?? '',
+      registrationId: json['registrationId'] ?? json['id'] ?? '',
       title: json['title'] ?? '',
       subtitle: json['subtitle'] ?? '',
       category: json['category'] ?? '',
@@ -53,7 +53,7 @@ class TravelItem {
       registeredAt: json['registeredAt'] != null 
           ? DateTime.parse(json['registeredAt'])
           : DateTime.now(),
-      package: json['package'] != null ? TravelPackage.fromJson(json['package']) : null,
+      package: null, // 暂时设为 null 避免解析问题
     );
   }
 
@@ -169,21 +169,9 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
       final registrations = await _travelPackagesRepository.getUserTravelRegistrations();
       print('Received ${registrations.length} registrations from API');
       
-      final travels = registrations.map((reg) {
-        print('Processing registration: ${reg.title} (PackageID: ${reg.packageId}, RegistrationID: ${reg.id})');
-        final travelItem = TravelItem(
-          id: reg.packageId.toString(),
-          registrationId: reg.id.toString(),
-          title: reg.title,
-          subtitle: reg.subtitle ?? '',
-          category: reg.category,
-          icon: FeatherIcons.map,
-          type: 'travel',
-          registeredAt: reg.registeredAt,
-          package: null, // 暂时设为 null 避免解析问题
-        );
-        print('Created TravelItem: ${travelItem.title} (ID: ${travelItem.id}, RegistrationID: ${travelItem.registrationId})');
-        return travelItem;
+      final travels = registrations.map((data) {
+        print('Processing registration data: $data');
+        return TravelItem.fromJson(data);
       }).toList();
       
       state = travels;

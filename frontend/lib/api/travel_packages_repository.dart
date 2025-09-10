@@ -88,19 +88,17 @@ class TravelPackagesRepository {
   }
 
   // 获取用户旅游注册列表
-  Future<List<TravelRegistration>> getUserTravelRegistrations() async {
-    final response = await _dioClient.get<Map<String, dynamic>>(
+  Future<List<Map<String, dynamic>>> getUserTravelRegistrations() async {
+    final response = await _dioClient.get<List<Map<String, dynamic>>>(
       '/api/travel/registrations',
-      fromJson: (json) => json as Map<String, dynamic>,
+      fromJson: (json) {
+        final data = json as Map<String, dynamic>;
+        final registrations = data['registrations'] as List;
+        return registrations.cast<Map<String, dynamic>>();
+      },
     );
 
-    if (response.data != null && response.data!['data'] != null) {
-      final data = response.data!['data'] as Map<String, dynamic>;
-      final registrations = data['registrations'] as List;
-      return registrations.map((reg) => TravelRegistration.fromJson(reg)).toList();
-    }
-    
-    return [];
+    return response.data ?? [];
   }
 
   // 清空所有旅游注册
