@@ -84,8 +84,7 @@ class TravelRegistration {
   final String? subtitle;
   final String category;
   final String status; // REGISTERED, CANCELLED, COMPLETED
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime registeredAt;
   final TravelPackage? package;
 
   const TravelRegistration({
@@ -96,8 +95,7 @@ class TravelRegistration {
     this.subtitle,
     required this.category,
     required this.status,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.registeredAt,
     this.package,
   });
 

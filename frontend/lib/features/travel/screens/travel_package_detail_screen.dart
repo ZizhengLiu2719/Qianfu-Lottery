@@ -381,7 +381,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
         category: widget.category,
       );
 
-      // 注册成功后添加到前端状态
+      // 注册成功后添加到前端状态（不重复调用API）
       final travel = TravelItem(
         id: widget.packageId,
         title: widget.title,
@@ -392,7 +392,8 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
         registeredAt: DateTime.now(),
       );
 
-      ref.read(travelsProvider.notifier).addTravel(travel);
+      // 直接添加到状态，不调用addTravel（避免重复API调用）
+      ref.read(travelsProvider.notifier).state = [...ref.read(travelsProvider), travel];
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

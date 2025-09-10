@@ -167,7 +167,7 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
         'subtitle': reg.subtitle,
         'category': reg.category,
         'type': 'travel',
-        'registeredAt': reg.createdAt.toIso8601String(),
+        'registeredAt': reg.registeredAt.toIso8601String(),
         'icon': 'map',
         'package': reg.package?.toJson(),
       })).toList();
