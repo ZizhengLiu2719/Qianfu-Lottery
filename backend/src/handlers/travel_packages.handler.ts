@@ -33,9 +33,12 @@ export function createTravelPackageHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
-      // 检查套餐是否存在
-      const packageExists = await prisma.travelPackage.findUnique({
-        where: { id: parseInt(body.packageId) }
+      // 检查套餐是否存在 - 使用字符串ID查找
+      const packageExists = await prisma.travelPackage.findFirst({
+        where: { 
+          title: body.title,
+          category: body.category
+        }
       })
 
       if (!packageExists) {
@@ -50,7 +53,7 @@ export function createTravelPackageHandlers() {
       const existingRegistration = await prisma.travelRegistration.findFirst({
         where: {
           userId: currentUser.id,
-          packageId: parseInt(body.packageId),
+          packageId: packageExists.id,
           status: 'REGISTERED'
         }
       })
@@ -67,7 +70,7 @@ export function createTravelPackageHandlers() {
       const registration = await prisma.travelRegistration.create({
         data: {
           userId: currentUser.id,
-          packageId: parseInt(body.packageId),
+          packageId: packageExists.id,
           title: body.title,
           subtitle: body.subtitle,
           category: body.category,
@@ -77,7 +80,7 @@ export function createTravelPackageHandlers() {
 
       // 更新套餐参与人数
       await prisma.travelPackage.update({
-        where: { id: parseInt(body.packageId) },
+        where: { id: packageExists.id },
         data: {
           currentParticipants: {
             increment: 1
@@ -89,7 +92,7 @@ export function createTravelPackageHandlers() {
         code: 200,
         message: 'Travel package registered successfully',
         data: {
-          id: body.packageId,
+          id: packageExists.id.toString(),
           title: body.title,
           subtitle: body.subtitle,
           category: body.category,

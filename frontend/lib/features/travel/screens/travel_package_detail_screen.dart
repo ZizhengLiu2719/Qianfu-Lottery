@@ -187,13 +187,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
           isDesktop: isDesktop,
         ),
         SizedBox(height: 12.h),
-        _buildDetailItem(
-          context,
-          icon: FeatherIcons.dollarSign,
-          title: '价格',
-          content: _getPrice(),
-          isDesktop: isDesktop,
-        ),
+        // 价格信息已移除
       ],
     );
   }
@@ -469,22 +463,5 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
     }
   }
 
-  String _getPrice() {
-    switch (widget.packageId) {
-      case 'domestic_1':
-        return '50仟彩豆';
-      case 'domestic_2':
-        return '80仟彩豆';
-      case 'domestic_3':
-        return '120仟彩豆';
-      case 'international_1':
-        return '500仟彩豆';
-      case 'international_2':
-        return '800仟彩豆';
-      case 'international_3':
-        return '300仟彩豆';
-      default:
-        return '待定';
-    }
-  }
+  // 价格信息已移除
 }

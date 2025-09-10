@@ -230,7 +230,6 @@ model TravelPackage {
   category            String    // DOMESTIC, INTERNATIONAL
   subcategory         String?   // 文化体验, 自然风光, 城市探索 等
   durationDays        Int?      // 行程天数
-  priceInQiancaiDou   Int       @default(0) // 仟彩豆价格
   maxParticipants     Int       @default(20) // 最大参与人数
   currentParticipants Int       @default(0) // 当前参与人数
   startDate           DateTime? // 出发日期

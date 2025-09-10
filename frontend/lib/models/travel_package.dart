@@ -11,7 +11,6 @@ class TravelPackage {
   final String category; // DOMESTIC, INTERNATIONAL
   final String? subcategory; // 文化体验, 自然风光, 城市探索 等
   final int? durationDays; // 行程天数
-  final int priceInQiancaiDou; // 仟彩豆价格
   final int maxParticipants; // 最大参与人数
   final int currentParticipants; // 当前参与人数
   final DateTime? startDate; // 出发日期
@@ -31,7 +30,6 @@ class TravelPackage {
     required this.category,
     this.subcategory,
     this.durationDays,
-    required this.priceInQiancaiDou,
     required this.maxParticipants,
     required this.currentParticipants,
     this.startDate,
@@ -74,9 +72,7 @@ class TravelPackage {
 
   bool get isFullyBooked => currentParticipants >= maxParticipants;
 
-  String get priceDisplay {
-    return '${priceInQiancaiDou}仟彩豆';
-  }
+  // 价格信息已移除
 }
 
 @JsonSerializable()
