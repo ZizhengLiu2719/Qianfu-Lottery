@@ -98,8 +98,19 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
   // 移除旅游预约
   void removeTravel(String travelId) {
     print('Removing travel with ID: $travelId');
+    print('Current state length: ${state.length}');
+    print('Current state items: ${state.map((item) => '${item.id}:${item.registrationId}').join(', ')}');
+    
     final travel = state.firstWhere((item) => item.id == travelId);
     print('Found travel to remove: ${travel.title}, registrationId: ${travel.registrationId}');
+    
+    if (travel.registrationId.isEmpty) {
+      print('ERROR: registrationId is empty! Cannot delete from backend.');
+      // 仍然更新本地状态，但跳过后端删除
+      state = state.where((item) => item.id != travelId).toList();
+      return;
+    }
+    
     state = state.where((item) => item.id != travelId).toList();
     _removeTravelFromBackend(travel.registrationId);
   }
@@ -130,13 +141,30 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
   // 保存预约到后端
   Future<void> _saveTravelToBackend(TravelItem travel) async {
     try {
-      await _travelPackagesRepository.registerTravelPackage(
+      final response = await _travelPackagesRepository.registerTravelPackage(
         packageId: travel.id,
         title: travel.title,
         subtitle: travel.subtitle,
         category: travel.category,
       );
-      print('Successfully saved travel to backend: ${travel.id}');
+      
+      // 更新 TravelItem 的 registrationId
+      final updatedTravel = TravelItem(
+        id: travel.id,
+        registrationId: response['data']?['id']?.toString() ?? '',
+        title: travel.title,
+        subtitle: travel.subtitle,
+        category: travel.category,
+        icon: travel.icon,
+        type: travel.type,
+        registeredAt: travel.registeredAt,
+        package: travel.package,
+      );
+      
+      // 更新状态中的 TravelItem
+      state = state.map((item) => item.id == travel.id ? updatedTravel : item).toList();
+      
+      print('Successfully saved travel to backend: ${travel.id}, registrationId: ${updatedTravel.registrationId}');
     } catch (e) {
       print('Error saving travel: $e');
       // 如果保存失败，从本地状态中移除
@@ -175,11 +203,14 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
       
       final travels = registrations.map((data) {
         print('Processing registration data: $data');
-        return TravelItem.fromJson(data);
+        final travel = TravelItem.fromJson(data);
+        print('Created TravelItem: id=${travel.id}, registrationId=${travel.registrationId}, title=${travel.title}');
+        return travel;
       }).toList();
       
       state = travels;
       print('Successfully loaded ${travels.length} travels from backend');
+      print('Final state: ${state.map((item) => '${item.id}:${item.registrationId}').join(', ')}');
     } catch (e) {
       print('Error loading travels: $e');
       print('Stack trace: ${StackTrace.current}');
