@@ -281,7 +281,7 @@ export function createLearningHandlers() {
       })
 
       // 转换为前端需要的格式
-      const formattedRegistrations = registrations.map(reg => {
+      const formattedRegistrations = registrations.map((reg: any) => {
         let icon = 'helpCircle'
         
         switch (reg.itemType) {
