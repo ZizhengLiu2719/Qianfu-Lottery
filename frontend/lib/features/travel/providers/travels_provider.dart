@@ -7,7 +7,8 @@ import '../../../models/travel_package.dart';
 
 // 旅游预约项目模型
 class TravelItem {
-  final String id;
+  final String id; // packageId
+  final String registrationId; // 注册记录ID
   final String title;
   final String subtitle;
   final String category;
@@ -18,6 +19,7 @@ class TravelItem {
 
   TravelItem({
     required this.id,
+    required this.registrationId,
     required this.title,
     required this.subtitle,
     required this.category,
@@ -30,6 +32,7 @@ class TravelItem {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'registrationId': registrationId,
       'title': title,
       'subtitle': subtitle,
       'category': category,
@@ -41,6 +44,7 @@ class TravelItem {
   factory TravelItem.fromJson(Map<String, dynamic> json) {
     return TravelItem(
       id: json['id'] ?? json['packageId'] ?? '',
+      registrationId: json['registrationId'] ?? '',
       title: json['title'] ?? '',
       subtitle: json['subtitle'] ?? '',
       category: json['category'] ?? '',
@@ -93,8 +97,9 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
 
   // 移除旅游预约
   void removeTravel(String travelId) {
+    final travel = state.firstWhere((item) => item.id == travelId);
     state = state.where((item) => item.id != travelId).toList();
-    _removeTravelFromBackend(travelId);
+    _removeTravelFromBackend(travel.registrationId);
   }
 
   // 清空所有旅游预约
@@ -138,10 +143,10 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
   }
 
   // 从后端移除预约
-  Future<void> _removeTravelFromBackend(String travelId) async {
+  Future<void> _removeTravelFromBackend(String registrationId) async {
     try {
-      await _travelPackagesRepository.cancelTravelRegistration(travelId);
-      print('Successfully removed travel from backend: $travelId');
+      await _travelPackagesRepository.cancelTravelRegistration(registrationId);
+      print('Successfully removed travel from backend: $registrationId');
     } catch (e) {
       print('Error removing travel: $e');
     }
@@ -165,9 +170,10 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
       print('Received ${registrations.length} registrations from API');
       
       final travels = registrations.map((reg) {
-        print('Processing registration: ${reg.title} (ID: ${reg.packageId})');
+        print('Processing registration: ${reg.title} (PackageID: ${reg.packageId}, RegistrationID: ${reg.id})');
         return TravelItem.fromJson({
           'id': reg.packageId.toString(),
+          'registrationId': reg.id.toString(),
           'title': reg.title,
           'subtitle': reg.subtitle,
           'category': reg.category,
