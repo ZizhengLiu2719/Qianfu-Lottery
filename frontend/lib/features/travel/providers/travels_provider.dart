@@ -43,8 +43,8 @@ class TravelItem {
 
   factory TravelItem.fromJson(Map<String, dynamic> json) {
     return TravelItem(
-      id: json['id'] ?? json['packageId'] ?? '',
-      registrationId: json['registrationId'] ?? json['id'] ?? '',
+      id: json['packageId']?.toString() ?? json['id']?.toString() ?? '',  // 使用 packageId 作为 id
+      registrationId: json['id']?.toString() ?? '',  // 使用 id 作为 registrationId
       title: json['title'] ?? '',
       subtitle: json['subtitle'] ?? '',
       category: json['category'] ?? '',
@@ -97,7 +97,9 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
 
   // 移除旅游预约
   void removeTravel(String travelId) {
+    print('Removing travel with ID: $travelId');
     final travel = state.firstWhere((item) => item.id == travelId);
+    print('Found travel to remove: ${travel.title}, registrationId: ${travel.registrationId}');
     state = state.where((item) => item.id != travelId).toList();
     _removeTravelFromBackend(travel.registrationId);
   }
