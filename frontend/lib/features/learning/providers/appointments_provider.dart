@@ -124,43 +124,37 @@ class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
   // 保存预约到后端
   Future<void> _saveAppointmentToBackend(AppointmentItem appointment) async {
     try {
-      print('Attempting to save appointment to backend: ${appointment.id} (${appointment.type})');
-      
       switch (appointment.type) {
         case 'course':
-          final result = await _learningRepository.registerCourse(
+          await _learningRepository.registerCourse(
             courseId: appointment.id,
             title: appointment.title,
             subtitle: appointment.subtitle,
             category: appointment.category,
           );
-          print('Course registration result: $result');
           break;
         case 'service':
-          final result = await _learningRepository.registerStudyAbroadService(
+          await _learningRepository.registerStudyAbroadService(
             serviceId: appointment.id,
             title: appointment.title,
             subtitle: appointment.subtitle,
             category: appointment.category,
           );
-          print('Service registration result: $result');
           break;
         case 'camp':
-          final result = await _learningRepository.registerSummerCamp(
+          await _learningRepository.registerSummerCamp(
             campId: appointment.id,
             title: appointment.title,
             subtitle: appointment.subtitle,
             category: appointment.category,
           );
-          print('Camp registration result: $result');
           break;
       }
       print('Successfully saved appointment to backend: ${appointment.id}');
     } catch (e) {
       print('Error saving appointment: $e');
-      print('Error type: ${e.runtimeType}');
-      // 不要立即移除，让用户知道保存失败
-      // 可以考虑添加一个错误状态或者重试机制
+      // 如果保存失败，从本地状态中移除
+      state = state.where((item) => item.id != appointment.id).toList();
     }
   }
 
