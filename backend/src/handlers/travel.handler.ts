@@ -302,3 +302,6 @@ export function createTravelHandlers() {
     searchTravelPosts
   }
 }
+
+// 导入旅游套餐处理器
+export { createTravelPackageHandlers } from './travel_packages.handler'

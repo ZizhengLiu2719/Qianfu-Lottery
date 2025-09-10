@@ -4,3 +4,4 @@ export 'user.dart';
 export 'product.dart';
 export 'appointment.dart';
 export 'travel_post.dart';
+export 'travel_package.dart';

@@ -29,6 +29,7 @@ model User {
   orders                  Order[]
   appointments            UserAppointment[]
   learningRegistrations   LearningRegistration[]
+  travelRegistrations     TravelRegistration[]
   account                 Account?
   carts                   Cart[]
   addresses               Address[]
@@ -206,16 +207,65 @@ model TravelPost {
   content     String
   summary     String?
   category    String   // DOMESTIC, INTERNATIONAL
+  subcategory String?  // 文化体验, 自然风光, 城市探索 等
   tags        String[] @default([])
   imageUrl    String?
   images      String[] @default([])
   author      String?
   isPublished Boolean  @default(false)
   viewCount   Int      @default(0)
+  packageId   Int?     // 关联旅游套餐
+  package     TravelPackage? @relation(fields: [packageId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
   @@map("travel_posts")
+}
+
+// 旅游套餐
+model TravelPackage {
+  id                  Int       @id @default(autoincrement())
+  title               String
+  description         String?
+  category            String    // DOMESTIC, INTERNATIONAL
+  subcategory         String?   // 文化体验, 自然风光, 城市探索 等
+  durationDays        Int?      // 行程天数
+  priceInQiancaiDou   Int       @default(0) // 仟彩豆价格
+  maxParticipants     Int       @default(20) // 最大参与人数
+  currentParticipants Int       @default(0) // 当前参与人数
+  startDate           DateTime? // 出发日期
+  endDate             DateTime? // 结束日期
+  location            String?   // 目的地
+  imageUrl            String?   // 主图片
+  images              String[]  @default([]) // 图片数组
+  tags                String[]  @default([]) // 标签数组
+  isActive            Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  
+  // 关联关系
+  registrations       TravelRegistration[]
+  posts               TravelPost[]
+  
+  @@map("travel_packages")
+}
+
+// 旅游注册
+model TravelRegistration {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  user        User     @relation(fields: [userId], references: [id])
+  packageId   Int      @map("package_id")
+  package     TravelPackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  title       String
+  subtitle    String?
+  category    String
+  status      String   @default("REGISTERED") // REGISTERED, CANCELLED, COMPLETED
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  @@unique([userId, packageId])
+  @@map("travel_registrations")
 }
 
 // 账户：仟彩豆可用/锁定余额

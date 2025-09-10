@@ -10,7 +10,7 @@ import { createLearningHandlers } from './handlers/learning.handler'
 import { createOrderHandlers } from './handlers/order.handler'
 import { createProductHandlers } from './handlers/products.handler'
 import { createSeedHandlers } from './handlers/seed.handler'
-import { createTravelHandlers } from './handlers/travel.handler'
+import { createTravelHandlers, createTravelPackageHandlers } from './handlers/travel.handler'
 import { corsMiddleware, createAuthMiddleware } from './middleware/auth.middleware'
 import { AuthService } from './services/auth'
 import { getPrismaClient } from './services/db'
@@ -304,6 +304,45 @@ app.get('/api/travel/tags', async (c) => {
 app.get('/api/travel/search', async (c) => {
   const handlers = createTravelHandlers()
   return handlers.searchTravelPosts(c)
+})
+
+// 旅游套餐相关路由 (受保护)
+app.get('/api/travel/packages', async (c) => {
+  const handlers = createTravelPackageHandlers()
+  return handlers.getTravelPackages(c)
+})
+
+app.get('/api/travel/packages/:id', async (c) => {
+  const handlers = createTravelPackageHandlers()
+  return handlers.getTravelPackage(c)
+})
+
+app.post('/api/travel/packages/register', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createTravelPackageHandlers()
+  return handlers.registerTravelPackage(c)
+})
+
+app.delete('/api/travel/registrations/:id', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createTravelPackageHandlers()
+  return handlers.cancelTravelRegistration(c)
+})
+
+app.get('/api/travel/registrations', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createTravelPackageHandlers()
+  return handlers.getUserTravelRegistrations(c)
+})
+
+app.delete('/api/travel/registrations/clear', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createTravelPackageHandlers()
+  return handlers.clearAllTravelRegistrations(c)
 })
 
 // 开发环境：种子产品（按分类填充示例）
