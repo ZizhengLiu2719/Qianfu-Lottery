@@ -163,6 +163,7 @@ class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
     try {
       // 找到要删除的预约项
       final appointment = state.firstWhere((item) => item.id == appointmentId);
+      print('Attempting to delete learning registration with ID: $appointmentId, type: ${appointment.type}');
       
       await _learningRepository.deleteRegistration(
         registrationId: appointmentId,
@@ -171,6 +172,7 @@ class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
       print('Successfully deleted appointment from backend: $appointmentId');
     } catch (e) {
       print('Error deleting appointment: $e');
+      print('Stack trace: ${StackTrace.current}');
     }
   }
 

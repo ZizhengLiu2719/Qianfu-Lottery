@@ -96,7 +96,8 @@ export function createTravelPackageHandlers() {
         code: 200,
         message: 'Travel package registered successfully',
         data: {
-          id: packageExists.id.toString(),
+          id: registration.id.toString(),  // 返回注册记录ID
+          packageId: packageExists.id.toString(),  // 返回套餐ID
           title: body.title,
           subtitle: body.subtitle,
           category: body.category,

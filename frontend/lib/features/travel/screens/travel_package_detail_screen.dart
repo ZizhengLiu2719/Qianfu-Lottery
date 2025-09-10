@@ -402,7 +402,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
       final dioClient = DioClient();
       final travelPackagesRepository = TravelPackagesRepository(dioClient);
       
-      await travelPackagesRepository.registerTravelPackage(
+      final response = await travelPackagesRepository.registerTravelPackage(
         packageId: widget.packageId,
         title: widget.title,
         subtitle: widget.subtitle,
@@ -412,7 +412,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
       // 注册成功后添加到前端状态（不重复调用API）
       final travel = TravelItem(
         id: widget.packageId,
-        registrationId: '',
+        registrationId: response['data']?['id']?.toString() ?? '',  // 使用后端返回的注册记录ID
         title: widget.title,
         subtitle: widget.subtitle,
         category: widget.category,

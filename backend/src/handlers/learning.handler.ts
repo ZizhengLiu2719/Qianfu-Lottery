@@ -36,6 +36,24 @@ export function createLearningHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
+      // 检查是否已经注册
+      const existingRegistration = await (prisma as any).learningRegistration.findFirst({
+        where: {
+          userId: currentUser.id,
+          itemId: body.courseId,
+          itemType: 'course',
+          status: 'REGISTERED'
+        }
+      })
+
+      if (existingRegistration) {
+        return c.json({
+          code: 400,
+          message: 'Already registered for this course',
+          data: null
+        }, 400)
+      }
+
       // 创建学习彩注册记录
       const registration = await (prisma as any).learningRegistration.create({
         data: {
@@ -96,6 +114,24 @@ export function createLearningHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
+      // 检查是否已经注册
+      const existingRegistration = await (prisma as any).learningRegistration.findFirst({
+        where: {
+          userId: currentUser.id,
+          itemId: body.serviceId,
+          itemType: 'service',
+          status: 'REGISTERED'
+        }
+      })
+
+      if (existingRegistration) {
+        return c.json({
+          code: 400,
+          message: 'Already registered for this service',
+          data: null
+        }, 400)
+      }
+
       // 创建学习彩注册记录
       const registration = await (prisma as any).learningRegistration.create({
         data: {
@@ -155,6 +191,24 @@ export function createLearningHandlers() {
       }
 
       const prisma = getPrismaClient(databaseUrl)
+
+      // 检查是否已经注册
+      const existingRegistration = await (prisma as any).learningRegistration.findFirst({
+        where: {
+          userId: currentUser.id,
+          itemId: body.campId,
+          itemType: 'camp',
+          status: 'REGISTERED'
+        }
+      })
+
+      if (existingRegistration) {
+        return c.json({
+          code: 400,
+          message: 'Already registered for this camp',
+          data: null
+        }, 400)
+      }
 
       // 创建学习彩注册记录
       const registration = await (prisma as any).learningRegistration.create({
