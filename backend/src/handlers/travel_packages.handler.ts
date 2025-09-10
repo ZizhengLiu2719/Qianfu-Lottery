@@ -197,6 +197,7 @@ export function createTravelPackageHandlers() {
   const getUserTravelRegistrations = async (c: Context) => {
     try {
       const currentUser = c.get('user')
+      console.log('Getting travel registrations for user:', currentUser.id)
 
       const databaseUrl = c.env?.DATABASE_URL as string
       if (!databaseUrl) {
@@ -229,6 +230,8 @@ export function createTravelPackageHandlers() {
           AND tr.status = 'REGISTERED'
         ORDER BY tr.registered_at DESC
       `
+      
+      console.log('Raw SQL result:', registrations)
 
       // 转换为前端需要的格式
       const formattedRegistrations = Array.isArray(registrations) ? registrations.map((reg: any) => {
@@ -252,6 +255,8 @@ export function createTravelPackageHandlers() {
           }
         }
       }) : []
+
+      console.log('Formatted registrations:', formattedRegistrations)
 
       return c.json({
         code: 200,
