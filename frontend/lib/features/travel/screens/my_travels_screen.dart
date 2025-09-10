@@ -50,63 +50,161 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
       ),
       body: travels.isEmpty
           ? _buildEmptyState(context)
-          : Column(
-              children: [
-                // 统计信息
-                _buildStatsSection(context, travelStats, isDesktop),
-                SizedBox(height: 16.h),
-                // 预约列表
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    itemCount: travels.length,
-                    itemBuilder: (context, index) {
-                      final travel = travels[index];
-                      return _buildTravelCard(context, travel, isDesktop);
-                    },
-                  ),
-                ),
-              ],
-            ),
+          : _buildTravelsList(context, isDesktop, travels),
     );
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width > 768;
+    
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             FeatherIcons.map,
-            size: 64.sp,
-            color: Colors.grey.shade400,
+            size: isDesktop ? 80.sp : 100.sp,
+            color: Colors.grey.shade300,
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 24.h),
           Text(
             '暂无旅游预约',
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: isDesktop ? 18.sp : 20.sp,
               fontWeight: FontWeight.w600,
               color: AppTheme.textSecondary,
             ),
           ),
           SizedBox(height: 8.h),
           Text(
-            '去发现更多精彩的旅游套餐吧！',
+            '去旅游彩页面选择感兴趣的套餐吧',
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: isDesktop ? 14.sp : 16.sp,
               color: AppTheme.textTertiary,
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 32.h),
           ElevatedButton.icon(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(FeatherIcons.search),
-            label: Text('浏览旅游套餐'),
+            icon: Icon(FeatherIcons.arrowLeft),
+            label: Text('返回旅游彩'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryColor,
               foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+              padding: EdgeInsets.symmetric(
+                horizontal: 24.w,
+                vertical: 12.h,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTravelsList(BuildContext context, bool isDesktop, List<TravelItem> travels) {
+    final travelStats = ref.watch(travelStatsProvider);
+    
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 统计信息
+          _buildStatsCard(context, isDesktop, travelStats),
+          SizedBox(height: 24.h),
+          
+          // 预约列表
+          Text(
+            '预约列表 (${travels.length})',
+            style: TextStyle(
+              fontSize: isDesktop ? 16.sp : 18.sp,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
+            ),
+          ),
+          SizedBox(height: 16.h),
+          
+          ...travels.map((travel) => 
+            _buildTravelCard(context, travel, isDesktop)
+          ).toList(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatsCard(BuildContext context, bool isDesktop, Map<String, int> stats) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppTheme.primaryColor.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: AppTheme.primaryColor.withOpacity(0.1)),
+      ),
+      child: Row(
+        children: [
+          _buildStatItem(
+            context, 
+            '国内旅游', 
+            stats['domestic'] ?? 0, 
+            FeatherIcons.home, 
+            Colors.blue, 
+            isDesktop
+          ),
+          SizedBox(width: 24.w),
+          _buildStatItem(
+            context, 
+            '国外旅游', 
+            stats['international'] ?? 0, 
+            FeatherIcons.globe, 
+            Colors.green, 
+            isDesktop
+          ),
+          SizedBox(width: 24.w),
+          _buildStatItem(
+            context, 
+            '总计', 
+            stats['total'] ?? 0, 
+            FeatherIcons.map, 
+            AppTheme.primaryColor, 
+            isDesktop
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(
+    BuildContext context, 
+    String label, 
+    int count, 
+    IconData icon, 
+    Color color, 
+    bool isDesktop
+  ) {
+    return Expanded(
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: isDesktop ? 20.sp : 24.sp,
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            count.toString(),
+            style: TextStyle(
+              fontSize: isDesktop ? 18.sp : 20.sp,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: isDesktop ? 12.sp : 14.sp,
+              color: AppTheme.textSecondary,
             ),
           ),
         ],

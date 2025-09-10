@@ -33,6 +33,15 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
   bool _isRegistering = false;
 
   @override
+  void initState() {
+    super.initState();
+    // 页面加载时从后端获取用户注册数据
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(travelsProvider.notifier).loadUserTravels();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width > 768;
     final travels = ref.watch(travelsProvider);
