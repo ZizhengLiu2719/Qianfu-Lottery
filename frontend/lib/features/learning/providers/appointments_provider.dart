@@ -81,17 +81,20 @@ class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
   void addAppointment(AppointmentItem appointment) {
     if (!state.any((item) => item.id == appointment.id)) {
       state = [...state, appointment];
+      _saveAppointmentToBackend(appointment);
     }
   }
 
   // 移除预约
   void removeAppointment(String appointmentId) {
     state = state.where((item) => item.id != appointmentId).toList();
+    _removeAppointmentFromBackend(appointmentId);
   }
 
   // 清空所有预约
   void clearAllAppointments() {
     state = [];
+    _clearAllAppointmentsFromBackend();
   }
 
   // 检查是否已预约
@@ -110,6 +113,40 @@ class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
       'service': serviceCount,
       'camp': campCount,
     };
+  }
+
+  // 保存预约到后端
+  Future<void> _saveAppointmentToBackend(AppointmentItem appointment) async {
+    try {
+      // TODO: 实现API调用保存到数据库
+      // 这里需要根据预约类型调用不同的API端点
+      // 例如：POST /api/appointments/course, /api/appointments/service, /api/appointments/camp
+      print('Saving appointment to backend: ${appointment.id}');
+    } catch (e) {
+      print('Error saving appointment: $e');
+    }
+  }
+
+  // 从后端移除预约
+  Future<void> _removeAppointmentFromBackend(String appointmentId) async {
+    try {
+      // TODO: 实现API调用从数据库删除
+      // 例如：DELETE /api/appointments/$appointmentId
+      print('Removing appointment from backend: $appointmentId');
+    } catch (e) {
+      print('Error removing appointment: $e');
+    }
+  }
+
+  // 从后端清空所有预约
+  Future<void> _clearAllAppointmentsFromBackend() async {
+    try {
+      // TODO: 实现API调用清空数据库
+      // 例如：DELETE /api/appointments
+      print('Clearing all appointments from backend');
+    } catch (e) {
+      print('Error clearing appointments: $e');
+    }
   }
 }
 
