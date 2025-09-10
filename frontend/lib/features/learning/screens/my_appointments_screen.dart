@@ -15,6 +15,15 @@ class MyAppointmentsScreen extends ConsumerStatefulWidget {
 class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
 
   @override
+  void initState() {
+    super.initState();
+    // 页面加载时从后端获取用户预约数据
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(appointmentsProvider.notifier).loadUserAppointments();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width > 768;
     final appointments = ref.watch(appointmentsProvider);

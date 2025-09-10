@@ -6,6 +6,7 @@ import { createAuthHandlers } from './handlers/auth.handler'
 import { createCartHandlers } from './handlers/cart.handler'
 import { createCheckoutHandlers } from './handlers/checkout.handler'
 import { createInventoryHandlers } from './handlers/inventory.handler'
+import { createLearningHandlers } from './handlers/learning.handler'
 import { createOrderHandlers } from './handlers/order.handler'
 import { createProductHandlers } from './handlers/products.handler'
 import { createSeedHandlers } from './handlers/seed.handler'
@@ -239,6 +240,49 @@ app.patch('/api/appointments/:id/cancel', async (c) => {
   await authMiddleware(c, async () => {})
   const handlers = createAppointmentHandlers(qiancaiDouService)
   return handlers.cancelAppointment(c)
+})
+
+// 学习彩相关路由 (受保护)
+app.post('/api/learning/courses/register', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createLearningHandlers()
+  return handlers.registerCourse(c)
+})
+
+app.post('/api/learning/study-abroad/register', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createLearningHandlers()
+  return handlers.registerStudyAbroadService(c)
+})
+
+app.post('/api/learning/summer-camps/register', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createLearningHandlers()
+  return handlers.registerSummerCamp(c)
+})
+
+app.delete('/api/learning/:type/cancel/:id', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createLearningHandlers()
+  return handlers.cancelRegistration(c)
+})
+
+app.get('/api/learning/registrations', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createLearningHandlers()
+  return handlers.getUserLearningRegistrations(c)
+})
+
+app.delete('/api/learning/registrations/clear', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createLearningHandlers()
+  return handlers.clearAllLearningRegistrations(c)
 })
 
 // 旅游相关路由 (公开)

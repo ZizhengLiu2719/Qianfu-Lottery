@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import '../../../api/learning_repository.dart';
+import '../../../api/dio_client.dart';
 
 // 预约项目模型
 class AppointmentItem {
@@ -35,13 +37,15 @@ class AppointmentItem {
 
   factory AppointmentItem.fromJson(Map<String, dynamic> json) {
     return AppointmentItem(
-      id: json['id'],
-      title: json['title'],
-      subtitle: json['subtitle'],
-      category: json['category'],
+      id: json['id'] ?? json['courseId'] ?? json['serviceId'] ?? json['campId'] ?? '',
+      title: json['title'] ?? '',
+      subtitle: json['subtitle'] ?? '',
+      category: json['category'] ?? '',
       icon: _getIconFromString(json['icon'] ?? 'helpCircle'),
-      type: json['type'],
-      registeredAt: DateTime.parse(json['registeredAt']),
+      type: json['type'] ?? 'course',
+      registeredAt: json['registeredAt'] != null 
+          ? DateTime.parse(json['registeredAt'])
+          : DateTime.now(),
     );
   }
 
@@ -75,7 +79,9 @@ class AppointmentItem {
 
 // 预约状态管理
 class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
-  AppointmentsNotifier() : super([]);
+  final LearningRepository _learningRepository;
+  
+  AppointmentsNotifier(this._learningRepository) : super([]);
 
   // 添加预约
   void addAppointment(AppointmentItem appointment) {
@@ -118,21 +124,51 @@ class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
   // 保存预约到后端
   Future<void> _saveAppointmentToBackend(AppointmentItem appointment) async {
     try {
-      // TODO: 实现API调用保存到数据库
-      // 这里需要根据预约类型调用不同的API端点
-      // 例如：POST /api/appointments/course, /api/appointments/service, /api/appointments/camp
-      print('Saving appointment to backend: ${appointment.id}');
+      switch (appointment.type) {
+        case 'course':
+          await _learningRepository.registerCourse(
+            courseId: appointment.id,
+            title: appointment.title,
+            subtitle: appointment.subtitle,
+            category: appointment.category,
+          );
+          break;
+        case 'service':
+          await _learningRepository.registerStudyAbroadService(
+            serviceId: appointment.id,
+            title: appointment.title,
+            subtitle: appointment.subtitle,
+            category: appointment.category,
+          );
+          break;
+        case 'camp':
+          await _learningRepository.registerSummerCamp(
+            campId: appointment.id,
+            title: appointment.title,
+            subtitle: appointment.subtitle,
+            category: appointment.category,
+          );
+          break;
+      }
+      print('Successfully saved appointment to backend: ${appointment.id}');
     } catch (e) {
       print('Error saving appointment: $e');
+      // 如果保存失败，从本地状态中移除
+      state = state.where((item) => item.id != appointment.id).toList();
     }
   }
 
   // 从后端移除预约
   Future<void> _removeAppointmentFromBackend(String appointmentId) async {
     try {
-      // TODO: 实现API调用从数据库删除
-      // 例如：DELETE /api/appointments/$appointmentId
-      print('Removing appointment from backend: $appointmentId');
+      // 找到要删除的预约项
+      final appointment = state.firstWhere((item) => item.id == appointmentId);
+      
+      await _learningRepository.cancelRegistration(
+        registrationId: appointmentId,
+        type: appointment.type,
+      );
+      print('Successfully removed appointment from backend: $appointmentId');
     } catch (e) {
       print('Error removing appointment: $e');
     }
@@ -141,18 +177,33 @@ class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
   // 从后端清空所有预约
   Future<void> _clearAllAppointmentsFromBackend() async {
     try {
-      // TODO: 实现API调用清空数据库
-      // 例如：DELETE /api/appointments
-      print('Clearing all appointments from backend');
+      await _learningRepository.clearAllLearningRegistrations();
+      print('Successfully cleared all appointments from backend');
     } catch (e) {
       print('Error clearing appointments: $e');
+    }
+  }
+
+  // 从后端加载用户预约
+  Future<void> loadUserAppointments() async {
+    try {
+      final registrations = await _learningRepository.getUserLearningRegistrations();
+      final appointments = registrations.map((data) => AppointmentItem.fromJson(data)).toList();
+      state = appointments;
+      print('Successfully loaded ${appointments.length} appointments from backend');
+    } catch (e) {
+      print('Error loading appointments: $e');
     }
   }
 }
 
 // 提供者
 final appointmentsProvider = StateNotifierProvider<AppointmentsNotifier, List<AppointmentItem>>(
-  (ref) => AppointmentsNotifier(),
+  (ref) {
+    final dioClient = ref.watch(dioClientProvider);
+    final learningRepository = LearningRepository(dioClient);
+    return AppointmentsNotifier(learningRepository);
+  },
 );
 
 // 预约统计提供者
