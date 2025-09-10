@@ -439,7 +439,11 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
     );
   }
 
-  void _handleCancelRegistration() {
+  void _handleCancelRegistration() async {
+    // 先重新加载用户预约数据，确保有正确的数据
+    await ref.read(appointmentsProvider.notifier).loadUserAppointments();
+    
+    // 然后删除
     ref.read(appointmentsProvider.notifier).removeAppointment(widget.serviceId);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

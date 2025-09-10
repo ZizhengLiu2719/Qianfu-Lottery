@@ -451,7 +451,11 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
     }
   }
 
-  void _handleCancelRegistration() {
+  void _handleCancelRegistration() async {
+    // 先重新加载用户旅游数据，确保有正确的 registrationId
+    await ref.read(travelsProvider.notifier).loadUserTravels();
+    
+    // 然后删除
     ref.read(travelsProvider.notifier).removeTravel(widget.packageId);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

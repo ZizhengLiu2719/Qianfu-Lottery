@@ -93,8 +93,14 @@ class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
 
   // 移除预约
   void removeAppointment(String appointmentId) {
+    // 先找到要删除的预约项
+    final appointment = state.firstWhere((item) => item.id == appointmentId);
+    
+    // 更新本地状态
     state = state.where((item) => item.id != appointmentId).toList();
-    _removeAppointmentFromBackend(appointmentId);
+    
+    // 然后调用后端删除
+    _removeAppointmentFromBackend(appointmentId, appointment.type);
   }
 
   // 清空所有预约
@@ -159,15 +165,13 @@ class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
   }
 
   // 从后端移除预约
-  Future<void> _removeAppointmentFromBackend(String appointmentId) async {
+  Future<void> _removeAppointmentFromBackend(String appointmentId, String type) async {
     try {
-      // 找到要删除的预约项
-      final appointment = state.firstWhere((item) => item.id == appointmentId);
-      print('Attempting to delete learning registration with ID: $appointmentId, type: ${appointment.type}');
+      print('Attempting to delete learning registration with ID: $appointmentId, type: $type');
       
       await _learningRepository.deleteRegistration(
         registrationId: appointmentId,
-        type: appointment.type,
+        type: type,
       );
       print('Successfully deleted appointment from backend: $appointmentId');
     } catch (e) {
