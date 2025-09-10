@@ -37,7 +37,7 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 创建学习彩注册记录
-      const registration = await prisma.learningRegistration.create({
+      const registration = await (prisma as any).learningRegistration.create({
         data: {
           userId: currentUser.id,
           itemId: body.courseId,
@@ -97,7 +97,7 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 创建学习彩注册记录
-      const registration = await prisma.learningRegistration.create({
+      const registration = await (prisma as any).learningRegistration.create({
         data: {
           userId: currentUser.id,
           itemId: body.serviceId,
@@ -157,7 +157,7 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 创建学习彩注册记录
-      const registration = await prisma.learningRegistration.create({
+      const registration = await (prisma as any).learningRegistration.create({
         data: {
           userId: currentUser.id,
           itemId: body.campId,
@@ -218,7 +218,7 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 查找并更新注册记录
-      const registration = await prisma.learningRegistration.findFirst({
+      const registration = await (prisma as any).learningRegistration.findFirst({
         where: {
           userId: currentUser.id,
           itemId: registrationId,
@@ -236,7 +236,7 @@ export function createLearningHandlers() {
       }
 
       // 更新状态为已取消
-      await prisma.learningRegistration.update({
+      await (prisma as any).learningRegistration.update({
         where: { id: registration.id },
         data: { status: 'CANCELLED' }
       })
@@ -272,7 +272,7 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 获取用户的所有学习彩注册记录
-      const registrations = await prisma.learningRegistration.findMany({
+      const registrations = await (prisma as any).learningRegistration.findMany({
         where: {
           userId: currentUser.id,
           status: 'REGISTERED'
@@ -338,7 +338,7 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 删除用户的所有学习彩注册记录
-      await prisma.learningRegistration.deleteMany({
+      await (prisma as any).learningRegistration.deleteMany({
         where: {
           userId: currentUser.id,
           status: 'REGISTERED'
