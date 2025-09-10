@@ -97,9 +97,18 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
 
   // 移除旅游预约
   void removeTravel(String travelId) {
-    final travel = state.firstWhere((item) => item.id == travelId);
-    state = state.where((item) => item.id != travelId).toList();
-    _removeTravelFromBackend(travel.registrationId);
+    final travel = state.firstWhere(
+      (item) => item.id == travelId || item.title == travelId,
+      orElse: () => state.firstWhere((item) => item.id == travelId,
+          orElse: () => state.isNotEmpty ? state.first : throw Exception('Travel not found')),
+    );
+    state = state.where((item) => item.id != travel.id).toList();
+    if (travel.registrationId.isNotEmpty) {
+      _removeTravelFromBackend(travel.registrationId);
+    } else {
+      // 如果本地没有registrationId，回退到拉取一次服务端
+      loadUserTravels();
+    }
   }
 
   // 清空所有旅游预约

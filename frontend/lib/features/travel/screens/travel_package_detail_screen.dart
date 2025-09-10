@@ -47,7 +47,8 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
     final travels = ref.watch(travelsProvider);
     print('Checking registration status for packageId: ${widget.packageId}');
     print('Available travels: ${travels.map((t) => '${t.id}: ${t.title}').join(', ')}');
-    final isTravelRegistered = travels.any((item) => item.id == widget.packageId);
+    final isTravelRegistered = travels.any((item) =>
+      item.id == widget.packageId || item.title == widget.title);
     print('Is travel registered: $isTravelRegistered');
     
     return Scaffold(
@@ -382,10 +383,10 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
     });
 
     try {
-      // 调用后端 API 注册旅游套餐
-      final dioClient = DioClient();
+      // 调用后端 API 注册旅游套餐（使用共享的 Dio 实例）
+      final dioClient = ref.read(dioClientProvider);
       final travelPackagesRepository = TravelPackagesRepository(dioClient);
-      
+
       await travelPackagesRepository.registerTravelPackage(
         packageId: widget.packageId,
         title: widget.title,
@@ -393,20 +394,8 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
         category: widget.category,
       );
 
-      // 注册成功后添加到前端状态（不重复调用API）
-      final travel = TravelItem(
-        id: widget.packageId,
-        registrationId: '',
-        title: widget.title,
-        subtitle: widget.subtitle,
-        category: widget.category,
-        icon: widget.icon,
-        type: 'travel',
-        registeredAt: DateTime.now(),
-      );
-
-      // 直接添加到状态，不调用addTravel（避免重复API调用）
-      ref.read(travelsProvider.notifier).state = [...ref.read(travelsProvider), travel];
+      // 成功后从后端重新加载，确保有正确的 registrationId 等信息
+      await ref.read(travelsProvider.notifier).loadUserTravels();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -437,6 +426,8 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
 
   void _handleCancelRegistration() {
     ref.read(travelsProvider.notifier).removeTravel(widget.packageId);
+    // 取消后刷新一次，确保状态与后端一致
+    ref.read(travelsProvider.notifier).loadUserTravels();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('已取消注册'),
