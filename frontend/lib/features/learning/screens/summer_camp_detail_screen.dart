@@ -5,16 +5,16 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/appointments_provider.dart';
 
-class CourseDetailScreen extends ConsumerStatefulWidget {
-  final String courseId;
+class SummerCampDetailScreen extends ConsumerStatefulWidget {
+  final String campId;
   final String title;
   final String subtitle;
   final String category;
   final IconData icon;
 
-  const CourseDetailScreen({
+  const SummerCampDetailScreen({
     super.key,
-    required this.courseId,
+    required this.campId,
     required this.title,
     required this.subtitle,
     required this.category,
@@ -22,23 +22,22 @@ class CourseDetailScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CourseDetailScreen> createState() => _CourseDetailScreenState();
+  ConsumerState<SummerCampDetailScreen> createState() => _SummerCampDetailScreenState();
 }
 
-class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
-  bool _isRegistered = false;
+class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen> {
   bool _isHovering = false;
 
   @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width > 768;
     final appointments = ref.watch(appointmentsProvider);
-    final isAppointed = appointments.any((item) => item.id == widget.courseId);
+    final isAppointed = appointments.any((item) => item.id == widget.campId);
     
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('课程详情'),
+        title: Text('夏令营详情'),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
@@ -52,12 +51,12 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 课程卡片
-            _buildCourseCard(context, isDesktop),
+            // 夏令营卡片
+            _buildCampCard(context, isDesktop),
             SizedBox(height: 24.h),
             
-            // 课程详情
-            _buildCourseDetails(context, isDesktop),
+            // 夏令营详情
+            _buildCampDetails(context, isDesktop),
             SizedBox(height: 24.h),
             
             // 注册按钮区域
@@ -68,7 +67,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
     );
   }
 
-  Widget _buildCourseCard(BuildContext context, bool isDesktop) {
+  Widget _buildCampCard(BuildContext context, bool isDesktop) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -88,12 +87,12 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withOpacity(0.1),
+              color: Colors.orange.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Icon(
               widget.icon,
-              color: AppTheme.primaryColor,
+              color: Colors.orange,
               size: isDesktop ? 32.sp : 40.sp,
             ),
           ),
@@ -122,14 +121,14 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    color: Colors.orange.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
                     widget.category,
                     style: TextStyle(
                       fontSize: isDesktop ? 12.sp : 14.sp,
-                      color: AppTheme.primaryColor,
+                      color: Colors.orange,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -142,12 +141,12 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
     );
   }
 
-  Widget _buildCourseDetails(BuildContext context, bool isDesktop) {
+  Widget _buildCampDetails(BuildContext context, bool isDesktop) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '课程详情',
+          '夏令营详情',
           style: TextStyle(
             fontSize: isDesktop ? 18.sp : 20.sp,
             fontWeight: FontWeight.bold,
@@ -157,33 +156,41 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
         SizedBox(height: 16.h),
         _buildDetailItem(
           context,
-          icon: FeatherIcons.clock,
-          title: '课程时长',
-          content: '60分钟',
-          isDesktop: isDesktop,
-        ),
-        SizedBox(height: 12.h),
-        _buildDetailItem(
-          context,
           icon: FeatherIcons.calendar,
-          title: '上课时间',
-          content: '每周二/四 晚 20:00',
+          title: '活动时间',
+          content: _getCampDuration(),
           isDesktop: isDesktop,
         ),
         SizedBox(height: 12.h),
         _buildDetailItem(
           context,
           icon: FeatherIcons.users,
-          title: '适合人群',
-          content: '编程初学者，对AI感兴趣的学生',
+          title: '适合年龄',
+          content: _getAgeRange(),
+          isDesktop: isDesktop,
+        ),
+        SizedBox(height: 12.h),
+        _buildDetailItem(
+          context,
+          icon: FeatherIcons.mapPin,
+          title: '活动地点',
+          content: _getLocation(),
           isDesktop: isDesktop,
         ),
         SizedBox(height: 12.h),
         _buildDetailItem(
           context,
           icon: FeatherIcons.bookOpen,
-          title: '课程内容',
-          content: 'Python基础、机器学习入门、深度学习概念',
+          title: '活动内容',
+          content: _getCampContent(),
+          isDesktop: isDesktop,
+        ),
+        SizedBox(height: 12.h),
+        _buildDetailItem(
+          context,
+          icon: FeatherIcons.award,
+          title: '活动特色',
+          content: _getCampFeatures(),
           isDesktop: isDesktop,
         ),
       ],
@@ -203,7 +210,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
         Icon(
           icon,
           size: isDesktop ? 16.sp : 18.sp,
-          color: AppTheme.primaryColor,
+          color: Colors.orange,
         ),
         SizedBox(width: 12.w),
         Expanded(
@@ -244,7 +251,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
       child: Column(
         children: [
           Text(
-            isAppointed ? '已注册此课程' : '立即注册课程',
+            isAppointed ? '已注册此夏令营' : '立即注册夏令营',
             style: TextStyle(
               fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
@@ -259,7 +266,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                   onEnter: (_) => setState(() => _isHovering = true),
                   onExit: (_) => setState(() => _isHovering = false),
                   child: GestureDetector(
-                    onTap: _handleRegistration,
+                    onTap: () => _handleRegistration(isAppointed),
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 200),
                       padding: EdgeInsets.symmetric(
@@ -269,11 +276,11 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                       decoration: BoxDecoration(
                         color: isAppointed 
                           ? Colors.green 
-                          : (_isHovering ? AppTheme.primaryColor.withOpacity(0.8) : AppTheme.primaryColor),
+                          : (_isHovering ? Colors.orange.withOpacity(0.8) : Colors.orange),
                         borderRadius: BorderRadius.circular(12.r),
                         boxShadow: _isHovering ? [
                           BoxShadow(
-                            color: AppTheme.primaryColor.withOpacity(0.3),
+                            color: Colors.orange.withOpacity(0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 4),
                           ),
@@ -289,7 +296,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            isAppointed ? '已注册' : '注册课程',
+                            isAppointed ? '已注册' : '注册夏令营',
                             style: TextStyle(
                               fontSize: isDesktop ? 14.sp : 16.sp,
                               color: Colors.white,
@@ -347,14 +354,94 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
     );
   }
 
-  void _handleRegistration() {
+  String _getCampDuration() {
+    switch (widget.campId) {
+      case 'summer_camp_1':
+        return '7月1日-14日 (14天)';
+      case 'summer_camp_2':
+        return '7月15日-28日 (14天)';
+      case 'summer_camp_3':
+        return '8月1日-14日 (14天)';
+      case 'summer_camp_4':
+        return '8月15日-28日 (14天)';
+      default:
+        return '14天';
+    }
+  }
+
+  String _getAgeRange() {
+    switch (widget.campId) {
+      case 'summer_camp_1':
+        return '14-18岁';
+      case 'summer_camp_2':
+        return '15-18岁';
+      case 'summer_camp_3':
+        return '10-16岁';
+      case 'summer_camp_4':
+        return '12-17岁';
+      default:
+        return '10-18岁';
+    }
+  }
+
+  String _getLocation() {
+    switch (widget.campId) {
+      case 'summer_camp_1':
+        return '马萨诸塞州，哈佛西湖学校';
+      case 'summer_camp_2':
+        return '马萨诸塞州，麻省理工学院';
+      case 'summer_camp_3':
+        return '加利福尼亚州，Wonder Valley度假村';
+      case 'summer_camp_4':
+        return '纽约州，Rocking Horse牧场';
+      default:
+        return '美国知名学府';
+    }
+  }
+
+  String _getCampContent() {
+    switch (widget.campId) {
+      case 'summer_camp_1':
+        return '辩论技巧训练、公共演讲、逻辑思维、团队合作、模拟辩论赛';
+      case 'summer_camp_2':
+        return '科学实验、工程挑战、数学建模、编程项目、创新设计';
+      case 'summer_camp_3':
+        return '户外探险、团队建设、领导力训练、自然探索、生存技能';
+      case 'summer_camp_4':
+        return '马术训练、农场体验、环保教育、手工制作、户外运动';
+      default:
+        return '丰富多彩的夏令营活动';
+    }
+  }
+
+  String _getCampFeatures() {
+    switch (widget.campId) {
+      case 'summer_camp_1':
+        return '顶级辩论教练、小班教学、个性化指导、国际视野';
+      case 'summer_camp_2':
+        return 'MIT教授授课、前沿科技体验、创新思维培养';
+      case 'summer_camp_3':
+        return '自然教育、冒险精神、独立能力、环保意识';
+      case 'summer_camp_4':
+        return '马术专业指导、农场生活体验、动物关爱教育';
+      default:
+        return '专业指导、安全可靠、寓教于乐';
+    }
+  }
+
+  void _handleRegistration(bool isAppointed) {
+    if (isAppointed) {
+      _handleCancelRegistration();
+      return;
+    }
+
     final appointment = AppointmentItem(
-      id: widget.courseId,
+      id: widget.campId,
       title: widget.title,
       subtitle: widget.subtitle,
       category: widget.category,
       icon: widget.icon,
-      type: 'course',
+      type: 'camp',
       registeredAt: DateTime.now(),
     );
 
@@ -376,7 +463,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
   }
 
   void _handleCancelRegistration() {
-    ref.read(appointmentsProvider.notifier).removeAppointment(widget.courseId);
+    ref.read(appointmentsProvider.notifier).removeAppointment(widget.campId);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('已取消注册'),

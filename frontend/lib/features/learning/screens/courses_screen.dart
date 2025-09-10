@@ -6,7 +6,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/responsive_tag.dart';
 import 'course_detail_screen.dart';
+import 'study_abroad_detail_screen.dart';
+import 'summer_camp_detail_screen.dart';
 import 'my_appointments_screen.dart';
+import '../providers/appointments_provider.dart';
 
 class CoursesScreen extends ConsumerStatefulWidget {
   const CoursesScreen({super.key});
@@ -17,7 +20,6 @@ class CoursesScreen extends ConsumerStatefulWidget {
 
 class _CoursesScreenState extends ConsumerState<CoursesScreen> {
   String? _selectedCategory;
-  Set<String> _registeredCourses = {};
 
   @override
   Widget build(BuildContext context) {
@@ -297,36 +299,48 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           ),
         ),
         SizedBox(height: 24.h),
-        _buildServiceCard(
-          context,
-          title: '留学规划与定位',
-          subtitle: '根据学术背景和职业目标提供个性化留学计划',
-          icon: FeatherIcons.crosshair,
-          duration: '4周',
+        GestureDetector(
+          onTap: () => _navigateToStudyAbroadDetail('study_abroad_1'),
+          child: _buildServiceCard(
+            context,
+            title: '留学规划与定位',
+            subtitle: '根据学术背景和职业目标提供个性化留学计划',
+            icon: FeatherIcons.crosshair,
+            duration: '4周',
+          ),
         ),
         SizedBox(height: 12.h),
-        _buildServiceCard(
-          context,
-          title: '院校选择与专业推荐',
-          subtitle: '推荐适合的学校和专业，提供详细信息',
-          icon: FeatherIcons.bookOpen,
-          duration: '2周',
+        GestureDetector(
+          onTap: () => _navigateToStudyAbroadDetail('study_abroad_2'),
+          child: _buildServiceCard(
+            context,
+            title: '院校选择与专业推荐',
+            subtitle: '推荐适合的学校和专业，提供详细信息',
+            icon: FeatherIcons.bookOpen,
+            duration: '2周',
+          ),
         ),
         SizedBox(height: 12.h),
-        _buildServiceCard(
-          context,
-          title: '申请材料准备指导',
-          subtitle: '协助准备个人陈述、推荐信等申请材料',
-          icon: FeatherIcons.edit,
-          duration: '6周',
+        GestureDetector(
+          onTap: () => _navigateToStudyAbroadDetail('study_abroad_3'),
+          child: _buildServiceCard(
+            context,
+            title: '申请材料准备指导',
+            subtitle: '协助准备个人陈述、推荐信等申请材料',
+            icon: FeatherIcons.edit,
+            duration: '6周',
+          ),
         ),
         SizedBox(height: 12.h),
-        _buildServiceCard(
-          context,
-          title: '语言培训与考试指导',
-          subtitle: '提供语言培训课程和考试指导',
-          icon: FeatherIcons.award,
-          duration: '8周',
+        GestureDetector(
+          onTap: () => _navigateToStudyAbroadDetail('study_abroad_4'),
+          child: _buildServiceCard(
+            context,
+            title: '语言培训与考试指导',
+            subtitle: '提供语言培训课程和考试指导',
+            icon: FeatherIcons.award,
+            duration: '8周',
+          ),
         ),
       ],
     );
@@ -354,36 +368,48 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           ),
         ),
         SizedBox(height: 24.h),
-        _buildCampCard(
-          context,
-          title: '哈佛西湖辩论赛夏令营',
-          subtitle: '马萨诸塞州 · 14-18岁',
-          icon: FeatherIcons.messageSquare,
-          duration: '7月1日-14日',
+        GestureDetector(
+          onTap: () => _navigateToSummerCampDetail('summer_camp_1'),
+          child: _buildCampCard(
+            context,
+            title: '哈佛西湖辩论赛夏令营',
+            subtitle: '马萨诸塞州 · 14-18岁',
+            icon: FeatherIcons.messageSquare,
+            duration: '7月1日-14日',
+          ),
         ),
         SizedBox(height: 12.h),
-        _buildCampCard(
-          context,
-          title: '麻省理工STEAM沉浸式夏令营',
-          subtitle: '马萨诸塞州 · 15-18岁',
-          icon: FeatherIcons.cpu,
-          duration: '7月15日-28日',
+        GestureDetector(
+          onTap: () => _navigateToSummerCampDetail('summer_camp_2'),
+          child: _buildCampCard(
+            context,
+            title: '麻省理工STEAM沉浸式夏令营',
+            subtitle: '马萨诸塞州 · 15-18岁',
+            icon: FeatherIcons.cpu,
+            duration: '7月15日-28日',
+          ),
         ),
         SizedBox(height: 12.h),
-        _buildCampCard(
-          context,
-          title: 'Wonder Valley度假村夏令营',
-          subtitle: '加利福尼亚州 · 10-16岁',
-          icon: FeatherIcons.mapPin,
-          duration: '8月1日-14日',
+        GestureDetector(
+          onTap: () => _navigateToSummerCampDetail('summer_camp_3'),
+          child: _buildCampCard(
+            context,
+            title: 'Wonder Valley度假村夏令营',
+            subtitle: '加利福尼亚州 · 10-16岁',
+            icon: FeatherIcons.mapPin,
+            duration: '8月1日-14日',
+          ),
         ),
         SizedBox(height: 12.h),
-        _buildCampCard(
-          context,
-          title: 'Rocking Horse牧场夏令营',
-          subtitle: '纽约州 · 12-17岁',
-          icon: FeatherIcons.heart,
-          duration: '8月15日-28日',
+        GestureDetector(
+          onTap: () => _navigateToSummerCampDetail('summer_camp_4'),
+          child: _buildCampCard(
+            context,
+            title: 'Rocking Horse牧场夏令营',
+            subtitle: '纽约州 · 12-17岁',
+            icon: FeatherIcons.heart,
+            duration: '8月15日-28日',
+          ),
         ),
       ],
     );
@@ -560,6 +586,116 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         builder: (context) => const MyAppointmentsScreen(),
       ),
     );
+  }
+
+  void _navigateToStudyAbroadDetail(String serviceId) {
+    Map<String, dynamic> serviceInfo = _getStudyAbroadInfo(serviceId);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => StudyAbroadDetailScreen(
+          serviceId: serviceId,
+          title: serviceInfo['title'],
+          subtitle: serviceInfo['subtitle'],
+          category: serviceInfo['category'],
+          icon: serviceInfo['icon'],
+        ),
+      ),
+    );
+  }
+
+  void _navigateToSummerCampDetail(String campId) {
+    Map<String, dynamic> campInfo = _getSummerCampInfo(campId);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SummerCampDetailScreen(
+          campId: campId,
+          title: campInfo['title'],
+          subtitle: campInfo['subtitle'],
+          category: campInfo['category'],
+          icon: campInfo['icon'],
+        ),
+      ),
+    );
+  }
+
+  Map<String, dynamic> _getStudyAbroadInfo(String serviceId) {
+    switch (serviceId) {
+      case 'study_abroad_1':
+        return {
+          'title': '留学规划与定位',
+          'subtitle': '根据学术背景和职业目标提供个性化留学计划',
+          'category': '留学咨询',
+          'icon': FeatherIcons.crosshair,
+        };
+      case 'study_abroad_2':
+        return {
+          'title': '院校选择与专业推荐',
+          'subtitle': '推荐适合的学校和专业，提供详细信息',
+          'category': '留学咨询',
+          'icon': FeatherIcons.bookOpen,
+        };
+      case 'study_abroad_3':
+        return {
+          'title': '申请材料准备指导',
+          'subtitle': '协助准备个人陈述、推荐信等申请材料',
+          'category': '留学咨询',
+          'icon': FeatherIcons.edit,
+        };
+      case 'study_abroad_4':
+        return {
+          'title': '语言培训与考试指导',
+          'subtitle': '提供语言培训课程和考试指导',
+          'category': '留学咨询',
+          'icon': FeatherIcons.award,
+        };
+      default:
+        return {
+          'title': '未知服务',
+          'subtitle': '服务信息不可用',
+          'category': '留学咨询',
+          'icon': FeatherIcons.helpCircle,
+        };
+    }
+  }
+
+  Map<String, dynamic> _getSummerCampInfo(String campId) {
+    switch (campId) {
+      case 'summer_camp_1':
+        return {
+          'title': '哈佛西湖辩论赛夏令营',
+          'subtitle': '马萨诸塞州 · 14-18岁',
+          'category': '夏令营',
+          'icon': FeatherIcons.messageSquare,
+        };
+      case 'summer_camp_2':
+        return {
+          'title': '麻省理工STEAM沉浸式夏令营',
+          'subtitle': '马萨诸塞州 · 15-18岁',
+          'category': '夏令营',
+          'icon': FeatherIcons.cpu,
+        };
+      case 'summer_camp_3':
+        return {
+          'title': 'Wonder Valley度假村夏令营',
+          'subtitle': '加利福尼亚州 · 10-16岁',
+          'category': '夏令营',
+          'icon': FeatherIcons.mapPin,
+        };
+      case 'summer_camp_4':
+        return {
+          'title': 'Rocking Horse牧场夏令营',
+          'subtitle': '纽约州 · 12-17岁',
+          'category': '夏令营',
+          'icon': FeatherIcons.heart,
+        };
+      default:
+        return {
+          'title': '未知夏令营',
+          'subtitle': '夏令营信息不可用',
+          'category': '夏令营',
+          'icon': FeatherIcons.helpCircle,
+        };
+    }
   }
 
   Widget _buildCategoryCard(

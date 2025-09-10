@@ -5,16 +5,16 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/appointments_provider.dart';
 
-class CourseDetailScreen extends ConsumerStatefulWidget {
-  final String courseId;
+class StudyAbroadDetailScreen extends ConsumerStatefulWidget {
+  final String serviceId;
   final String title;
   final String subtitle;
   final String category;
   final IconData icon;
 
-  const CourseDetailScreen({
+  const StudyAbroadDetailScreen({
     super.key,
-    required this.courseId,
+    required this.serviceId,
     required this.title,
     required this.subtitle,
     required this.category,
@@ -22,23 +22,22 @@ class CourseDetailScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CourseDetailScreen> createState() => _CourseDetailScreenState();
+  ConsumerState<StudyAbroadDetailScreen> createState() => _StudyAbroadDetailScreenState();
 }
 
-class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
-  bool _isRegistered = false;
+class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScreen> {
   bool _isHovering = false;
 
   @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width > 768;
     final appointments = ref.watch(appointmentsProvider);
-    final isAppointed = appointments.any((item) => item.id == widget.courseId);
+    final isAppointed = appointments.any((item) => item.id == widget.serviceId);
     
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('课程详情'),
+        title: Text('留学咨询详情'),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
@@ -52,12 +51,12 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 课程卡片
-            _buildCourseCard(context, isDesktop),
+            // 服务卡片
+            _buildServiceCard(context, isDesktop),
             SizedBox(height: 24.h),
             
-            // 课程详情
-            _buildCourseDetails(context, isDesktop),
+            // 服务详情
+            _buildServiceDetails(context, isDesktop),
             SizedBox(height: 24.h),
             
             // 注册按钮区域
@@ -68,7 +67,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
     );
   }
 
-  Widget _buildCourseCard(BuildContext context, bool isDesktop) {
+  Widget _buildServiceCard(BuildContext context, bool isDesktop) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -88,12 +87,12 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withOpacity(0.1),
+              color: Colors.purple.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Icon(
               widget.icon,
-              color: AppTheme.primaryColor,
+              color: Colors.purple,
               size: isDesktop ? 32.sp : 40.sp,
             ),
           ),
@@ -122,14 +121,14 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    color: Colors.purple.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
                     widget.category,
                     style: TextStyle(
                       fontSize: isDesktop ? 12.sp : 14.sp,
-                      color: AppTheme.primaryColor,
+                      color: Colors.purple,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -142,12 +141,12 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
     );
   }
 
-  Widget _buildCourseDetails(BuildContext context, bool isDesktop) {
+  Widget _buildServiceDetails(BuildContext context, bool isDesktop) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '课程详情',
+          '服务详情',
           style: TextStyle(
             fontSize: isDesktop ? 18.sp : 20.sp,
             fontWeight: FontWeight.bold,
@@ -158,16 +157,8 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
         _buildDetailItem(
           context,
           icon: FeatherIcons.clock,
-          title: '课程时长',
-          content: '60分钟',
-          isDesktop: isDesktop,
-        ),
-        SizedBox(height: 12.h),
-        _buildDetailItem(
-          context,
-          icon: FeatherIcons.calendar,
-          title: '上课时间',
-          content: '每周二/四 晚 20:00',
+          title: '服务时长',
+          content: _getServiceDuration(),
           isDesktop: isDesktop,
         ),
         SizedBox(height: 12.h),
@@ -175,15 +166,23 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
           context,
           icon: FeatherIcons.users,
           title: '适合人群',
-          content: '编程初学者，对AI感兴趣的学生',
+          content: _getTargetAudience(),
           isDesktop: isDesktop,
         ),
         SizedBox(height: 12.h),
         _buildDetailItem(
           context,
           icon: FeatherIcons.bookOpen,
-          title: '课程内容',
-          content: 'Python基础、机器学习入门、深度学习概念',
+          title: '服务内容',
+          content: _getServiceContent(),
+          isDesktop: isDesktop,
+        ),
+        SizedBox(height: 12.h),
+        _buildDetailItem(
+          context,
+          icon: FeatherIcons.award,
+          title: '服务优势',
+          content: _getServiceAdvantages(),
           isDesktop: isDesktop,
         ),
       ],
@@ -203,7 +202,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
         Icon(
           icon,
           size: isDesktop ? 16.sp : 18.sp,
-          color: AppTheme.primaryColor,
+          color: Colors.purple,
         ),
         SizedBox(width: 12.w),
         Expanded(
@@ -244,7 +243,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
       child: Column(
         children: [
           Text(
-            isAppointed ? '已注册此课程' : '立即注册课程',
+            isAppointed ? '已注册此服务' : '立即注册服务',
             style: TextStyle(
               fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
@@ -259,7 +258,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                   onEnter: (_) => setState(() => _isHovering = true),
                   onExit: (_) => setState(() => _isHovering = false),
                   child: GestureDetector(
-                    onTap: _handleRegistration,
+                    onTap: () => _handleRegistration(isAppointed),
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 200),
                       padding: EdgeInsets.symmetric(
@@ -269,11 +268,11 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                       decoration: BoxDecoration(
                         color: isAppointed 
                           ? Colors.green 
-                          : (_isHovering ? AppTheme.primaryColor.withOpacity(0.8) : AppTheme.primaryColor),
+                          : (_isHovering ? Colors.purple.withOpacity(0.8) : Colors.purple),
                         borderRadius: BorderRadius.circular(12.r),
                         boxShadow: _isHovering ? [
                           BoxShadow(
-                            color: AppTheme.primaryColor.withOpacity(0.3),
+                            color: Colors.purple.withOpacity(0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 4),
                           ),
@@ -289,7 +288,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            isAppointed ? '已注册' : '注册课程',
+                            isAppointed ? '已注册' : '注册服务',
                             style: TextStyle(
                               fontSize: isDesktop ? 14.sp : 16.sp,
                               color: Colors.white,
@@ -347,14 +346,79 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
     );
   }
 
-  void _handleRegistration() {
+  String _getServiceDuration() {
+    switch (widget.serviceId) {
+      case 'study_abroad_1':
+        return '4周';
+      case 'study_abroad_2':
+        return '2周';
+      case 'study_abroad_3':
+        return '6周';
+      case 'study_abroad_4':
+        return '8周';
+      default:
+        return '4周';
+    }
+  }
+
+  String _getTargetAudience() {
+    switch (widget.serviceId) {
+      case 'study_abroad_1':
+        return '准备申请海外大学的学生';
+      case 'study_abroad_2':
+        return '对专业选择迷茫的学生';
+      case 'study_abroad_3':
+        return '需要申请材料指导的学生';
+      case 'study_abroad_4':
+        return '需要语言培训的学生';
+      default:
+        return '准备留学的学生';
+    }
+  }
+
+  String _getServiceContent() {
+    switch (widget.serviceId) {
+      case 'study_abroad_1':
+        return '个人背景分析、目标院校评估、申请时间规划、专业选择建议';
+      case 'study_abroad_2':
+        return '院校信息收集、专业对比分析、录取要求解读、申请策略制定';
+      case 'study_abroad_3':
+        return '个人陈述撰写、推荐信指导、简历优化、作品集准备';
+      case 'study_abroad_4':
+        return '托福/雅思培训、口语练习、写作指导、考试技巧';
+      default:
+        return '个性化留学规划服务';
+    }
+  }
+
+  String _getServiceAdvantages() {
+    switch (widget.serviceId) {
+      case 'study_abroad_1':
+        return '资深顾问一对一指导，成功率高达95%';
+      case 'study_abroad_2':
+        return '海量院校数据库，精准匹配推荐';
+      case 'study_abroad_3':
+        return '专业文书团队，提升申请竞争力';
+      case 'study_abroad_4':
+        return '小班教学，快速提升语言能力';
+      default:
+        return '专业团队，优质服务';
+    }
+  }
+
+  void _handleRegistration(bool isAppointed) {
+    if (isAppointed) {
+      _handleCancelRegistration();
+      return;
+    }
+
     final appointment = AppointmentItem(
-      id: widget.courseId,
+      id: widget.serviceId,
       title: widget.title,
       subtitle: widget.subtitle,
       category: widget.category,
       icon: widget.icon,
-      type: 'course',
+      type: 'service',
       registeredAt: DateTime.now(),
     );
 
@@ -376,7 +440,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
   }
 
   void _handleCancelRegistration() {
-    ref.read(appointmentsProvider.notifier).removeAppointment(widget.courseId);
+    ref.read(appointmentsProvider.notifier).removeAppointment(widget.serviceId);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('已取消注册'),

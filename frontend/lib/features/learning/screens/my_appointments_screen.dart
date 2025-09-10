@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
+import '../providers/appointments_provider.dart';
 
 class MyAppointmentsScreen extends ConsumerStatefulWidget {
   const MyAppointmentsScreen({super.key});
@@ -12,49 +13,11 @@ class MyAppointmentsScreen extends ConsumerStatefulWidget {
 }
 
 class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
-  // 模拟预约数据
-  List<Map<String, dynamic>> _appointments = [
-    {
-      'id': 'ai_course_1',
-      'title': 'AI 编程入门（直播课）',
-      'subtitle': '每周二/四 晚 20:00 · 60 分钟',
-      'category': 'AI编程',
-      'icon': FeatherIcons.cpu,
-      'type': 'course',
-      'registeredAt': '2024-01-15',
-    },
-    {
-      'id': 'english_course_2',
-      'title': '商务英语写作',
-      'subtitle': '专业商务邮件与报告写作',
-      'category': '英语学习',
-      'icon': FeatherIcons.edit,
-      'type': 'course',
-      'registeredAt': '2024-01-16',
-    },
-    {
-      'id': 'study_abroad_1',
-      'title': '留学规划与定位',
-      'subtitle': '根据学术背景和职业目标提供个性化留学计划',
-      'category': '留学咨询',
-      'icon': FeatherIcons.crosshair,
-      'type': 'service',
-      'registeredAt': '2024-01-17',
-    },
-    {
-      'id': 'summer_camp_1',
-      'title': '哈佛西湖辩论赛夏令营',
-      'subtitle': '马萨诸塞州 · 14-18岁',
-      'category': '夏令营',
-      'icon': FeatherIcons.messageSquare,
-      'type': 'camp',
-      'registeredAt': '2024-01-18',
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width > 768;
+    final appointments = ref.watch(appointmentsProvider);
     
     return Scaffold(
       backgroundColor: Colors.white,
@@ -64,7 +27,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
         actions: [
-          if (_appointments.isNotEmpty)
+          if (appointments.isNotEmpty)
             IconButton(
               icon: Icon(FeatherIcons.trash2),
               onPressed: _showClearAllDialog,
@@ -72,9 +35,9 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
             ),
         ],
       ),
-      body: _appointments.isEmpty 
+      body: appointments.isEmpty 
         ? _buildEmptyState(context, isDesktop)
-        : _buildAppointmentsList(context, isDesktop),
+        : _buildAppointmentsList(context, isDesktop, appointments),
     );
   }
 
@@ -124,19 +87,19 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
     );
   }
 
-  Widget _buildAppointmentsList(BuildContext context, bool isDesktop) {
+  Widget _buildAppointmentsList(BuildContext context, bool isDesktop, List<AppointmentItem> appointments) {
     return SingleChildScrollView(
       padding: EdgeInsets.all(16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 统计信息
-          _buildStatsCard(context, isDesktop),
+          _buildStatsCard(context, isDesktop, appointments),
           SizedBox(height: 24.h),
           
           // 预约列表
           Text(
-            '预约列表 (${_appointments.length})',
+            '预约列表 (${appointments.length})',
             style: TextStyle(
               fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
@@ -145,7 +108,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
           ),
           SizedBox(height: 16.h),
           
-          ..._appointments.map((appointment) => 
+          ...appointments.map((appointment) => 
             _buildAppointmentCard(context, appointment, isDesktop)
           ).toList(),
         ],
@@ -153,10 +116,10 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
     );
   }
 
-  Widget _buildStatsCard(BuildContext context, bool isDesktop) {
-    int courseCount = _appointments.where((a) => a['type'] == 'course').length;
-    int serviceCount = _appointments.where((a) => a['type'] == 'service').length;
-    int campCount = _appointments.where((a) => a['type'] == 'camp').length;
+  Widget _buildStatsCard(BuildContext context, bool isDesktop, List<AppointmentItem> appointments) {
+    int courseCount = appointments.where((a) => a.type == 'course').length;
+    int serviceCount = appointments.where((a) => a.type == 'service').length;
+    int campCount = appointments.where((a) => a.type == 'camp').length;
     
     return Container(
       padding: EdgeInsets.all(20.w),
@@ -251,7 +214,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
 
   Widget _buildAppointmentCard(
     BuildContext context, 
-    Map<String, dynamic> appointment, 
+    AppointmentItem appointment, 
     bool isDesktop
   ) {
     return Container(
@@ -274,12 +237,12 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
           Container(
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-              color: _getCategoryColor(appointment['category']).withOpacity(0.1),
+              color: _getCategoryColor(appointment.category).withOpacity(0.1),
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: Icon(
-              appointment['icon'],
-              color: _getCategoryColor(appointment['category']),
+              appointment.icon,
+              color: _getCategoryColor(appointment.category),
               size: isDesktop ? 20.sp : 24.sp,
             ),
           ),
@@ -289,7 +252,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  appointment['title'],
+                  appointment.title,
                   style: TextStyle(
                     fontSize: isDesktop ? 14.sp : 16.sp,
                     fontWeight: FontWeight.w600,
@@ -298,7 +261,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  appointment['subtitle'],
+                  appointment.subtitle,
                   style: TextStyle(
                     fontSize: isDesktop ? 12.sp : 14.sp,
                     color: AppTheme.textSecondary,
@@ -310,21 +273,21 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                       decoration: BoxDecoration(
-                        color: _getCategoryColor(appointment['category']).withOpacity(0.1),
+                        color: _getCategoryColor(appointment.category).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Text(
-                        appointment['category'],
+                        appointment.category,
                         style: TextStyle(
                           fontSize: isDesktop ? 10.sp : 12.sp,
-                          color: _getCategoryColor(appointment['category']),
+                          color: _getCategoryColor(appointment.category),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                     SizedBox(width: 8.w),
                     Text(
-                      '预约时间: ${appointment['registeredAt']}',
+                      '预约时间: ${_formatDate(appointment.registeredAt)}',
                       style: TextStyle(
                         fontSize: isDesktop ? 10.sp : 12.sp,
                         color: AppTheme.textTertiary,
@@ -341,7 +304,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
               color: Colors.red,
               size: isDesktop ? 16.sp : 18.sp,
             ),
-            onPressed: () => _removeAppointment(appointment['id']),
+            onPressed: () => _removeAppointment(appointment.id),
             tooltip: '删除预约',
           ),
         ],
@@ -364,6 +327,10 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
     }
   }
 
+  String _formatDate(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
   void _removeAppointment(String appointmentId) {
     showDialog(
       context: context,
@@ -377,9 +344,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
           ),
           TextButton(
             onPressed: () {
-              setState(() {
-                _appointments.removeWhere((a) => a['id'] == appointmentId);
-              });
+              ref.read(appointmentsProvider.notifier).removeAppointment(appointmentId);
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -408,9 +373,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
           ),
           TextButton(
             onPressed: () {
-              setState(() {
-                _appointments.clear();
-              });
+              ref.read(appointmentsProvider.notifier).clearAllAppointments();
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
