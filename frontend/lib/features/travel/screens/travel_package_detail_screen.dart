@@ -45,7 +45,10 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
   Widget build(BuildContext context) {
     final isDesktop = MediaQuery.of(context).size.width > 768;
     final travels = ref.watch(travelsProvider);
+    print('Checking registration status for packageId: ${widget.packageId}');
+    print('Available travels: ${travels.map((t) => '${t.id}: ${t.title}').join(', ')}');
     final isTravelRegistered = travels.any((item) => item.id == widget.packageId);
+    print('Is travel registered: $isTravelRegistered');
     
     return Scaffold(
       backgroundColor: Colors.white,

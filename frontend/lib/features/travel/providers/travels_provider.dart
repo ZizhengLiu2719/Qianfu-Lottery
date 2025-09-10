@@ -160,21 +160,29 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
   // 从后端加载用户预约
   Future<void> loadUserTravels() async {
     try {
+      print('Loading user travels...');
       final registrations = await _travelPackagesRepository.getUserTravelRegistrations();
-      final travels = registrations.map((reg) => TravelItem.fromJson({
-        'id': reg.packageId.toString(),
-        'title': reg.title,
-        'subtitle': reg.subtitle,
-        'category': reg.category,
-        'type': 'travel',
-        'registeredAt': reg.registeredAt.toIso8601String(),
-        'icon': 'map',
-        'package': reg.package?.toJson(),
-      })).toList();
+      print('Received ${registrations.length} registrations from API');
+      
+      final travels = registrations.map((reg) {
+        print('Processing registration: ${reg.title} (ID: ${reg.packageId})');
+        return TravelItem.fromJson({
+          'id': reg.packageId.toString(),
+          'title': reg.title,
+          'subtitle': reg.subtitle,
+          'category': reg.category,
+          'type': 'travel',
+          'registeredAt': reg.registeredAt.toIso8601String(),
+          'icon': 'map',
+          'package': reg.package?.toJson(),
+        });
+      }).toList();
+      
       state = travels;
       print('Successfully loaded ${travels.length} travels from backend');
     } catch (e) {
       print('Error loading travels: $e');
+      print('Stack trace: ${StackTrace.current}');
     }
   }
 }
