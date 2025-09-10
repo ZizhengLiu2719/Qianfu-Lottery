@@ -244,33 +244,33 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
               Expanded(
                 child: _buildStatItem(
                   context,
-                  icon: FeatherIcons.mapPin,
-                  label: '国内旅游',
-                  count: stats['domestic'] ?? 0,
-                  color: Colors.blue,
-                  isDesktop: isDesktop,
+                  '国内旅游',
+                  stats['domestic'] ?? 0,
+                  FeatherIcons.mapPin,
+                  Colors.blue,
+                  isDesktop,
                 ),
               ),
               SizedBox(width: 16.w),
               Expanded(
                 child: _buildStatItem(
                   context,
-                  icon: FeatherIcons.globe,
-                  label: '国外旅游',
-                  count: stats['international'] ?? 0,
-                  color: Colors.green,
-                  isDesktop: isDesktop,
+                  '国外旅游',
+                  stats['international'] ?? 0,
+                  FeatherIcons.globe,
+                  Colors.green,
+                  isDesktop,
                 ),
               ),
               SizedBox(width: 16.w),
               Expanded(
                 child: _buildStatItem(
                   context,
-                  icon: FeatherIcons.calendar,
-                  label: '总计',
-                  count: stats['total'] ?? 0,
-                  color: AppTheme.primaryColor,
-                  isDesktop: isDesktop,
+                  '总计',
+                  stats['total'] ?? 0,
+                  FeatherIcons.calendar,
+                  AppTheme.primaryColor,
+                  isDesktop,
                 ),
               ),
             ],
@@ -280,48 +280,6 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
     );
   }
 
-  Widget _buildStatItem(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required int count,
-    required Color color,
-    required bool isDesktop,
-  }) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(isDesktop ? 8.w : 12.w),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Icon(
-            icon,
-            color: color,
-            size: isDesktop ? 20.sp : 24.sp,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        Text(
-          count.toString(),
-          style: TextStyle(
-            fontSize: isDesktop ? 18.sp : 20.sp,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textPrimary,
-          ),
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: isDesktop ? 12.sp : 14.sp,
-            color: AppTheme.textSecondary,
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildTravelCard(BuildContext context, TravelItem travel, bool isDesktop) {
     return Container(
