@@ -5,6 +5,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/travels_provider.dart';
 import '../../../api/travel_packages_repository.dart';
+import '../../../api/dio_client.dart';
 
 class TravelPackageDetailScreen extends ConsumerStatefulWidget {
   final String packageId;
@@ -353,7 +354,8 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
   void _handleRegistration() async {
     try {
       // 调用后端 API 注册旅游套餐
-      final travelPackagesRepository = TravelPackagesRepository();
+      final dioClient = DioClient();
+      final travelPackagesRepository = TravelPackagesRepository(dioClient);
       
       await travelPackagesRepository.registerTravelPackage(
         packageId: widget.packageId,
