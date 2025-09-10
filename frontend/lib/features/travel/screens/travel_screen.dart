@@ -165,7 +165,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           subtitle: '早上断桥、下午灵隐、傍晚苏堤看日落',
           icon: FeatherIcons.map,
           category: '文化体验',
-          onTap: () => _navigateToPackageDetail('domestic_1'),
+          onTap: () => _navigateToPackageDetail('1'),
         ),
         SizedBox(height: 12.h),
         _buildPackageCard(
@@ -174,7 +174,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           subtitle: '必吃推荐与最佳参观时段',
           icon: FeatherIcons.heart,
           category: '美食文化',
-          onTap: () => _navigateToPackageDetail('domestic_2'),
+          onTap: () => _navigateToPackageDetail('2'),
         ),
         SizedBox(height: 12.h),
         _buildPackageCard(
@@ -183,7 +183,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           subtitle: '椰林沙滩、礁石海湾、最佳光线时间',
           icon: FeatherIcons.camera,
           category: '自然风光',
-          onTap: () => _navigateToPackageDetail('domestic_3'),
+          onTap: () => _navigateToPackageDetail('3'),
         ),
       ],
     );
@@ -217,7 +217,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           subtitle: '东京、京都、大阪7日赏樱之旅',
           icon: FeatherIcons.heart,
           category: '自然风光',
-          onTap: () => _navigateToPackageDetail('international_1'),
+          onTap: () => _navigateToPackageDetail('4'),
         ),
         SizedBox(height: 12.h),
         _buildPackageCard(
@@ -226,7 +226,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           subtitle: '巴黎、罗马、巴塞罗那艺术文化深度体验',
           icon: FeatherIcons.bookOpen,
           category: '文化体验',
-          onTap: () => _navigateToPackageDetail('international_2'),
+          onTap: () => _navigateToPackageDetail('5'),
         ),
         SizedBox(height: 12.h),
         _buildPackageCard(
@@ -235,7 +235,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           subtitle: '普吉岛、巴厘岛、马尔代夫海岛休闲游',
           icon: FeatherIcons.sun,
           category: '休闲度假',
-          onTap: () => _navigateToPackageDetail('international_3'),
+          onTap: () => _navigateToPackageDetail('6'),
         ),
       ],
     );
