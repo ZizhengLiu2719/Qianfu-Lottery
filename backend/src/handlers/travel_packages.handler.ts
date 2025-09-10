@@ -79,8 +79,8 @@ export function createTravelPackageHandlers() {
 
       // 创建旅游注册记录
       const registrationResult = await prisma.$queryRaw`
-        INSERT INTO travel_registrations (user_id, package_id, title, subtitle, category, status, created_at, updated_at)
-        VALUES (${currentUser.id}, ${packageExists.id}, ${body.title}, ${body.subtitle || null}, ${body.category}, 'REGISTERED', NOW(), NOW())
+        INSERT INTO travel_registrations (user_id, package_id, title, subtitle, category, status, registered_at)
+        VALUES (${currentUser.id}, ${packageExists.id}, ${body.title}, ${body.subtitle || null}, ${body.category}, 'REGISTERED', NOW())
         RETURNING *
       `
       const registration = Array.isArray(registrationResult) ? registrationResult[0] : registrationResult
