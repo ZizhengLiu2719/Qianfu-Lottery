@@ -271,6 +271,13 @@ app.delete('/api/learning/:type/cancel/:id', async (c) => {
   return handlers.cancelRegistration(c)
 })
 
+app.delete('/api/learning/:type/delete/:id', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createLearningHandlers()
+  return handlers.deleteRegistration(c)
+})
+
 app.get('/api/learning/registrations', async (c) => {
   const { authMiddleware } = initializeServices(c)
   await authMiddleware(c, async () => {})
@@ -329,6 +336,13 @@ app.delete('/api/travel/registrations/:id', async (c) => {
   await authMiddleware(c, async () => {})
   const handlers = createTravelPackageHandlers()
   return handlers.cancelTravelRegistration(c)
+})
+
+app.delete('/api/travel/registrations/:id/delete', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createTravelPackageHandlers()
+  return handlers.deleteTravelRegistration(c)
 })
 
 app.get('/api/travel/registrations', async (c) => {

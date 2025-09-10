@@ -189,6 +189,77 @@ export function createTravelPackageHandlers() {
   }
 
   /**
+   * 删除旅游注册记录
+   */
+  const deleteTravelRegistration = async (c: Context) => {
+    try {
+      const currentUser = c.get('user')
+      const registrationId = c.req.param('id')
+
+      if (!registrationId) {
+        return c.json({
+          code: 400,
+          message: 'Registration ID is required',
+          data: null
+        }, 400)
+      }
+
+      const databaseUrl = c.env?.DATABASE_URL as string
+      if (!databaseUrl) {
+        throw new Error('DATABASE_URL not configured')
+      }
+
+      const prisma = getPrismaClient(databaseUrl)
+
+      // 使用原生SQL查找注册记录
+      const registrationResult = await prisma.$queryRaw`
+        SELECT id, user_id, package_id, status
+        FROM travel_registrations 
+        WHERE id = ${parseInt(registrationId)} 
+          AND user_id = ${currentUser.id} 
+          AND status = 'REGISTERED'
+      `
+      
+      const registration = Array.isArray(registrationResult) ? registrationResult[0] : registrationResult
+
+      if (!registration) {
+        return c.json({
+          code: 404,
+          message: 'Travel registration not found',
+          data: null
+        }, 404)
+      }
+
+      // 使用原生SQL真正删除注册记录
+      await prisma.$queryRaw`
+        DELETE FROM travel_registrations 
+        WHERE id = ${registration.id}
+      `
+
+      // 使用原生SQL减少套餐参与人数
+      await prisma.$queryRaw`
+        UPDATE travel_packages 
+        SET current_participants = current_participants - 1 
+        WHERE id = ${registration.package_id}
+      `
+
+      return c.json({
+        code: 200,
+        message: 'Travel registration deleted successfully',
+        data: null
+      })
+
+    } catch (error) {
+      console.error('Delete travel registration error:', error)
+      return c.json({
+        code: 500,
+        message: 'Internal server error',
+        data: null
+      }, 500)
+    }
+  }
+
+  /**
    * 获取用户旅游注册列表
    */
   const getUserTravelRegistrations = async (c: Context) => {
@@ -442,6 +513,7 @@ export function createTravelPackageHandlers() {
   return {
     registerTravelPackage,
     cancelTravelRegistration,
+    deleteTravelRegistration,
     getUserTravelRegistrations,
     getTravelPackages,
     getTravelPackage,

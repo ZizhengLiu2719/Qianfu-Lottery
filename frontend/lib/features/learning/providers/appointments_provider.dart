@@ -164,13 +164,13 @@ class AppointmentsNotifier extends StateNotifier<List<AppointmentItem>> {
       // 找到要删除的预约项
       final appointment = state.firstWhere((item) => item.id == appointmentId);
       
-      await _learningRepository.cancelRegistration(
+      await _learningRepository.deleteRegistration(
         registrationId: appointmentId,
         type: appointment.type,
       );
-      print('Successfully removed appointment from backend: $appointmentId');
+      print('Successfully deleted appointment from backend: $appointmentId');
     } catch (e) {
-      print('Error removing appointment: $e');
+      print('Error deleting appointment: $e');
     }
   }
 

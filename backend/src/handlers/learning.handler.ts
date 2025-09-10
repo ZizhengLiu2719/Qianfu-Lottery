@@ -258,6 +258,69 @@ export function createLearningHandlers() {
   }
 
   /**
+   * 删除注册记录
+   */
+  const deleteRegistration = async (c: Context) => {
+    try {
+      const currentUser = c.get('user')
+      const type = c.req.param('type')
+      const registrationId = c.req.param('id')
+
+      if (!type || !registrationId) {
+        return c.json({
+          code: 400,
+          message: 'Type and registration ID are required',
+          data: null
+        }, 400)
+      }
+
+      const databaseUrl = c.env?.DATABASE_URL as string
+      if (!databaseUrl) {
+        throw new Error('DATABASE_URL not configured')
+      }
+
+      const prisma = getPrismaClient(databaseUrl)
+
+      // 查找注册记录
+      const registration = await (prisma as any).learningRegistration.findFirst({
+        where: {
+          userId: currentUser.id,
+          itemId: registrationId,
+          itemType: type,
+          status: 'REGISTERED'
+        }
+      })
+
+      if (!registration) {
+        return c.json({
+          code: 404,
+          message: 'Registration not found',
+          data: null
+        }, 404)
+      }
+
+      // 真正删除注册记录
+      await (prisma as any).learningRegistration.delete({
+        where: { id: registration.id }
+      })
+
+      return c.json({
+        code: 200,
+        message: 'Registration deleted successfully',
+        data: null
+      })
+
+    } catch (error) {
+      console.error('Delete registration error:', error)
+      return c.json({
+        code: 500,
+        message: 'Internal server error',
+        data: null
+      }, 500)
+    }
+  }
+
+  /**
    * 获取用户学习彩注册列表
    */
   const getUserLearningRegistrations = async (c: Context) => {
@@ -366,6 +429,7 @@ export function createLearningHandlers() {
     registerStudyAbroadService,
     registerSummerCamp,
     cancelRegistration,
+    deleteRegistration,
     getUserLearningRegistrations,
     clearAllLearningRegistrations
   }

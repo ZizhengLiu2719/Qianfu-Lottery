@@ -147,10 +147,10 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
   // 从后端移除预约
   Future<void> _removeTravelFromBackend(String registrationId) async {
     try {
-      await _travelPackagesRepository.cancelTravelRegistration(registrationId);
-      print('Successfully removed travel from backend: $registrationId');
+      await _travelPackagesRepository.deleteTravelRegistration(registrationId);
+      print('Successfully deleted travel from backend: $registrationId');
     } catch (e) {
-      print('Error removing travel: $e');
+      print('Error deleting travel: $e');
     }
   }
 

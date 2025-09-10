@@ -87,6 +87,14 @@ class TravelPackagesRepository {
     );
   }
 
+  // 删除旅游注册记录
+  Future<void> deleteTravelRegistration(String registrationId) async {
+    await _dioClient.delete(
+      '/api/travel/registrations/$registrationId/delete',
+      fromJson: (json) => null,
+    );
+  }
+
   // 获取用户旅游注册列表
   Future<List<Map<String, dynamic>>> getUserTravelRegistrations() async {
     final response = await _dioClient.get<List<Map<String, dynamic>>>(

@@ -83,6 +83,17 @@ class LearningRepository {
     );
   }
 
+  // 删除注册记录
+  Future<void> deleteRegistration({
+    required String registrationId,
+    required String type, // 'course', 'service', 'camp'
+  }) async {
+    await _dioClient.delete<void>(
+      '/api/learning/$type/delete/$registrationId',
+      fromJson: (json) => null,
+    );
+  }
+
   // 获取用户的学习彩注册列表
   Future<List<Map<String, dynamic>>> getUserLearningRegistrations() async {
     final response = await _dioClient.get<List<Map<String, dynamic>>>(
