@@ -233,13 +233,13 @@ export function createTravelPackageHandlers() {
       // 转换为前端需要的格式
       const formattedRegistrations = Array.isArray(registrations) ? registrations.map((reg: any) => {
         return {
-          id: reg.package_id.toString(),
+          id: reg.id,  // 注册记录ID
+          packageId: reg.package_id,  // 套餐ID
           title: reg.title,
           subtitle: reg.subtitle,
           category: reg.category,
-          type: 'travel',
+          status: reg.status,
           registeredAt: reg.registered_at ? new Date(reg.registered_at).toISOString() : new Date().toISOString(),
-          icon: 'map',
           package: {
             id: reg.package_id,
             title: reg.package_title,

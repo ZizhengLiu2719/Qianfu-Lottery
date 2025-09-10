@@ -77,9 +77,8 @@ class TravelPackage {
 
 @JsonSerializable()
 class TravelRegistration {
-  final int id;
-  final int userId;
-  final int packageId;
+  final int id;  // 注册记录ID
+  final int packageId;  // 套餐ID
   final String title;
   final String? subtitle;
   final String category;
@@ -90,7 +89,6 @@ class TravelRegistration {
 
   const TravelRegistration({
     required this.id,
-    required this.userId,
     required this.packageId,
     required this.title,
     this.subtitle,
