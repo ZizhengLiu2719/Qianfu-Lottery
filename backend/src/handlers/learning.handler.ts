@@ -36,20 +36,16 @@ export function createLearningHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
-      // 生成一个虚拟的scheduleId，避免外键约束问题
-      // 使用courseId的哈希值生成一个唯一的数字ID
-      const virtualScheduleId = Math.abs(body.courseId.split('').reduce((a, b) => {
-        a = ((a << 5) - a) + b.charCodeAt(0);
-        return a & a;
-      }, 0)) % 1000000 + 900000; // 生成900000-999999之间的ID
-
       // 创建学习彩注册记录
-      const registration = await prisma.userAppointment.create({
+      const registration = await prisma.learningRegistration.create({
         data: {
           userId: currentUser.id,
-          scheduleId: virtualScheduleId,
+          itemId: body.courseId,
+          itemType: 'course',
+          title: body.title,
+          subtitle: body.subtitle,
+          category: body.category,
           status: 'REGISTERED',
-          note: `学习彩课程注册: ${body.title}`,
         }
       })
 
@@ -100,19 +96,16 @@ export function createLearningHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
-      // 生成一个虚拟的scheduleId，避免外键约束问题
-      const virtualScheduleId = Math.abs(body.serviceId.split('').reduce((a, b) => {
-        a = ((a << 5) - a) + b.charCodeAt(0);
-        return a & a;
-      }, 0)) % 1000000 + 800000; // 生成800000-899999之间的ID
-
       // 创建学习彩注册记录
-      const registration = await prisma.userAppointment.create({
+      const registration = await prisma.learningRegistration.create({
         data: {
           userId: currentUser.id,
-          scheduleId: virtualScheduleId,
+          itemId: body.serviceId,
+          itemType: 'service',
+          title: body.title,
+          subtitle: body.subtitle,
+          category: body.category,
           status: 'REGISTERED',
-          note: `学习彩留学咨询注册: ${body.title}`,
         }
       })
 
@@ -163,19 +156,16 @@ export function createLearningHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
-      // 生成一个虚拟的scheduleId，避免外键约束问题
-      const virtualScheduleId = Math.abs(body.campId.split('').reduce((a, b) => {
-        a = ((a << 5) - a) + b.charCodeAt(0);
-        return a & a;
-      }, 0)) % 1000000 + 700000; // 生成700000-799999之间的ID
-
       // 创建学习彩注册记录
-      const registration = await prisma.userAppointment.create({
+      const registration = await prisma.learningRegistration.create({
         data: {
           userId: currentUser.id,
-          scheduleId: virtualScheduleId,
+          itemId: body.campId,
+          itemType: 'camp',
+          title: body.title,
+          subtitle: body.subtitle,
+          category: body.category,
           status: 'REGISTERED',
-          note: `学习彩夏令营注册: ${body.title}`,
         }
       })
 
@@ -227,36 +217,12 @@ export function createLearningHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
-      // 生成对应的虚拟scheduleId
-      let virtualScheduleId: number
-      if (type === 'course') {
-        virtualScheduleId = Math.abs(registrationId.split('').reduce((a, b) => {
-          a = ((a << 5) - a) + b.charCodeAt(0);
-          return a & a;
-        }, 0)) % 1000000 + 900000
-      } else if (type === 'service') {
-        virtualScheduleId = Math.abs(registrationId.split('').reduce((a, b) => {
-          a = ((a << 5) - a) + b.charCodeAt(0);
-          return a & a;
-        }, 0)) % 1000000 + 800000
-      } else if (type === 'camp') {
-        virtualScheduleId = Math.abs(registrationId.split('').reduce((a, b) => {
-          a = ((a << 5) - a) + b.charCodeAt(0);
-          return a & a;
-        }, 0)) % 1000000 + 700000
-      } else {
-        return c.json({
-          code: 400,
-          message: 'Invalid registration type',
-          data: null
-        }, 400)
-      }
-
       // 查找并更新注册记录
-      const registration = await prisma.userAppointment.findFirst({
+      const registration = await prisma.learningRegistration.findFirst({
         where: {
           userId: currentUser.id,
-          scheduleId: virtualScheduleId,
+          itemId: registrationId,
+          itemType: type,
           status: 'REGISTERED'
         }
       })
@@ -270,7 +236,7 @@ export function createLearningHandlers() {
       }
 
       // 更新状态为已取消
-      await prisma.userAppointment.update({
+      await prisma.learningRegistration.update({
         where: { id: registration.id },
         data: { status: 'CANCELLED' }
       })
@@ -306,50 +272,36 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 获取用户的所有学习彩注册记录
-      const registrations = await prisma.userAppointment.findMany({
+      const registrations = await prisma.learningRegistration.findMany({
         where: {
           userId: currentUser.id,
-          status: 'REGISTERED',
-          note: {
-            contains: '学习彩'
-          }
+          status: 'REGISTERED'
         },
         orderBy: { createdAt: 'desc' }
       })
 
       // 转换为前端需要的格式
       const formattedRegistrations = registrations.map(reg => {
-        // 从note中提取信息
-        const note = reg.note || ''
-        let type = 'course'
-        let title = '未知课程'
         let icon = 'helpCircle'
-        let originalId = ''
-
-        if (note.includes('课程')) {
-          type = 'course'
-          title = note.replace('学习彩课程注册: ', '')
-          icon = 'cpu'
-          // 从虚拟scheduleId反推原始ID（这是一个简化的方法）
-          originalId = `course_${reg.scheduleId - 900000}`
-        } else if (note.includes('留学咨询')) {
-          type = 'service'
-          title = note.replace('学习彩留学咨询注册: ', '')
-          icon = 'messageSquare'
-          originalId = `service_${reg.scheduleId - 800000}`
-        } else if (note.includes('夏令营')) {
-          type = 'camp'
-          title = note.replace('学习彩夏令营注册: ', '')
-          icon = 'mapPin'
-          originalId = `camp_${reg.scheduleId - 700000}`
+        
+        switch (reg.itemType) {
+          case 'course':
+            icon = 'cpu'
+            break
+          case 'service':
+            icon = 'messageSquare'
+            break
+          case 'camp':
+            icon = 'mapPin'
+            break
         }
 
         return {
-          id: originalId,
-          title: title,
-          subtitle: '学习彩服务',
-          category: '学习彩',
-          type: type,
+          id: reg.itemId,
+          title: reg.title,
+          subtitle: reg.subtitle,
+          category: reg.category,
+          type: reg.itemType,
           registeredAt: reg.createdAt.toISOString(),
           icon: icon
         }
@@ -386,13 +338,10 @@ export function createLearningHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 删除用户的所有学习彩注册记录
-      await prisma.userAppointment.deleteMany({
+      await prisma.learningRegistration.deleteMany({
         where: {
           userId: currentUser.id,
-          status: 'REGISTERED',
-          note: {
-            contains: '学习彩'
-          }
+          status: 'REGISTERED'
         }
       })
 

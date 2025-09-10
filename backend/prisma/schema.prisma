@@ -28,6 +28,7 @@ model User {
   qiancaiDouTransactions  QiancaiDouTransaction[]
   orders                  Order[]
   appointments            UserAppointment[]
+  learningRegistrations   LearningRegistration[]
   account                 Account?
   carts                   Cart[]
   addresses               Address[]
@@ -178,6 +179,24 @@ model UserAppointment {
   
   @@unique([userId, scheduleId])
   @@map("user_appointments")
+}
+
+// 学习彩注册
+model LearningRegistration {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  itemId      String   // 课程/服务/夏令营的ID
+  itemType    String   // course, service, camp
+  title       String
+  subtitle    String
+  category    String
+  status      String   @default("REGISTERED") // REGISTERED, CANCELLED, COMPLETED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([userId, itemId, itemType])
+  @@map("learning_registrations")
 }
 
 // 旅游文章
