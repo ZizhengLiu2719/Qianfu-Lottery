@@ -245,10 +245,19 @@ export function createTravelPackageHandlers() {
             title: reg.package_title,
             description: reg.package_description,
             category: reg.package_category,
+            subcategory: null,
             durationDays: reg.duration_days,
+            maxParticipants: 20,
+            currentParticipants: 0,
+            startDate: null,
+            endDate: null,
             location: reg.location,
             imageUrl: reg.image_url,
-            tags: reg.tags
+            images: [],
+            tags: reg.tags || [],
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
           }
         }
       }) : []

@@ -171,17 +171,19 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
       
       final travels = registrations.map((reg) {
         print('Processing registration: ${reg.title} (PackageID: ${reg.packageId}, RegistrationID: ${reg.id})');
-        return TravelItem.fromJson({
-          'id': reg.packageId.toString(),
-          'registrationId': reg.id.toString(),
-          'title': reg.title,
-          'subtitle': reg.subtitle,
-          'category': reg.category,
-          'type': 'travel',
-          'registeredAt': reg.registeredAt.toIso8601String(),
-          'icon': 'map',
-          'package': reg.package?.toJson(),
-        });
+        final travelItem = TravelItem(
+          id: reg.packageId.toString(),
+          registrationId: reg.id.toString(),
+          title: reg.title,
+          subtitle: reg.subtitle ?? '',
+          category: reg.category,
+          icon: FeatherIcons.map,
+          type: 'travel',
+          registeredAt: reg.registeredAt,
+          package: null, // 暂时设为 null 避免解析问题
+        );
+        print('Created TravelItem: ${travelItem.title} (ID: ${travelItem.id}, RegistrationID: ${travelItem.registrationId})');
+        return travelItem;
       }).toList();
       
       state = travels;

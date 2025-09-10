@@ -19,8 +19,12 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
     // 加载用户的旅游预约（仅在状态为空时）
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final currentTravels = ref.read(travelsProvider);
+      print('MyTravelsScreen initState - currentTravels.length: ${currentTravels.length}');
       if (currentTravels.isEmpty) {
+        print('MyTravelsScreen initState - calling loadUserTravels()');
         ref.read(travelsProvider.notifier).loadUserTravels();
+      } else {
+        print('MyTravelsScreen initState - travels already loaded, skipping loadUserTravels()');
       }
     });
   }
@@ -30,6 +34,9 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
     final travels = ref.watch(travelsProvider);
     final travelStats = ref.watch(travelStatsProvider);
     final isDesktop = MediaQuery.of(context).size.width > 768;
+    
+    print('MyTravelsScreen build - travels.length: ${travels.length}');
+    print('MyTravelsScreen build - travels: ${travels.map((t) => '${t.id}: ${t.title}').join(', ')}');
 
     return Scaffold(
       backgroundColor: Colors.white,
