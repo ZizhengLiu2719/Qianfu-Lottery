@@ -233,13 +233,19 @@ export function createTravelPackageHandlers() {
       // 转换为前端需要的格式
       const formattedRegistrations = Array.isArray(registrations) ? registrations.map((reg: any) => {
         return {
-          id: reg.package_id.toString(),
+          // registration entity fields
+          id: reg.id, // registration id
+          userId: reg.user_id,
+          packageId: reg.package_id,
           title: reg.title,
           subtitle: reg.subtitle,
           category: reg.category,
-          type: 'travel',
+          status: reg.status,
           registeredAt: reg.registered_at ? new Date(reg.registered_at).toISOString() : new Date().toISOString(),
+          // ui helpers
+          type: 'travel',
           icon: 'map',
+          // embedded package data
           package: {
             id: reg.package_id,
             title: reg.package_title,

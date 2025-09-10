@@ -108,7 +108,7 @@ class TravelsNotifier extends StateNotifier<List<TravelItem>> {
     _clearAllTravelsFromBackend();
   }
 
-  // 检查是否已预约
+  // 检查是否已预约（以 packageId 判断）
   bool isTravelRegistered(String travelId) {
     return state.any((item) => item.id == travelId);
   }
