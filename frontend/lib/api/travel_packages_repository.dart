@@ -83,6 +83,7 @@ class TravelPackagesRepository {
   Future<void> cancelTravelRegistration(String registrationId) async {
     await _dioClient.delete(
       '/api/travel/registrations/$registrationId',
+      fromJson: (json) => null,
     );
   }
 
@@ -102,6 +103,9 @@ class TravelPackagesRepository {
 
   // 清空所有旅游注册
   Future<void> clearAllTravelRegistrations() async {
-    await _dioClient.delete('/api/travel/registrations/clear');
+    await _dioClient.delete(
+      '/api/travel/registrations/clear',
+      fromJson: (json) => null,
+    );
   }
 }

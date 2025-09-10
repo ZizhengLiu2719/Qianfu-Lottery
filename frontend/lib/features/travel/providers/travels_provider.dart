@@ -68,7 +68,7 @@ class TravelItem {
       case 'sun':
         return FeatherIcons.sun;
       case 'flower':
-        return FeatherIcons.flower;
+        return FeatherIcons.heart;
       case 'bookOpen':
         return FeatherIcons.bookOpen;
       default:

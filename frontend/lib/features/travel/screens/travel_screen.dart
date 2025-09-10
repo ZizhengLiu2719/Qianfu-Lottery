@@ -215,7 +215,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           context,
           title: '日本樱花季深度游',
           subtitle: '东京、京都、大阪7日赏樱之旅',
-          icon: FeatherIcons.flower,
+          icon: FeatherIcons.heart,
           category: '自然风光',
           onTap: () => _navigateToPackageDetail('international_1'),
         ),
@@ -453,7 +453,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           'title': '日本樱花季深度游',
           'subtitle': '东京、京都、大阪7日赏樱之旅',
           'category': '自然风光',
-          'icon': FeatherIcons.flower,
+          'icon': FeatherIcons.heart,
         };
       case 'international_2':
         return {

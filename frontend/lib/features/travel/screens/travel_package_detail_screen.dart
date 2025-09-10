@@ -189,7 +189,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
         SizedBox(height: 12.h),
         _buildDetailItem(
           context,
-          icon: FeatherIcons.coin,
+          icon: FeatherIcons.dollarSign,
           title: '价格',
           content: _getPrice(),
           isDesktop: isDesktop,

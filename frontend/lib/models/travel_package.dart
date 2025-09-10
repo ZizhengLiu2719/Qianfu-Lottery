@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'travel_post.dart'; // 导入 Pagination 类
 
 part 'travel_package.g.dart';
 
@@ -154,24 +155,4 @@ class TravelRegistrationListResponse {
   Map<String, dynamic> toJson() => _$TravelRegistrationListResponseToJson(this);
 }
 
-@JsonSerializable()
-class Pagination {
-  final int page;
-  final int limit;
-  final int total;
-  final int totalPages;
-
-  const Pagination({
-    required this.page,
-    required this.limit,
-    required this.total,
-    required this.totalPages,
-  });
-
-  factory Pagination.fromJson(Map<String, dynamic> json) => _$PaginationFromJson(json);
-  
-  Map<String, dynamic> toJson() => _$PaginationToJson(this);
-
-  bool get hasNext => page < totalPages;
-  bool get hasPrevious => page > 1;
-}
+// Pagination 类已从 travel_post.dart 导入，避免重复定义
