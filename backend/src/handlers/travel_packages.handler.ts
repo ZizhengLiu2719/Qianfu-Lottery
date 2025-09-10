@@ -205,31 +205,53 @@ export function createTravelPackageHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
-      // 获取用户的所有旅游注册记录
-      const registrations = await (prisma as any).travelRegistration.findMany({
-        where: {
-          userId: currentUser.id,
-          status: 'REGISTERED'
-        },
-        include: {
-          package: true
-        },
-        orderBy: { createdAt: 'desc' }
-      })
+      // 使用原生SQL查询获取用户的所有旅游注册记录
+      const registrations = await prisma.$queryRaw`
+        SELECT 
+          tr.id,
+          tr.user_id,
+          tr.package_id,
+          tr.title,
+          tr.subtitle,
+          tr.category,
+          tr.status,
+          tr.registered_at,
+          tp.title as package_title,
+          tp.description as package_description,
+          tp.category as package_category,
+          tp.duration_days,
+          tp.location,
+          tp.image_url,
+          tp.tags
+        FROM travel_registrations tr
+        LEFT JOIN travel_packages tp ON tr.package_id = tp.id
+        WHERE tr.user_id = ${currentUser.id} 
+          AND tr.status = 'REGISTERED'
+        ORDER BY tr.registered_at DESC
+      `
 
       // 转换为前端需要的格式
-      const formattedRegistrations = registrations.map((reg: any) => {
+      const formattedRegistrations = Array.isArray(registrations) ? registrations.map((reg: any) => {
         return {
-          id: reg.packageId.toString(),
+          id: reg.package_id.toString(),
           title: reg.title,
           subtitle: reg.subtitle,
           category: reg.category,
           type: 'travel',
-          registeredAt: reg.createdAt.toISOString(),
+          registeredAt: reg.registered_at ? new Date(reg.registered_at).toISOString() : new Date().toISOString(),
           icon: 'map',
-          package: reg.package
+          package: {
+            id: reg.package_id,
+            title: reg.package_title,
+            description: reg.package_description,
+            category: reg.package_category,
+            durationDays: reg.duration_days,
+            location: reg.location,
+            imageUrl: reg.image_url,
+            tags: reg.tags
+          }
         }
-      })
+      }) : []
 
       return c.json({
         code: 200,

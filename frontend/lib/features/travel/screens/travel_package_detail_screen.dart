@@ -30,6 +30,7 @@ class TravelPackageDetailScreen extends ConsumerStatefulWidget {
 class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailScreen> {
   bool _isRegistered = false;
   bool _isHovering = false;
+  bool _isRegistering = false;
 
   @override
   Widget build(BuildContext context) {
@@ -292,14 +293,23 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
                             size: isDesktop ? 16.sp : 18.sp,
                           ),
                           SizedBox(width: 8.w),
-                          Text(
-                            isTravelRegistered ? '已注册' : '注册套餐',
-                            style: TextStyle(
-                              fontSize: isDesktop ? 14.sp : 16.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          _isRegistering 
+                            ? SizedBox(
+                                width: 20.w,
+                                height: 20.h,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
+                              )
+                            : Text(
+                                isTravelRegistered ? '已注册' : '注册套餐',
+                                style: TextStyle(
+                                  fontSize: isDesktop ? 14.sp : 16.sp,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                         ],
                       ),
                     ),
@@ -352,6 +362,13 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
   }
 
   void _handleRegistration() async {
+    // 防止重复点击
+    if (_isRegistering) return;
+    
+    setState(() {
+      _isRegistering = true;
+    });
+
     try {
       // 调用后端 API 注册旅游套餐
       final dioClient = DioClient();
@@ -397,6 +414,10 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
           backgroundColor: Colors.red,
         ),
       );
+    } finally {
+      setState(() {
+        _isRegistering = false;
+      });
     }
   }
 
