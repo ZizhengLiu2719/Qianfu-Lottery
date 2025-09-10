@@ -84,6 +84,7 @@ class TravelRegistration {
   final String? subtitle;
   final String category;
   final String status; // REGISTERED, CANCELLED, COMPLETED
+  @JsonKey(name: 'registeredAt')
   final DateTime registeredAt;
   final TravelPackage? package;
 

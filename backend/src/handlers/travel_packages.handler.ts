@@ -139,14 +139,16 @@ export function createTravelPackageHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
-      // 查找注册记录
-      const registration = await (prisma as any).travelRegistration.findFirst({
-        where: {
-          id: parseInt(registrationId),
-          userId: currentUser.id,
-          status: 'REGISTERED'
-        }
-      })
+      // 使用原生SQL查找注册记录
+      const registrationResult = await prisma.$queryRaw`
+        SELECT id, user_id, package_id, status
+        FROM travel_registrations 
+        WHERE id = ${parseInt(registrationId)} 
+          AND user_id = ${currentUser.id} 
+          AND status = 'REGISTERED'
+      `
+      
+      const registration = Array.isArray(registrationResult) ? registrationResult[0] : registrationResult
 
       if (!registration) {
         return c.json({
@@ -156,24 +158,19 @@ export function createTravelPackageHandlers() {
         }, 404)
       }
 
-      // 更新状态为已取消
-      await (prisma as any).travelRegistration.update({
-        where: { id: registration.id },
-        data: { 
-          status: 'CANCELLED',
-          updatedAt: new Date()
-        }
-      })
+      // 使用原生SQL更新状态为已取消
+      await prisma.$queryRaw`
+        UPDATE travel_registrations 
+        SET status = 'CANCELLED' 
+        WHERE id = ${registration.id}
+      `
 
-      // 减少套餐参与人数
-      await (prisma as any).travelPackage.update({
-        where: { id: registration.packageId },
-        data: {
-          currentParticipants: {
-            decrement: 1
-          }
-        }
-      })
+      // 使用原生SQL减少套餐参与人数
+      await prisma.$queryRaw`
+        UPDATE travel_packages 
+        SET current_participants = current_participants - 1 
+        WHERE id = ${registration.package_id}
+      `
 
       return c.json({
         code: 200,
