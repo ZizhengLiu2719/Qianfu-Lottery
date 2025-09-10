@@ -36,20 +36,20 @@ export function createLearningHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
+      // 生成一个虚拟的scheduleId，避免外键约束问题
+      // 使用courseId的哈希值生成一个唯一的数字ID
+      const virtualScheduleId = Math.abs(body.courseId.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0)) % 1000000 + 900000; // 生成900000-999999之间的ID
+
       // 创建学习彩注册记录
       const registration = await prisma.userAppointment.create({
         data: {
           userId: currentUser.id,
-          scheduleId: parseInt(body.courseId), // 使用courseId作为scheduleId
+          scheduleId: virtualScheduleId,
           status: 'REGISTERED',
           note: `学习彩课程注册: ${body.title}`,
-        },
-        include: {
-          schedule: {
-            include: {
-              course: true
-            }
-          }
         }
       })
 
@@ -100,11 +100,17 @@ export function createLearningHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
+      // 生成一个虚拟的scheduleId，避免外键约束问题
+      const virtualScheduleId = Math.abs(body.serviceId.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0)) % 1000000 + 800000; // 生成800000-899999之间的ID
+
       // 创建学习彩注册记录
       const registration = await prisma.userAppointment.create({
         data: {
           userId: currentUser.id,
-          scheduleId: parseInt(body.serviceId), // 使用serviceId作为scheduleId
+          scheduleId: virtualScheduleId,
           status: 'REGISTERED',
           note: `学习彩留学咨询注册: ${body.title}`,
         }
@@ -157,11 +163,17 @@ export function createLearningHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
+      // 生成一个虚拟的scheduleId，避免外键约束问题
+      const virtualScheduleId = Math.abs(body.campId.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0)) % 1000000 + 700000; // 生成700000-799999之间的ID
+
       // 创建学习彩注册记录
       const registration = await prisma.userAppointment.create({
         data: {
           userId: currentUser.id,
-          scheduleId: parseInt(body.campId), // 使用campId作为scheduleId
+          scheduleId: virtualScheduleId,
           status: 'REGISTERED',
           note: `学习彩夏令营注册: ${body.title}`,
         }
@@ -215,11 +227,36 @@ export function createLearningHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
+      // 生成对应的虚拟scheduleId
+      let virtualScheduleId: number
+      if (type === 'course') {
+        virtualScheduleId = Math.abs(registrationId.split('').reduce((a, b) => {
+          a = ((a << 5) - a) + b.charCodeAt(0);
+          return a & a;
+        }, 0)) % 1000000 + 900000
+      } else if (type === 'service') {
+        virtualScheduleId = Math.abs(registrationId.split('').reduce((a, b) => {
+          a = ((a << 5) - a) + b.charCodeAt(0);
+          return a & a;
+        }, 0)) % 1000000 + 800000
+      } else if (type === 'camp') {
+        virtualScheduleId = Math.abs(registrationId.split('').reduce((a, b) => {
+          a = ((a << 5) - a) + b.charCodeAt(0);
+          return a & a;
+        }, 0)) % 1000000 + 700000
+      } else {
+        return c.json({
+          code: 400,
+          message: 'Invalid registration type',
+          data: null
+        }, 400)
+      }
+
       // 查找并更新注册记录
       const registration = await prisma.userAppointment.findFirst({
         where: {
           userId: currentUser.id,
-          scheduleId: parseInt(registrationId),
+          scheduleId: virtualScheduleId,
           status: 'REGISTERED'
         }
       })
@@ -287,23 +324,28 @@ export function createLearningHandlers() {
         let type = 'course'
         let title = '未知课程'
         let icon = 'helpCircle'
+        let originalId = ''
 
         if (note.includes('课程')) {
           type = 'course'
           title = note.replace('学习彩课程注册: ', '')
           icon = 'cpu'
+          // 从虚拟scheduleId反推原始ID（这是一个简化的方法）
+          originalId = `course_${reg.scheduleId - 900000}`
         } else if (note.includes('留学咨询')) {
           type = 'service'
           title = note.replace('学习彩留学咨询注册: ', '')
           icon = 'messageSquare'
+          originalId = `service_${reg.scheduleId - 800000}`
         } else if (note.includes('夏令营')) {
           type = 'camp'
           title = note.replace('学习彩夏令营注册: ', '')
           icon = 'mapPin'
+          originalId = `camp_${reg.scheduleId - 700000}`
         }
 
         return {
-          id: reg.scheduleId.toString(),
+          id: originalId,
           title: title,
           subtitle: '学习彩服务',
           category: '学习彩',
