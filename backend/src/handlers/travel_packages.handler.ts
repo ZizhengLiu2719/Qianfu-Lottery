@@ -101,7 +101,7 @@ export function createTravelPackageHandlers() {
           subtitle: body.subtitle,
           category: body.category,
           type: 'travel',
-          registeredAt: registration.createdAt.toISOString(),
+          registeredAt: registration.registered_at ? new Date(registration.registered_at).toISOString() : new Date().toISOString(),
           icon: 'map'
         }
       })

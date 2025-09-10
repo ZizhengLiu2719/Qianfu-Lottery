@@ -427,42 +427,42 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
 
   Map<String, dynamic> _getPackageInfo(String packageId) {
     switch (packageId) {
-      case 'domestic_1':
+      case '1':
         return {
           'title': '西湖一日游攻略',
           'subtitle': '早上断桥、下午灵隐、傍晚苏堤看日落',
           'category': '文化体验',
           'icon': FeatherIcons.map,
         };
-      case 'domestic_2':
+      case '2':
         return {
           'title': '成都·火锅+大熊猫',
           'subtitle': '必吃推荐与最佳参观时段',
           'category': '美食文化',
           'icon': FeatherIcons.heart,
         };
-      case 'domestic_3':
+      case '3':
         return {
           'title': '三亚海边拍照点合集',
           'subtitle': '椰林沙滩、礁石海湾、最佳光线时间',
           'category': '自然风光',
           'icon': FeatherIcons.camera,
         };
-      case 'international_1':
+      case '4':
         return {
           'title': '日本樱花季深度游',
           'subtitle': '东京、京都、大阪7日赏樱之旅',
           'category': '自然风光',
           'icon': FeatherIcons.heart,
         };
-      case 'international_2':
+      case '5':
         return {
           'title': '欧洲文化探索之旅',
           'subtitle': '巴黎、罗马、巴塞罗那艺术文化深度体验',
           'category': '文化体验',
           'icon': FeatherIcons.bookOpen,
         };
-      case 'international_3':
+      case '6':
         return {
           'title': '东南亚海岛度假',
           'subtitle': '普吉岛、巴厘岛、马尔代夫海岛休闲游',
