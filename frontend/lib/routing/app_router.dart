@@ -12,6 +12,7 @@ import '../features/shopping/screens/orders_screen.dart';
 import '../features/learning/screens/courses_screen.dart';
 import '../features/learning/screens/course_detail_screen.dart';
 import '../features/learning/screens/appointments_screen.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../features/travel/screens/travel_screen.dart';
 import '../features/travel/screens/travel_detail_screen.dart';
 import '../features/entertainment/screens/entertainment_screen.dart';
@@ -140,8 +141,16 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: ':id',
                 name: 'course-detail',
                 builder: (context, state) {
-                  final id = int.parse(state.pathParameters['id']!);
-                  return CourseDetailScreen(courseId: id);
+                  final id = state.pathParameters['id']!;
+                  // 根据ID获取课程信息
+                  Map<String, dynamic> courseInfo = _getCourseInfoById(id);
+                  return CourseDetailScreen(
+                    courseId: id,
+                    title: courseInfo['title'],
+                    subtitle: courseInfo['subtitle'],
+                    category: courseInfo['category'],
+                    icon: courseInfo['icon'],
+                  );
                 },
               ),
             ],
@@ -206,4 +215,59 @@ BottomNavPage getCurrentBottomNavPage(String location) {
     }
   }
   return BottomNavPage.life; // 默认返回生活彩
+}
+
+// 根据课程ID获取课程信息
+Map<String, dynamic> _getCourseInfoById(String courseId) {
+  switch (courseId) {
+    case 'ai_course_1':
+      return {
+        'title': 'AI 编程入门（直播课）',
+        'subtitle': '每周二/四 晚 20:00 · 60 分钟',
+        'category': 'AI编程',
+        'icon': FeatherIcons.cpu,
+      };
+    case 'ai_course_2':
+      return {
+        'title': '机器学习实战',
+        'subtitle': '从零开始构建AI模型',
+        'category': 'AI编程',
+        'icon': FeatherIcons.cpu,
+      };
+    case 'ai_course_3':
+      return {
+        'title': '深度学习进阶',
+        'subtitle': '神经网络与深度学习应用',
+        'category': 'AI编程',
+        'icon': FeatherIcons.layers,
+      };
+    case 'english_course_1':
+      return {
+        'title': '英语口语提升（录播+答疑）',
+        'subtitle': '随时观看 · 每周一次答疑',
+        'category': '英语学习',
+        'icon': FeatherIcons.mic,
+      };
+    case 'english_course_2':
+      return {
+        'title': '商务英语写作',
+        'subtitle': '专业商务邮件与报告写作',
+        'category': '英语学习',
+        'icon': FeatherIcons.edit,
+      };
+    case 'english_course_3':
+      return {
+        'title': '雅思托福备考',
+        'subtitle': '系统化备考，高分通过',
+        'category': '英语学习',
+        'icon': FeatherIcons.award,
+      };
+    default:
+      return {
+        'title': '未知课程',
+        'subtitle': '课程信息不可用',
+        'category': '其他',
+        'icon': FeatherIcons.helpCircle,
+      };
+  }
 }
