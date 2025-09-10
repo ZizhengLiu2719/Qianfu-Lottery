@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/travels_provider.dart';
+import '../../../api/travel_packages_repository.dart';
 
 class TravelPackageDetailScreen extends ConsumerStatefulWidget {
   final String packageId;
@@ -349,32 +350,52 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
     );
   }
 
-  void _handleRegistration() {
-    final travel = TravelItem(
-      id: widget.packageId,
-      title: widget.title,
-      subtitle: widget.subtitle,
-      category: widget.category,
-      icon: widget.icon,
-      type: 'travel',
-      registeredAt: DateTime.now(),
-    );
+  void _handleRegistration() async {
+    try {
+      // 调用后端 API 注册旅游套餐
+      final travelPackagesRepository = TravelPackagesRepository();
+      
+      await travelPackagesRepository.registerTravelPackage(
+        packageId: widget.packageId,
+        title: widget.title,
+        subtitle: widget.subtitle,
+        category: widget.category,
+      );
 
-    ref.read(travelsProvider.notifier).addTravel(travel);
+      // 注册成功后添加到前端状态
+      final travel = TravelItem(
+        id: widget.packageId,
+        title: widget.title,
+        subtitle: widget.subtitle,
+        category: widget.category,
+        icon: widget.icon,
+        type: 'travel',
+        registeredAt: DateTime.now(),
+      );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('注册成功！'),
-        backgroundColor: Colors.green,
-        action: SnackBarAction(
-          label: '查看我的旅游',
-          textColor: Colors.white,
-          onPressed: () {
-            // TODO: 导航到我的旅游页面
-          },
+      ref.read(travelsProvider.notifier).addTravel(travel);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('注册成功！'),
+          backgroundColor: Colors.green,
+          action: SnackBarAction(
+            label: '查看我的旅游',
+            textColor: Colors.white,
+            onPressed: () {
+              // TODO: 导航到我的旅游页面
+            },
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('注册失败：${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   void _handleCancelRegistration() {

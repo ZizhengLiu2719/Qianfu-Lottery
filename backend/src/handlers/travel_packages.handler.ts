@@ -33,13 +33,26 @@ export function createTravelPackageHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
-      // 检查套餐是否存在 - 使用字符串ID查找
-      const packageExists = await prisma.travelPackage.findFirst({
-        where: { 
-          title: body.title,
-          category: body.category
-        }
-      })
+      // 检查套餐是否存在 - 根据 packageId 或 title+category 查找
+      let packageExists = null
+      
+      // 如果 packageId 是数字，直接查找
+      if (!isNaN(parseInt(body.packageId))) {
+        packageExists = await (prisma as any).travelPackage.findUnique({
+          where: { id: parseInt(body.packageId) }
+        })
+      }
+      
+      // 如果没找到，尝试根据 title 和 category 查找
+      if (!packageExists) {
+        const allPackages = await (prisma as any).travelPackage.findMany({
+          where: { isActive: true }
+        })
+        
+        packageExists = allPackages.find((pkg: any) => 
+          pkg.title === body.title && pkg.category === body.category
+        )
+      }
 
       if (!packageExists) {
         return c.json({
@@ -50,7 +63,7 @@ export function createTravelPackageHandlers() {
       }
 
       // 检查是否已经注册
-      const existingRegistration = await prisma.travelRegistration.findFirst({
+      const existingRegistration = await (prisma as any).travelRegistration.findFirst({
         where: {
           userId: currentUser.id,
           packageId: packageExists.id,
@@ -67,7 +80,7 @@ export function createTravelPackageHandlers() {
       }
 
       // 创建旅游注册记录
-      const registration = await prisma.travelRegistration.create({
+      const registration = await (prisma as any).travelRegistration.create({
         data: {
           userId: currentUser.id,
           packageId: packageExists.id,
@@ -79,7 +92,7 @@ export function createTravelPackageHandlers() {
       })
 
       // 更新套餐参与人数
-      await prisma.travelPackage.update({
+      await (prisma as any).travelPackage.update({
         where: { id: packageExists.id },
         data: {
           currentParticipants: {
@@ -136,7 +149,7 @@ export function createTravelPackageHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 查找注册记录
-      const registration = await prisma.travelRegistration.findFirst({
+      const registration = await (prisma as any).travelRegistration.findFirst({
         where: {
           id: parseInt(registrationId),
           userId: currentUser.id,
@@ -153,7 +166,7 @@ export function createTravelPackageHandlers() {
       }
 
       // 更新状态为已取消
-      await prisma.travelRegistration.update({
+      await (prisma as any).travelRegistration.update({
         where: { id: registration.id },
         data: { 
           status: 'CANCELLED',
@@ -162,7 +175,7 @@ export function createTravelPackageHandlers() {
       })
 
       // 减少套餐参与人数
-      await prisma.travelPackage.update({
+      await (prisma as any).travelPackage.update({
         where: { id: registration.packageId },
         data: {
           currentParticipants: {
@@ -202,7 +215,7 @@ export function createTravelPackageHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 获取用户的所有旅游注册记录
-      const registrations = await prisma.travelRegistration.findMany({
+      const registrations = await (prisma as any).travelRegistration.findMany({
         where: {
           userId: currentUser.id,
           status: 'REGISTERED'
@@ -214,7 +227,7 @@ export function createTravelPackageHandlers() {
       })
 
       // 转换为前端需要的格式
-      const formattedRegistrations = registrations.map((reg) => {
+      const formattedRegistrations = registrations.map((reg: any) => {
         return {
           id: reg.packageId.toString(),
           title: reg.title,
@@ -270,7 +283,7 @@ export function createTravelPackageHandlers() {
       }
 
       const [packages, total] = await Promise.all([
-        prisma.travelPackage.findMany({
+        (prisma as any).travelPackage.findMany({
           where,
           orderBy: [
             { createdAt: 'desc' }
@@ -278,7 +291,7 @@ export function createTravelPackageHandlers() {
           skip: offset,
           take: limit
         }),
-        prisma.travelPackage.count({ where })
+        (prisma as any).travelPackage.count({ where })
       ])
 
       return c.json({
@@ -327,7 +340,7 @@ export function createTravelPackageHandlers() {
 
       const prisma = getPrismaClient(databaseUrl)
 
-      const packageData = await prisma.travelPackage.findUnique({
+      const packageData = await (prisma as any).travelPackage.findUnique({
         where: { 
           id: packageId,
           isActive: true
@@ -379,7 +392,7 @@ export function createTravelPackageHandlers() {
       const prisma = getPrismaClient(databaseUrl)
 
       // 删除用户的所有旅游注册记录
-      await prisma.travelRegistration.deleteMany({
+      await (prisma as any).travelRegistration.deleteMany({
         where: {
           userId: currentUser.id,
           status: 'REGISTERED'
