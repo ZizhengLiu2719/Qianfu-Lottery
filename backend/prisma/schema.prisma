@@ -184,16 +184,16 @@ model UserAppointment {
 // 学习彩注册
 model LearningRegistration {
   id          Int      @id @default(autoincrement())
-  userId      Int
+  userId      Int      @map("user_id")
   user        User     @relation(fields: [userId], references: [id])
-  itemId      String   // 课程/服务/夏令营的ID
-  itemType    String   // course, service, camp
+  itemId      String   @map("item_id") // 课程/服务/夏令营的ID
+  itemType    String   @map("item_type") // course, service, camp
   title       String
   subtitle    String
   category    String
   status      String   @default("REGISTERED") // REGISTERED, CANCELLED, COMPLETED
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
   
   @@unique([userId, itemId, itemType])
   @@map("learning_registrations")
