@@ -1,9 +1,39 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import '../../../models/models.dart';
 import '../../../api/dio_client.dart';
 
 class CartNotifier extends StateNotifier<List<CartItem>> {
-  CartNotifier() : super([]);
+  CartNotifier() : super([]) {
+    _loadCartFromStorage();
+  }
+
+  // 从本地存储加载购物车数据
+  Future<void> _loadCartFromStorage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final cartData = prefs.getString('cart_items');
+      if (cartData != null) {
+        final List<dynamic> jsonList = json.decode(cartData);
+        final cartItems = jsonList.map((json) => CartItem.fromJson(json)).toList();
+        state = cartItems;
+      }
+    } catch (e) {
+      print('Error loading cart from storage: $e');
+    }
+  }
+
+  // 保存购物车数据到本地存储
+  Future<void> _saveCartToStorage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final cartData = json.encode(state.map((item) => item.toJson()).toList());
+      await prefs.setString('cart_items', cartData);
+    } catch (e) {
+      print('Error saving cart to storage: $e');
+    }
+  }
 
   // 添加商品到购物车
   Future<void> addItem(Product product, {int quantity = 1}) async {
@@ -31,6 +61,9 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
         // 如果商品不存在，添加新商品
         state = [...state, CartItem(product: product, quantity: quantity)];
       }
+      
+      // 保存到本地存储
+      await _saveCartToStorage();
     } catch (e) {
       print('Error adding item to cart: $e');
       // 即使后端失败，也更新本地状态，确保用户体验
@@ -50,14 +83,17 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
         // 如果商品不存在，添加新商品
         state = [...state, CartItem(product: product, quantity: quantity)];
       }
+      
+      // 保存到本地存储
+      await _saveCartToStorage();
       // 不重新抛出异常，让用户知道商品已添加到本地购物车
     }
   }
 
   // 更新商品数量
-  void updateQuantity(int productId, int quantity) {
+  Future<void> updateQuantity(int productId, int quantity) async {
     if (quantity <= 0) {
-      removeItem(productId);
+      await removeItem(productId);
       return;
     }
 
@@ -69,17 +105,20 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
         existingItem.copyWith(quantity: quantity),
         ...state.sublist(existingIndex + 1),
       ];
+      await _saveCartToStorage();
     }
   }
 
   // 移除商品
-  void removeItem(int productId) {
+  Future<void> removeItem(int productId) async {
     state = state.where((item) => item.product.id != productId).toList();
+    await _saveCartToStorage();
   }
 
   // 清空购物车
-  void clear() {
+  Future<void> clear() async {
     state = [];
+    await _saveCartToStorage();
   }
 
   // 获取总价

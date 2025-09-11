@@ -165,14 +165,14 @@ class CartScreen extends ConsumerWidget {
           Row(
             children: [
               IconButton(
-                onPressed: () {
+                onPressed: () async {
                   if (item.quantity > 1) {
-                    ref.read(cartProvider.notifier).updateQuantity(
+                    await ref.read(cartProvider.notifier).updateQuantity(
                       item.product.id,
                       item.quantity - 1,
                     );
                   } else {
-                    ref.read(cartProvider.notifier).removeItem(item.product.id);
+                    await ref.read(cartProvider.notifier).removeItem(item.product.id);
                   }
                 },
                 icon: Icon(
@@ -192,8 +192,8 @@ class CartScreen extends ConsumerWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {
-                  ref.read(cartProvider.notifier).updateQuantity(
+                onPressed: () async {
+                  await ref.read(cartProvider.notifier).updateQuantity(
                     item.product.id,
                     item.quantity + 1,
                   );
@@ -291,8 +291,8 @@ class CartScreen extends ConsumerWidget {
             child: Text(AppLocalizations.of(context)!.common_cancel),
           ),
           TextButton(
-            onPressed: () {
-              ref.read(cartProvider.notifier).clear();
+            onPressed: () async {
+              await ref.read(cartProvider.notifier).clear();
               Navigator.pop(context);
             },
             child: Text(AppLocalizations.of(context)!.common_confirm),

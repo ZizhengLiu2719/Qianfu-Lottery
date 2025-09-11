@@ -438,7 +438,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
   Widget _buildBottomBar(int totalCost, bool isDesktop) {
     return Container(
-      padding: EdgeInsets.all(isDesktop ? 6.w : 8.w),
+      padding: EdgeInsets.all(isDesktop ? 3.w : 4.w),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -459,21 +459,21 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 '总计',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppTheme.textSecondary,
-                  fontSize: isDesktop ? 10.sp : 12.sp,
+                  fontSize: isDesktop ? 8.sp : 10.sp,
                 ),
               ),
-              SizedBox(height: 2.h),
+              SizedBox(height: 1.h),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  QiancaiDouIcon(size: isDesktop ? 12.sp : 14.sp),
-                  SizedBox(width: 2.w),
+                  QiancaiDouIcon(size: isDesktop ? 8.sp : 10.sp),
+                  SizedBox(width: 1.w),
                   Text(
                     '$totalCost',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppTheme.primaryColor,
-                      fontSize: isDesktop ? 14.sp : 16.sp,
+                      fontSize: isDesktop ? 12.sp : 14.sp,
                     ),
                   ),
                 ],
@@ -482,20 +482,20 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           ),
           const Spacer(),
           SizedBox(
-            width: isDesktop ? 80.w : 100.w,
+            width: isDesktop ? 60.w : 80.w,
             child: ElevatedButton(
               onPressed: _selectedAddress == null || _isLoading ? null : _createOrder,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryColor,
-                padding: EdgeInsets.symmetric(vertical: isDesktop ? 6.h : 8.h),
+                padding: EdgeInsets.symmetric(vertical: isDesktop ? 3.h : 4.h),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.r),
+                  borderRadius: BorderRadius.circular(6.r),
                 ),
               ),
               child: _isLoading
                   ? SizedBox(
-                      width: isDesktop ? 12.w : 16.w,
-                      height: isDesktop ? 12.w : 16.w,
+                      width: isDesktop ? 8.w : 12.w,
+                      height: isDesktop ? 8.w : 12.w,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -503,10 +503,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     )
                   : Text(
                       '提交订单',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: isDesktop ? 12.sp : 14.sp,
+                        fontSize: isDesktop ? 10.sp : 12.sp,
                       ),
                     ),
             ),
@@ -539,7 +539,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
       if (order != null && mounted) {
         // 清空购物车
-        ref.read(cartProvider.notifier).clear();
+        await ref.read(cartProvider.notifier).clear();
         
         // 跳转到支付成功页面
         Navigator.of(context).pushReplacement(
