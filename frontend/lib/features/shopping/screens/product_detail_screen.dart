@@ -4,12 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../models/models.dart';
 import '../../../api/dio_client.dart';
 import '../../../api/products_repository.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/qiancai_dou_icon.dart';
+import '../../../routing/app_router.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 import 'checkout_screen.dart';
@@ -52,7 +54,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                   IconButton(
                     icon: const Icon(FeatherIcons.shoppingCart, color: AppTheme.textPrimary),
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/cart');
+                      context.go(AppRoutes.cart);
                     },
                   ),
                   if (cartItemCount > 0)
