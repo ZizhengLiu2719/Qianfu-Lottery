@@ -61,7 +61,7 @@ class ProfileScreen extends ConsumerWidget {
                   _buildMenuTextItem(
                     context,
                     title: '我的旅游预约',
-                    onTap: () => context.go(AppRoutes.travel),
+                    onTap: () => context.go(AppRoutes.myTravels),
                   ),
                   _buildMenuTextItem(
                     context,

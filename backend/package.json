@@ -1,7 +1,7 @@
 {
   "name": "qianfu-jicai-backend",
   "version": "1.0.0",
-  "description": "仟府集彩后端 API",
+  "description": "千府集彩后端 API",
   "main": "src/index.ts",
   "scripts": {
     "predev": "npx prisma generate",

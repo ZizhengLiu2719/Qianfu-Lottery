@@ -16,6 +16,7 @@ import '../features/learning/screens/my_appointments_screen.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../features/travel/screens/travel_screen.dart';
 import '../features/travel/screens/travel_detail_screen.dart';
+import '../features/travel/screens/my_travels_screen.dart';
 import '../features/entertainment/screens/entertainment_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
 import '../features/profile/screens/transaction_history_screen.dart';
@@ -36,6 +37,7 @@ class AppRoutes {
   static const String appointments = '/appointments';
   static const String travel = '/travel';
   static const String travelDetail = '/travel/:id';
+  static const String myTravels = '/my-travels';
   static const String entertainment = '/entertainment';
   static const String profile = '/profile';
   static const String transactionHistory = '/transaction-history';
@@ -177,6 +179,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                 },
               ),
             ],
+          ),
+          GoRoute(
+            path: AppRoutes.myTravels,
+            name: 'my-travels',
+            builder: (context, state) => const MyTravelsScreen(),
           ),
 
           // 娱乐彩

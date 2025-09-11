@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../routing/app_router.dart';
 import '../providers/appointments_provider.dart';
 
 class MyAppointmentsScreen extends ConsumerStatefulWidget {
@@ -79,7 +81,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
           ),
           SizedBox(height: 32.h),
           ElevatedButton.icon(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.go(AppRoutes.courses),
             icon: Icon(FeatherIcons.arrowLeft),
             label: Text('返回学习彩'),
             style: ElevatedButton.styleFrom(

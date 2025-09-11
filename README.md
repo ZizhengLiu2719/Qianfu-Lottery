@@ -1,4 +1,4 @@
-# 仟府集彩 (Qianfu Jicai)
+# 千府集彩 (Qianfu Jicai)
 
 一个现代化的积分商城与预约平台，采用 Flutter + Hono + Prisma + Cloudflare 技术栈。
 
