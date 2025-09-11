@@ -237,51 +237,51 @@ Map<String, dynamic> _getCourseInfoById(String courseId) {
   switch (courseId) {
     case 'ai_course_1':
       return {
-        'title': 'AI 编程入门（直播课）',
-        'subtitle': '每周二/四 晚 20:00 · 60 分钟',
-        'category': 'AI编程',
+        'title': AppLocalizations.current.courses_title,
+        'subtitle': AppLocalizations.current.learning_course_schedule_value,
+        'category': AppLocalizations.current.learning_ai_programming,
         'icon': FeatherIcons.cpu,
       };
     case 'ai_course_2':
       return {
-        'title': '机器学习实战',
-        'subtitle': '从零开始构建AI模型',
-        'category': 'AI编程',
+        'title': AppLocalizations.current.learning_course_content,
+        'subtitle': AppLocalizations.current.learning_course_content_value,
+        'category': AppLocalizations.current.learning_ai_programming,
         'icon': FeatherIcons.cpu,
       };
     case 'ai_course_3':
       return {
-        'title': '深度学习进阶',
-        'subtitle': '神经网络与深度学习应用',
-        'category': 'AI编程',
+        'title': AppLocalizations.current.learning_course_content,
+        'subtitle': AppLocalizations.current.learning_course_content_value,
+        'category': AppLocalizations.current.learning_ai_programming,
         'icon': FeatherIcons.layers,
       };
     case 'english_course_1':
       return {
-        'title': '英语口语提升（录播+答疑）',
-        'subtitle': '随时观看 · 每周一次答疑',
-        'category': '英语学习',
+        'title': AppLocalizations.current.learning_oral_english,
+        'subtitle': AppLocalizations.current.learning_course_schedule_value,
+        'category': AppLocalizations.current.learning_english,
         'icon': FeatherIcons.mic,
       };
     case 'english_course_2':
       return {
-        'title': '商务英语写作',
-        'subtitle': '专业商务邮件与报告写作',
-        'category': '英语学习',
+        'title': AppLocalizations.current.learning_english,
+        'subtitle': AppLocalizations.current.learning_english_desc,
+        'category': AppLocalizations.current.learning_english,
         'icon': FeatherIcons.edit,
       };
     case 'english_course_3':
       return {
-        'title': '雅思托福备考',
-        'subtitle': '系统化备考，高分通过',
-        'category': '英语学习',
+        'title': AppLocalizations.current.learning_english,
+        'subtitle': AppLocalizations.current.learning_english_desc,
+        'category': AppLocalizations.current.learning_english,
         'icon': FeatherIcons.award,
       };
     default:
       return {
-        'title': '未知课程',
-        'subtitle': '课程信息不可用',
-        'category': '其他',
+        'title': AppLocalizations.current.travel_unknown_package,
+        'subtitle': AppLocalizations.current.travel_package_unavailable,
+        'category': AppLocalizations.current.travel_other,
         'icon': FeatherIcons.helpCircle,
       };
   }

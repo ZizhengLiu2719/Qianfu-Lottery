@@ -62,26 +62,26 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
     final categories = [
       ResponsiveTagData(
         key: 'ai',
-        text: 'AI编程学习',
-        mobileText: 'AI编程',
+        text: AppLocalizations.of(context)!.learning_ai_programming,
+        mobileText: AppLocalizations.of(context)!.learning_ai_programming,
         icon: FeatherIcons.cpu,
       ),
       ResponsiveTagData(
         key: 'english',
-        text: '英语学习',
-        mobileText: '英语',
+        text: AppLocalizations.of(context)!.learning_english,
+        mobileText: AppLocalizations.of(context)!.learning_english,
         icon: FeatherIcons.mic,
       ),
       ResponsiveTagData(
         key: 'study_abroad',
-        text: '留学咨询',
-        mobileText: '留学',
+        text: AppLocalizations.of(context)!.learning_study_abroad,
+        mobileText: AppLocalizations.of(context)!.learning_study_abroad,
         icon: FeatherIcons.globe,
       ),
       ResponsiveTagData(
         key: 'summer_camp',
-        text: '夏令营',
-        mobileText: '夏令营',
+        text: AppLocalizations.of(context)!.learning_summer_camp,
+        mobileText: AppLocalizations.of(context)!.learning_summer_camp,
         icon: FeatherIcons.sun,
       ),
     ];
@@ -179,7 +179,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
       children: [
         SizedBox(height: 16.h),
         Text(
-          'AI编程学习',
+          AppLocalizations.of(context)!.learning_ai_programming,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -188,7 +188,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         ),
         SizedBox(height: 8.h),
         Text(
-          '掌握人工智能编程技能，开启未来职业道路',
+          AppLocalizations.of(context)!.learning_ai_programming_desc,
           style: TextStyle(
             fontSize: 14.sp,
             color: AppTheme.textSecondary,
@@ -197,28 +197,28 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         SizedBox(height: 24.h),
         _buildCourseCard(
           context,
-          title: 'AI 编程入门（直播课）',
-          subtitle: '每周二/四 晚 20:00 · 60 分钟',
+          title: AppLocalizations.of(context)!.courses_title,
+          subtitle: AppLocalizations.of(context)!.learning_course_schedule_value,
           icon: FeatherIcons.cpu,
-          category: 'AI编程',
+          category: AppLocalizations.of(context)!.learning_ai_programming,
           onTap: () => _navigateToCourseDetail('ai_course_1'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
           context,
-          title: '机器学习实战',
-          subtitle: '从零开始构建AI模型',
+          title: AppLocalizations.of(context)!.travel_unknown_package,
+          subtitle: AppLocalizations.of(context)!.learning_course_content_value,
           icon: FeatherIcons.cpu,
-          category: 'AI编程',
+          category: AppLocalizations.of(context)!.learning_ai_programming,
           onTap: () => _navigateToCourseDetail('ai_course_2'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
           context,
-          title: '深度学习进阶',
-          subtitle: '神经网络与深度学习应用',
+          title: AppLocalizations.of(context)!.learning_course_content,
+          subtitle: AppLocalizations.of(context)!.learning_course_content_value,
           icon: FeatherIcons.layers,
-          category: 'AI编程',
+          category: AppLocalizations.of(context)!.learning_ai_programming,
           onTap: () => _navigateToCourseDetail('ai_course_3'),
         ),
       ],
@@ -231,7 +231,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
       children: [
         SizedBox(height: 16.h),
         Text(
-          '英语学习',
+          AppLocalizations.of(context)!.learning_english,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -240,7 +240,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         ),
         SizedBox(height: 8.h),
         Text(
-          '提升英语水平，拓展国际视野',
+          AppLocalizations.of(context)!.learning_english_desc,
           style: TextStyle(
             fontSize: 14.sp,
             color: AppTheme.textSecondary,
@@ -249,28 +249,28 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         SizedBox(height: 24.h),
         _buildCourseCard(
           context,
-          title: '英语口语提升（录播+答疑）',
-          subtitle: '随时观看 · 每周一次答疑',
+          title: AppLocalizations.of(context)!.learning_oral_english,
+          subtitle: AppLocalizations.of(context)!.learning_course_schedule_value,
           icon: FeatherIcons.mic,
-          category: '英语学习',
+          category: AppLocalizations.of(context)!.learning_english,
           onTap: () => _navigateToCourseDetail('english_course_1'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
           context,
-          title: '商务英语写作',
-          subtitle: '专业商务邮件与报告写作',
+          title: AppLocalizations.of(context)!.travel_unknown_package,
+          subtitle: AppLocalizations.of(context)!.learning_english_desc,
           icon: FeatherIcons.edit,
-          category: '英语学习',
+          category: AppLocalizations.of(context)!.learning_english,
           onTap: () => _navigateToCourseDetail('english_course_2'),
         ),
         SizedBox(height: 12.h),
         _buildCourseCard(
           context,
-          title: '雅思托福备考',
-          subtitle: '系统化备考，高分通过',
+          title: AppLocalizations.of(context)!.travel_unknown_package,
+          subtitle: AppLocalizations.of(context)!.learning_english_desc,
           icon: FeatherIcons.award,
-          category: '英语学习',
+          category: AppLocalizations.of(context)!.learning_english,
           onTap: () => _navigateToCourseDetail('english_course_3'),
         ),
       ],
@@ -283,7 +283,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
       children: [
         SizedBox(height: 16.h),
         Text(
-          '留学咨询',
+          AppLocalizations.of(context)!.learning_study_abroad,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -292,7 +292,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         ),
         SizedBox(height: 8.h),
         Text(
-          '专业留学规划，助力海外求学梦想',
+          AppLocalizations.of(context)!.learning_study_abroad_desc,
           style: TextStyle(
             fontSize: 14.sp,
             color: AppTheme.textSecondary,
@@ -304,9 +304,9 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           child: _buildServiceCard(
             context,
             title: '留学规划与定位',
-            subtitle: '根据学术背景和职业目标提供个性化留学计划',
+            subtitle: AppLocalizations.of(context)!.learning_study_abroad_desc,
             icon: FeatherIcons.crosshair,
-            duration: '4周',
+            duration: AppLocalizations.of(context)!.learning_course_duration_value,
           ),
         ),
         SizedBox(height: 12.h),
@@ -315,9 +315,9 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           child: _buildServiceCard(
             context,
             title: '院校选择与专业推荐',
-            subtitle: '推荐适合的学校和专业，提供详细信息',
+            subtitle: AppLocalizations.of(context)!.learning_study_abroad_desc,
             icon: FeatherIcons.bookOpen,
-            duration: '2周',
+            duration: AppLocalizations.of(context)!.learning_course_duration_value,
           ),
         ),
         SizedBox(height: 12.h),
@@ -326,9 +326,9 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           child: _buildServiceCard(
             context,
             title: '申请材料准备指导',
-            subtitle: '协助准备个人陈述、推荐信等申请材料',
+            subtitle: AppLocalizations.of(context)!.learning_study_abroad_desc,
             icon: FeatherIcons.edit,
-            duration: '6周',
+            duration: AppLocalizations.of(context)!.learning_course_duration_value,
           ),
         ),
         SizedBox(height: 12.h),
@@ -337,9 +337,9 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           child: _buildServiceCard(
             context,
             title: '语言培训与考试指导',
-            subtitle: '提供语言培训课程和考试指导',
+            subtitle: AppLocalizations.of(context)!.learning_study_abroad_desc,
             icon: FeatherIcons.award,
-            duration: '8周',
+            duration: AppLocalizations.of(context)!.learning_course_duration_value,
           ),
         ),
       ],

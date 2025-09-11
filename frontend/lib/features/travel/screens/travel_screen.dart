@@ -60,14 +60,14 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
     final categories = [
       ResponsiveTagData(
         key: 'domestic',
-        text: '国内旅游',
-        mobileText: '国内游',
+        text: AppLocalizations.of(context)!.travel_domestic,
+        mobileText: AppLocalizations.of(context)!.travel_domestic,
         icon: FeatherIcons.mapPin,
       ),
       ResponsiveTagData(
         key: 'international',
-        text: '国外旅游',
-        mobileText: '国外游',
+        text: AppLocalizations.of(context)!.travel_international,
+        mobileText: AppLocalizations.of(context)!.travel_international,
         icon: FeatherIcons.globe,
       ),
     ];
@@ -121,7 +121,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           title: AppLocalizations.of(context)!.travel_domestic,
           subtitle: AppLocalizations.of(context)!.travel_domestic_desc,
           icon: FeatherIcons.mapPin,
-          category: '国内旅游',
+          category: AppLocalizations.of(context)!.travel_domestic,
           onTap: () => setState(() => _selectedCategory = 'domestic'),
         ),
         SizedBox(height: 12.h),
@@ -130,7 +130,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           title: AppLocalizations.of(context)!.travel_international,
           subtitle: AppLocalizations.of(context)!.travel_international_desc,
           icon: FeatherIcons.globe,
-          category: '国外旅游',
+          category: AppLocalizations.of(context)!.travel_international,
           onTap: () => setState(() => _selectedCategory = 'international'),
         ),
       ],
@@ -195,7 +195,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
       children: [
         SizedBox(height: 16.h),
         Text(
-          '国外旅游',
+          AppLocalizations.of(context)!.travel_international,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -204,7 +204,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
         ),
         SizedBox(height: 8.h),
         Text(
-          '体验异国风情，感受不同文化的魅力',
+          AppLocalizations.of(context)!.travel_international_desc,
           style: TextStyle(
             fontSize: 14.sp,
             color: AppTheme.textSecondary,
@@ -213,28 +213,28 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
         SizedBox(height: 24.h),
         _buildPackageCard(
           context,
-          title: '日本樱花季深度游',
-          subtitle: '东京、京都、大阪7日赏樱之旅',
+          title: AppLocalizations.of(context)!.travel_japan,
+          subtitle: AppLocalizations.of(context)!.travel_japan_desc,
           icon: FeatherIcons.heart,
-          category: '自然风光',
+          category: AppLocalizations.of(context)!.travel_natural_scenery,
           onTap: () => _navigateToPackageDetail('4'),
         ),
         SizedBox(height: 12.h),
         _buildPackageCard(
           context,
-          title: '欧洲文化探索之旅',
-          subtitle: '巴黎、罗马、巴塞罗那艺术文化深度体验',
+          title: AppLocalizations.of(context)!.travel_europe,
+          subtitle: AppLocalizations.of(context)!.travel_europe_desc,
           icon: FeatherIcons.bookOpen,
-          category: '文化体验',
+          category: AppLocalizations.of(context)!.travel_cultural_experience,
           onTap: () => _navigateToPackageDetail('5'),
         ),
         SizedBox(height: 12.h),
         _buildPackageCard(
           context,
-          title: '东南亚海岛度假',
-          subtitle: '普吉岛、巴厘岛、马尔代夫海岛休闲游',
+          title: AppLocalizations.of(context)!.travel_southeast_asia,
+          subtitle: AppLocalizations.of(context)!.travel_southeast_asia_desc,
           icon: FeatherIcons.sun,
-          category: '休闲度假',
+          category: AppLocalizations.of(context)!.travel_leisure,
           onTap: () => _navigateToPackageDetail('6'),
         ),
       ],
@@ -429,51 +429,51 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
     switch (packageId) {
       case '1':
         return {
-          'title': '西湖一日游攻略',
-          'subtitle': '早上断桥、下午灵隐、傍晚苏堤看日落',
-          'category': '文化体验',
+          'title': AppLocalizations.of(context)!.travel_west_lake,
+          'subtitle': AppLocalizations.of(context)!.travel_west_lake_desc,
+          'category': AppLocalizations.of(context)!.travel_cultural_experience,
           'icon': FeatherIcons.map,
         };
       case '2':
         return {
-          'title': '成都·火锅+大熊猫',
-          'subtitle': '必吃推荐与最佳参观时段',
-          'category': '美食文化',
+          'title': AppLocalizations.of(context)!.travel_chengdu,
+          'subtitle': AppLocalizations.of(context)!.travel_chengdu_desc,
+          'category': AppLocalizations.of(context)!.travel_food_culture,
           'icon': FeatherIcons.heart,
         };
       case '3':
         return {
-          'title': '三亚海边拍照点合集',
-          'subtitle': '椰林沙滩、礁石海湾、最佳光线时间',
-          'category': '自然风光',
+          'title': AppLocalizations.of(context)!.travel_sanya,
+          'subtitle': AppLocalizations.of(context)!.travel_sanya_desc,
+          'category': AppLocalizations.of(context)!.travel_natural_scenery,
           'icon': FeatherIcons.camera,
         };
       case '4':
         return {
-          'title': '日本樱花季深度游',
-          'subtitle': '东京、京都、大阪7日赏樱之旅',
-          'category': '自然风光',
+          'title': AppLocalizations.of(context)!.travel_japan,
+          'subtitle': AppLocalizations.of(context)!.travel_japan_desc,
+          'category': AppLocalizations.of(context)!.travel_natural_scenery,
           'icon': FeatherIcons.heart,
         };
       case '5':
         return {
-          'title': '欧洲文化探索之旅',
-          'subtitle': '巴黎、罗马、巴塞罗那艺术文化深度体验',
-          'category': '文化体验',
+          'title': AppLocalizations.of(context)!.travel_europe,
+          'subtitle': AppLocalizations.of(context)!.travel_europe_desc,
+          'category': AppLocalizations.of(context)!.travel_cultural_experience,
           'icon': FeatherIcons.bookOpen,
         };
       case '6':
         return {
-          'title': '东南亚海岛度假',
-          'subtitle': '普吉岛、巴厘岛、马尔代夫海岛休闲游',
-          'category': '休闲度假',
+          'title': AppLocalizations.of(context)!.travel_southeast_asia,
+          'subtitle': AppLocalizations.of(context)!.travel_southeast_asia_desc,
+          'category': AppLocalizations.of(context)!.travel_leisure,
           'icon': FeatherIcons.sun,
         };
       default:
         return {
-          'title': '未知套餐',
-          'subtitle': '套餐信息不可用',
-          'category': '其他',
+          'title': AppLocalizations.of(context)!.travel_unknown_package,
+          'subtitle': AppLocalizations.of(context)!.travel_package_unavailable,
+          'category': AppLocalizations.of(context)!.travel_other,
           'icon': FeatherIcons.helpCircle,
         };
     }

@@ -352,7 +352,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  '数量: ${item.quantity}',
+                  '${AppLocalizations.of(context)!.products_quantity}: ${item.quantity}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppTheme.textSecondary,
                   ),
@@ -551,7 +551,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('订单创建失败，请重试'),
+            content: Text(AppLocalizations.of(context)!.checkout_order_failed),
             backgroundColor: AppTheme.errorColor,
           ),
         );
@@ -560,7 +560,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('订单创建失败：${e.toString()}'),
+            content: Text(AppLocalizations.of(context)!.checkout_order_failed),
             backgroundColor: AppTheme.errorColor,
           ),
         );

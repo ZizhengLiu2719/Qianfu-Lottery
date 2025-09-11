@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../providers/travels_provider.dart';
 import '../../../api/travel_packages_repository.dart';
 import '../../../api/dio_client.dart';
@@ -56,7 +57,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('旅游套餐详情'),
+        title: Text(AppLocalizations.of(context)!.travel_package_details),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
@@ -165,7 +166,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '套餐详情',
+          AppLocalizations.of(context)!.travel_package_details,
           style: TextStyle(
             fontSize: isDesktop ? 18.sp : 20.sp,
             fontWeight: FontWeight.bold,
@@ -176,7 +177,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
         _buildDetailItem(
           context,
           icon: FeatherIcons.clock,
-          title: '行程天数',
+          title: AppLocalizations.of(context)!.travel_itinerary_days,
           content: _getDuration(),
           isDesktop: isDesktop,
         ),
@@ -184,7 +185,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
         _buildDetailItem(
           context,
           icon: FeatherIcons.mapPin,
-          title: '目的地',
+          title: AppLocalizations.of(context)!.travel_destination,
           content: _getLocation(),
           isDesktop: isDesktop,
         ),
@@ -192,7 +193,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
         _buildDetailItem(
           context,
           icon: FeatherIcons.users,
-          title: '适合人群',
+          title: AppLocalizations.of(context)!.travel_target_audience,
           content: _getTargetAudience(),
           isDesktop: isDesktop,
         ),
@@ -200,7 +201,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
         _buildDetailItem(
           context,
           icon: FeatherIcons.star,
-          title: '套餐特色',
+          title: AppLocalizations.of(context)!.travel_features,
           content: _getFeatures(),
           isDesktop: isDesktop,
         ),
@@ -264,7 +265,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
       child: Column(
         children: [
           Text(
-            isTravelRegistered ? '已注册此旅游套餐' : '立即注册旅游套餐',
+            isTravelRegistered ? AppLocalizations.of(context)!.travel_registered : AppLocalizations.of(context)!.travel_register_now,
             style: TextStyle(
               fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
@@ -318,7 +319,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
                                 ),
                               )
                             : Text(
-                                isTravelRegistered ? '已注册' : '注册套餐',
+                                isTravelRegistered ? AppLocalizations.of(context)!.travel_registered : AppLocalizations.of(context)!.travel_register_now,
                                 style: TextStyle(
                                   fontSize: isDesktop ? 14.sp : 16.sp,
                                   color: Colors.white,
@@ -356,7 +357,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            '取消注册',
+                            AppLocalizations.of(context)!.travel_cancel_registration,
                             style: TextStyle(
                               fontSize: isDesktop ? 14.sp : 16.sp,
                               color: Colors.red,
@@ -386,7 +387,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
     if (isAlreadyRegistered) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('您已经注册过此旅游套餐！'),
+          content: Text(AppLocalizations.of(context)!.travel_already_registered),
           backgroundColor: Colors.orange,
         ),
       );
@@ -426,10 +427,10 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('注册成功！'),
+          content: Text(AppLocalizations.of(context)!.travel_registration_success),
           backgroundColor: Colors.green,
           action: SnackBarAction(
-            label: '查看我的旅游',
+            label: AppLocalizations.of(context)!.travel_view_my_travel,
             textColor: Colors.white,
             onPressed: () {
               // TODO: 导航到我的旅游页面
@@ -440,7 +441,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('注册失败：${e.toString()}'),
+          content: Text(AppLocalizations.of(context)!.common_failed),
           backgroundColor: Colors.red,
         ),
       );
@@ -459,7 +460,7 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
     ref.read(travelsProvider.notifier).removeTravel(widget.packageId);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('已取消注册'),
+        content: Text(AppLocalizations.of(context)!.travel_registration_cancelled),
         backgroundColor: Colors.orange,
       ),
     );
@@ -468,76 +469,76 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
   String _getDuration() {
     switch (widget.packageId) {
       case 'domestic_1':
-        return '1日游';
+        return AppLocalizations.of(context)!.travel_duration;
       case 'domestic_2':
-        return '2日游';
+        return AppLocalizations.of(context)!.travel_duration;
       case 'domestic_3':
-        return '3日游';
+        return AppLocalizations.of(context)!.travel_duration;
       case 'international_1':
-        return '7日游';
+        return AppLocalizations.of(context)!.travel_duration;
       case 'international_2':
-        return '10日游';
+        return AppLocalizations.of(context)!.travel_duration;
       case 'international_3':
-        return '5日游';
+        return AppLocalizations.of(context)!.travel_duration;
       default:
-        return '待定';
+        return AppLocalizations.of(context)!.common_empty;
     }
   }
 
   String _getLocation() {
     switch (widget.packageId) {
       case 'domestic_1':
-        return '杭州';
+        return 'Hangzhou';
       case 'domestic_2':
-        return '成都';
+        return 'Chengdu';
       case 'domestic_3':
-        return '三亚';
+        return 'Sanya';
       case 'international_1':
-        return '日本（东京、京都、大阪）';
+        return 'Japan (Tokyo, Kyoto, Osaka)';
       case 'international_2':
-        return '欧洲（巴黎、罗马、巴塞罗那）';
+        return 'Europe (Paris, Rome, Barcelona)';
       case 'international_3':
-        return '东南亚（普吉岛、巴厘岛、马尔代夫）';
+        return 'Southeast Asia (Phuket, Bali, Maldives)';
       default:
-        return '待定';
+        return AppLocalizations.of(context)!.common_empty;
     }
   }
 
   String _getTargetAudience() {
     switch (widget.packageId) {
       case 'domestic_1':
-        return '文化爱好者，喜欢历史古迹的游客';
+        return AppLocalizations.of(context)!.travel_cultural_experience;
       case 'domestic_2':
-        return '美食爱好者，喜欢大熊猫的游客';
+        return AppLocalizations.of(context)!.travel_food_culture;
       case 'domestic_3':
-        return '摄影爱好者，喜欢海景的游客';
+        return AppLocalizations.of(context)!.travel_natural_scenery;
       case 'international_1':
-        return '樱花爱好者，喜欢日本文化的游客';
+        return AppLocalizations.of(context)!.travel_japan_desc;
       case 'international_2':
-        return '艺术爱好者，喜欢欧洲文化的游客';
+        return AppLocalizations.of(context)!.travel_europe_desc;
       case 'international_3':
-        return '度假爱好者，喜欢海岛风光的游客';
+        return AppLocalizations.of(context)!.travel_leisure;
       default:
-        return '所有游客';
+        return AppLocalizations.of(context)!.travel_other;
     }
   }
 
   String _getFeatures() {
     switch (widget.packageId) {
       case 'domestic_1':
-        return '经典西湖十景，专业导游讲解，特色美食体验';
+        return AppLocalizations.of(context)!.travel_west_lake_desc;
       case 'domestic_2':
-        return '正宗川菜品尝，大熊猫基地参观，成都文化体验';
+        return AppLocalizations.of(context)!.travel_chengdu_desc;
       case 'domestic_3':
-        return '专业摄影指导，最佳拍摄时间安排，海景酒店住宿';
+        return AppLocalizations.of(context)!.travel_sanya_desc;
       case 'international_1':
-        return '樱花季限定，日式温泉体验，和服文化体验';
+        return AppLocalizations.of(context)!.travel_japan_desc;
       case 'international_2':
-        return '艺术博物馆参观，米其林餐厅体验，欧洲古建筑游览';
+        return AppLocalizations.of(context)!.travel_europe_desc;
       case 'international_3':
-        return '海岛度假村住宿，水上活动体验，热带风情体验';
+        return AppLocalizations.of(context)!.travel_southeast_asia_desc;
       default:
-        return '特色体验';
+        return AppLocalizations.of(context)!.travel_notes;
     }
   }
 

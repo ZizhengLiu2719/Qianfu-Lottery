@@ -44,7 +44,7 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('我的旅游预约'),
+        title: Text(AppLocalizations.of(context)!.travel_my_appointments),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
@@ -57,7 +57,7 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
             IconButton(
               icon: Icon(FeatherIcons.trash2),
               onPressed: _showClearAllDialog,
-              tooltip: '清空所有预约',
+              tooltip: AppLocalizations.of(context)!.cart_clear,
             ),
         ],
       ),
@@ -129,7 +129,7 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
           
           // 预约列表
           Text(
-            '预约列表 (${travels.length})',
+            '${AppLocalizations.of(context)!.appointments_title} (${travels.length})',
             style: TextStyle(
               fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
@@ -158,7 +158,7 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
         children: [
           _buildStatItem(
             context, 
-            '国内旅游', 
+            AppLocalizations.of(context)!.travel_domestic, 
             stats['domestic'] ?? 0, 
             FeatherIcons.home, 
             Colors.blue, 
@@ -167,7 +167,7 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
           SizedBox(width: 24.w),
           _buildStatItem(
             context, 
-            '国外旅游', 
+            AppLocalizations.of(context)!.travel_international, 
             stats['international'] ?? 0, 
             FeatherIcons.globe, 
             Colors.green, 
@@ -176,7 +176,7 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
           SizedBox(width: 24.w),
           _buildStatItem(
             context, 
-            '总计', 
+            AppLocalizations.of(context)!.orders_total_cost, 
             stats['total'] ?? 0, 
             FeatherIcons.map, 
             AppTheme.primaryColor, 
@@ -397,12 +397,12 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('取消预约'),
-        content: Text('确定要取消 "${travel.title}" 的预约吗？'),
+        title: Text(AppLocalizations.of(context)!.confirm_cancel_appointment),
+        content: Text(AppLocalizations.of(context)!.confirm_cancel_appointment),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('取消'),
+            child: Text(AppLocalizations.of(context)!.common_cancel),
           ),
           TextButton(
             onPressed: () {
@@ -413,12 +413,12 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
               });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('已取消预约'),
+                  content: Text(AppLocalizations.of(context)!.appointments_status_cancelled),
                   backgroundColor: Colors.orange,
                 ),
               );
             },
-            child: Text('确定', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context)!.common_confirm, style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -429,12 +429,12 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('清空所有预约'),
-        content: Text('确定要清空所有旅游预约吗？此操作不可撤销。'),
+        title: Text(AppLocalizations.of(context)!.cart_clear),
+        content: Text(AppLocalizations.of(context)!.confirm_delete),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('取消'),
+            child: Text(AppLocalizations.of(context)!.common_cancel),
           ),
           TextButton(
             onPressed: () {
@@ -442,12 +442,12 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
               ref.read(travelsProvider.notifier).clearAllTravels();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('已清空所有预约'),
+                  content: Text(AppLocalizations.of(context)!.common_success),
                   backgroundColor: Colors.red,
                 ),
               );
             },
-            child: Text('确定', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context)!.common_confirm, style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

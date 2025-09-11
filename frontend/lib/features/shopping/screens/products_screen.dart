@@ -186,7 +186,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  '暂无商品',
+                  AppLocalizations.of(context)!.common_empty,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppTheme.textTertiary,
                   ),
@@ -315,7 +315,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         SizedBox(height: 4.h),
                         // 库存状态
                         Text(
-                          '库存: ${product.stock}',
+                          '${AppLocalizations.of(context)!.products_stock}: ${product.stock}',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: product.isInStock ? AppTheme.successColor : AppTheme.errorColor,
                           ),

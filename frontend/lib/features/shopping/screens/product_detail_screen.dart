@@ -208,7 +208,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        '库存: ${product.stock}',
+                        '${AppLocalizations.of(context)!.products_stock}: ${product.stock}',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: product.isInStock ? AppTheme.successColor : AppTheme.errorColor,
                           fontWeight: FontWeight.w600,
@@ -297,7 +297,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                         Icon(FeatherIcons.creditCard, color: AppTheme.primaryColor, size: 20.sp),
                         SizedBox(width: 8.w),
                         Text(
-                          '我的千彩豆余额: ',
+                          '${AppLocalizations.of(context)!.qiancaidou_balance}: ',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         Text(
