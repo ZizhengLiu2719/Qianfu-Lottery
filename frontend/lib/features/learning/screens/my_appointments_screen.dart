@@ -326,13 +326,13 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
 
   Color _getCategoryColor(String category) {
     switch (category) {
-      case AppLocalizations.of(context)!.learning_ai_programming_tag:
+      case 'AI编程':
         return Colors.blue;
-      case AppLocalizations.of(context)!.learning_english_category:
+      case '英语学习':
         return Colors.green;
-      case AppLocalizations.of(context)!.learning_study_abroad_category:
+      case '留学咨询':
         return Colors.purple;
-      case AppLocalizations.of(context)!.learning_summer_camp_category:
+      case '夏令营':
         return Colors.orange;
       default:
         return AppTheme.primaryColor;

@@ -610,5 +610,7 @@
   "common_confirm_clear_content": "确定要清空所有项目吗？此操作不可撤销。",
   "common_deleted": "项目已删除",
   "common_cleared": "所有项目已清空",
-  "common_clear": "清空"
+  "common_clear": "清空",
+
+  "travel_details": "旅游详情"
 }

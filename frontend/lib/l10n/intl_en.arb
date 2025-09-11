@@ -610,5 +610,7 @@
   "common_confirm_clear_content": "Are you sure you want to clear all items? This action cannot be undone.",
   "common_deleted": "Item deleted",
   "common_cleared": "All items cleared",
-  "common_clear": "Clear"
+  "common_clear": "Clear",
+
+  "travel_details": "Travel Details"
 }
