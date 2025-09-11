@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:html' as html;
 
 import '../../../core/theme/app_theme.dart';
@@ -356,6 +357,96 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
     }
   }
 
+  // 检查URL是否为有效的data URL
+  bool _isValidDataUrl(String? url) {
+    if (url == null || url.isEmpty) return false;
+    return url.startsWith('data:image/') && url.contains('base64,');
+  }
+
+  // 获取头像显示组件
+  Widget _buildAvatarWidget(String? avatarUrl) {
+    if (avatarUrl == null || avatarUrl.isEmpty) {
+      return Text(
+        widget.initialName.isNotEmpty ? widget.initialName.characters.first : '-',
+        style: TextStyle(
+          color: AppTheme.textPrimary,
+          fontSize: 36.sp,
+          fontWeight: FontWeight.w600,
+        ),
+      );
+    }
+
+    // 如果是data URL，直接使用Image.memory
+    if (_isValidDataUrl(avatarUrl)) {
+      try {
+        final base64Data = avatarUrl.split('base64,')[1];
+        final bytes = base64Decode(base64Data);
+        return Image.memory(
+          bytes,
+          width: 128,
+          height: 128,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            print('Data URL 头像加载失败: $error');
+            return _buildFallbackAvatar();
+          },
+        );
+      } catch (e) {
+        print('Data URL 解析失败: $e');
+        return _buildFallbackAvatar();
+      }
+    }
+
+    // 如果是网络URL，使用CachedNetworkImage
+    return CachedNetworkImage(
+      imageUrl: avatarUrl,
+      width: 128,
+      height: 128,
+      fit: BoxFit.cover,
+      memCacheWidth: 256,
+      memCacheHeight: 256,
+      maxWidthDiskCache: 512,
+      maxHeightDiskCache: 512,
+      httpHeaders: const {
+        'Cache-Control': 'max-age=3600',
+      },
+      placeholder: (context, url) => Container(
+        width: 128,
+        height: 128,
+        color: AppTheme.primaryColor.withOpacity(0.1),
+        child: Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2.0,
+            valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
+          ),
+        ),
+      ),
+      errorWidget: (context, url, error) {
+        print('网络头像加载失败: $url, 错误: $error');
+        return _buildFallbackAvatar();
+      },
+    );
+  }
+
+  // 构建备用头像
+  Widget _buildFallbackAvatar() {
+    return Container(
+      width: 128,
+      height: 128,
+      color: AppTheme.primaryColor.withOpacity(0.1),
+      child: Center(
+        child: Text(
+          widget.initialName.isNotEmpty ? widget.initialName.characters.first : '-',
+          style: TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 36.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> _pickAvatarOld() async {
     // Web/Flutter 通用：使用 file_picker/web 或 html input（此处使用简化实现：showDialog 提示由前端补齐插件）
     // 为了跨平台，这里先使用 image_picker_web 的 API 占位（用户可添加依赖）
@@ -409,6 +500,12 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
     final currentUser = ref.watch(currentUserProvider);
     final avatarUrl = currentUser?.avatarUrl ?? _avatarPath;
     
+    // 调试信息
+    if (avatarUrl != null) {
+      print('头像URL: $avatarUrl');
+      print('是否为data URL: ${avatarUrl.startsWith('data:')}');
+    }
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween, // 使用spaceBetween确保内容可见
       children: [
@@ -448,17 +545,9 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
             CircleAvatar(
               radius: 64, // 进一步增大头像半径到64
               backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
-              backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
-              child: avatarUrl == null
-                  ? Text(
-                      widget.initialName.isNotEmpty ? widget.initialName.characters.first : '-',
-                      style: TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontSize: 36.sp, // 进一步增大字体到36
-                        fontWeight: FontWeight.w600,
-                      ),
-                    )
-                  : null,
+              child: ClipOval(
+                child: _buildAvatarWidget(avatarUrl),
+              ),
             ),
             SizedBox(height: 4.h), // 进一步减少间距
             TextButton(
