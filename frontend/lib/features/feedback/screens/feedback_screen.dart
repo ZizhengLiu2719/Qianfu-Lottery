@@ -252,18 +252,18 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
   bool _isSubmitting = false;
 
   final List<Map<String, String>> _categories = [
-    {'value': 'general', 'label': '一般反馈'},
-    {'value': 'bug', 'label': '错误报告'},
-    {'value': 'feature', 'label': '功能建议'},
-    {'value': 'suggestion', 'label': '改进建议'},
-    {'value': 'complaint', 'label': '投诉'},
+    {'value': 'general', 'label': AppLocalizations.of(context)!.feedback_category_general},
+    {'value': 'bug', 'label': AppLocalizations.of(context)!.feedback_category_bug},
+    {'value': 'feature', 'label': AppLocalizations.of(context)!.feedback_category_feature},
+    {'value': 'suggestion', 'label': AppLocalizations.of(context)!.feedback_category_suggestion},
+    {'value': 'complaint', 'label': AppLocalizations.of(context)!.feedback_category_complaint},
   ];
 
   final List<Map<String, String>> _priorities = [
-    {'value': 'low', 'label': '低'},
-    {'value': 'medium', 'label': '中'},
-    {'value': 'high', 'label': '高'},
-    {'value': 'urgent', 'label': '紧急'},
+    {'value': 'low', 'label': AppLocalizations.of(context)!.feedback_priority_low},
+    {'value': 'medium', 'label': AppLocalizations.of(context)!.feedback_priority_medium},
+    {'value': 'high', 'label': AppLocalizations.of(context)!.feedback_priority_high},
+    {'value': 'urgent', 'label': AppLocalizations.of(context)!.feedback_priority_urgent},
   ];
 
   @override
@@ -490,7 +490,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('反馈提交成功，我们会尽快处理'),
+              content: Text(AppLocalizations.of(context)!.success_feedback_submitted),
               backgroundColor: Colors.green,
             ),
           );
@@ -500,7 +500,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('提交失败，请稍后重试'),
+              content: Text(AppLocalizations.of(context)!.common_failed),
               backgroundColor: Colors.red,
             ),
           );
@@ -510,7 +510,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('提交失败: $e'),
+            content: Text('${AppLocalizations.of(context)!.common_failed}: $e'),
             backgroundColor: Colors.red,
           ),
         );

@@ -350,7 +350,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               ),
             ),
             child: Text(
-              '登录后购买',
+              AppLocalizations.of(context)!.products_login_to_buy,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -493,7 +493,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
     if (!ref.read(isAuthenticatedProvider)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('请先登录'),
+          content: Text(AppLocalizations.of(context)!.products_please_login),
           backgroundColor: AppTheme.errorColor,
         ),
       );

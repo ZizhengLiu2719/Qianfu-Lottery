@@ -35,12 +35,12 @@ class CartScreen extends ConsumerWidget {
           IconButton(
             onPressed: () => context.push('/orders'),
             icon: Icon(FeatherIcons.package),
-            tooltip: '我的订单',
+            tooltip: AppLocalizations.of(context)!.cart_my_orders,
           ),
           if (!isEmpty)
             TextButton(
               onPressed: () => _showClearCartDialog(context, ref),
-              child: Text('清空'),
+              child: Text(AppLocalizations.of(context)!.cart_clear),
             ),
         ],
       ),
@@ -150,7 +150,7 @@ class CartScreen extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(width: 4.w),
-                    const Text('千彩豆'),
+                    Text(AppLocalizations.of(context)!.cart_qiancai_dou),
                     SizedBox(width: 4.w),
                     QiancaiDouIcon(
                       size: 14.0,
@@ -243,7 +243,7 @@ class CartScreen extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(width: 4.w),
-                    const Text('千彩豆'),
+                    Text(AppLocalizations.of(context)!.cart_qiancai_dou),
                     SizedBox(width: 4.w),
                     QiancaiDouIcon(
                       size: 20.0,

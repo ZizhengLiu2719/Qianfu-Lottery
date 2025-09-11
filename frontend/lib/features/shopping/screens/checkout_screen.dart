@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/qiancai_dou_icon.dart';
 import '../providers/cart_provider.dart';
@@ -57,7 +58,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            '确认订单',
+            AppLocalizations.of(context)!.checkout_title,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: AppTheme.textPrimary,
@@ -79,14 +80,14 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               ),
               SizedBox(height: 16.h),
               Text(
-                '购物车为空',
+                AppLocalizations.of(context)!.cart_empty_cart,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: AppTheme.textTertiary,
                 ),
               ),
               SizedBox(height: 8.h),
               Text(
-                '请先添加商品到购物车',
+                AppLocalizations.of(context)!.cart_empty_cart_desc,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppTheme.textTertiary,
                 ),
@@ -103,7 +104,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          '确认订单',
+          AppLocalizations.of(context)!.checkout_title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
@@ -160,7 +161,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 Icon(FeatherIcons.mapPin, color: AppTheme.primaryColor, size: 20.sp),
                 SizedBox(width: 8.w),
                 Text(
-                  '收货地址',
+                  AppLocalizations.of(context)!.checkout_shipping_address,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -181,7 +182,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     );
                   },
                   child: Text(
-                    _selectedAddress == null ? '选择地址' : '更换地址',
+                    _selectedAddress == null ? AppLocalizations.of(context)!.checkout_select_address : AppLocalizations.of(context)!.checkout_change_address,
                     style: TextStyle(
                       color: AppTheme.primaryColor,
                       fontWeight: FontWeight.w600,
@@ -213,7 +214,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      '请选择收货地址',
+                      AppLocalizations.of(context)!.checkout_select_address,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppTheme.textTertiary,
                       ),
@@ -256,7 +257,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                               borderRadius: BorderRadius.circular(4.r),
                             ),
                             child: Text(
-                              '默认',
+                              AppLocalizations.of(context)!.checkout_default,
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: AppTheme.primaryColor,
                                 fontWeight: FontWeight.w600,
@@ -305,7 +306,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 Icon(FeatherIcons.package, color: AppTheme.primaryColor, size: 20.sp),
                 SizedBox(width: 8.w),
                 Text(
-                  '商品清单',
+                  AppLocalizations.of(context)!.checkout_order_items,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -406,7 +407,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 Icon(FeatherIcons.messageSquare, color: AppTheme.primaryColor, size: 20.sp),
                 SizedBox(width: 8.w),
                 Text(
-                  '订单备注',
+                  AppLocalizations.of(context)!.checkout_note,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -418,7 +419,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               onChanged: (value) => _note = value,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: '请输入订单备注（选填）',
+                hintText: AppLocalizations.of(context)!.checkout_note_hint,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
                   borderSide: BorderSide(color: AppTheme.borderColor),
@@ -456,7 +457,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '总计',
+                AppLocalizations.of(context)!.checkout_total,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppTheme.textSecondary,
                   fontSize: isDesktop ? 8.sp : 10.sp,
@@ -502,7 +503,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                       ),
                     )
                   : Text(
-                      '提交订单',
+                      AppLocalizations.of(context)!.checkout_submit_order,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -520,7 +521,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     if (_selectedAddress == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('请选择收货地址'),
+          content: Text(AppLocalizations.of(context)!.checkout_select_address),
           backgroundColor: AppTheme.errorColor,
         ),
       );

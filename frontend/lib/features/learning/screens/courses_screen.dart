@@ -118,7 +118,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
       children: [
         SizedBox(height: 16.h),
         Text(
-          '学习彩 - 知识改变命运',
+          AppLocalizations.of(context)!.learning_title,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -127,7 +127,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         ),
         SizedBox(height: 8.h),
         Text(
-          '选择你感兴趣的领域，开始你的学习之旅',
+          AppLocalizations.of(context)!.learning_subtitle,
           style: TextStyle(
             fontSize: 14.sp,
             color: AppTheme.textSecondary,
@@ -136,8 +136,8 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         SizedBox(height: 24.h),
         _buildCategoryCard(
           context,
-          title: 'AI编程学习',
-          subtitle: '掌握人工智能编程技能，开启未来职业道路',
+          title: AppLocalizations.of(context)!.learning_ai_programming,
+          subtitle: AppLocalizations.of(context)!.learning_ai_programming_desc,
           icon: FeatherIcons.cpu,
           category: 'AI编程学习',
           onTap: () => setState(() => _selectedCategory = 'ai'),
@@ -145,8 +145,8 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         SizedBox(height: 12.h),
         _buildCategoryCard(
           context,
-          title: '英语学习',
-          subtitle: '提升英语水平，拓展国际视野',
+          title: AppLocalizations.of(context)!.learning_english,
+          subtitle: AppLocalizations.of(context)!.learning_english_desc,
           icon: FeatherIcons.mic,
           category: '英语学习',
           onTap: () => setState(() => _selectedCategory = 'english'),
@@ -154,8 +154,8 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         SizedBox(height: 12.h),
         _buildCategoryCard(
           context,
-          title: '留学咨询',
-          subtitle: '专业留学规划，助力海外求学梦想',
+          title: AppLocalizations.of(context)!.learning_study_abroad,
+          subtitle: AppLocalizations.of(context)!.learning_study_abroad_desc,
           icon: FeatherIcons.globe,
           category: '留学咨询',
           onTap: () => setState(() => _selectedCategory = 'study_abroad'),
@@ -163,8 +163,8 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         SizedBox(height: 12.h),
         _buildCategoryCard(
           context,
-          title: '夏令营',
-          subtitle: '美国顶级夏令营，体验国际化教育',
+          title: AppLocalizations.of(context)!.learning_summer_camp,
+          subtitle: AppLocalizations.of(context)!.learning_summer_camp_desc,
           icon: FeatherIcons.sun,
           category: '夏令营',
           onTap: () => setState(() => _selectedCategory = 'summer_camp'),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routing/app_router.dart';
 import '../providers/travels_provider.dart';
@@ -80,7 +81,7 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
           ),
           SizedBox(height: 24.h),
           Text(
-            '暂无旅游预约',
+            AppLocalizations.of(context)!.travel_no_appointments,
             style: TextStyle(
               fontSize: isDesktop ? 18.sp : 20.sp,
               fontWeight: FontWeight.w600,
@@ -89,7 +90,7 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
           ),
           SizedBox(height: 8.h),
           Text(
-            '去旅游彩页面选择感兴趣的套餐吧',
+            AppLocalizations.of(context)!.travel_go_to_travel_page,
             style: TextStyle(
               fontSize: isDesktop ? 14.sp : 16.sp,
               color: AppTheme.textTertiary,
@@ -99,7 +100,7 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
           ElevatedButton.icon(
             onPressed: () => context.go(AppRoutes.travel),
             icon: Icon(FeatherIcons.arrowLeft),
-            label: Text('返回旅游彩'),
+            label: Text(AppLocalizations.of(context)!.travel_back_to_travel),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryColor,
               foregroundColor: Colors.white,

@@ -37,7 +37,7 @@ class EntertainmentScreen extends ConsumerWidget {
               ),
               SizedBox(height: 16.h),
               Text(
-                '精彩内容正在筹备中，敬请期待！',
+                AppLocalizations.of(context)!.entertainment_coming_soon_desc,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: AppTheme.textSecondary,
                 ),

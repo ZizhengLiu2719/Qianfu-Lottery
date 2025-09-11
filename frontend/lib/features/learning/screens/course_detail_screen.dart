@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/appointments_provider.dart';
 
@@ -38,7 +39,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('课程详情'),
+        title: Text(AppLocalizations.of(context)!.learning_course_details),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
@@ -147,7 +148,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '课程详情',
+          AppLocalizations.of(context)!.learning_course_details,
           style: TextStyle(
             fontSize: isDesktop ? 18.sp : 20.sp,
             fontWeight: FontWeight.bold,
@@ -158,32 +159,32 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
         _buildDetailItem(
           context,
           icon: FeatherIcons.clock,
-          title: '课程时长',
-          content: '60分钟',
+          title: AppLocalizations.of(context)!.learning_course_duration,
+          content: AppLocalizations.of(context)!.learning_course_duration_value,
           isDesktop: isDesktop,
         ),
         SizedBox(height: 12.h),
         _buildDetailItem(
           context,
           icon: FeatherIcons.calendar,
-          title: '上课时间',
-          content: '每周二/四 晚 20:00',
+          title: AppLocalizations.of(context)!.learning_course_schedule,
+          content: AppLocalizations.of(context)!.learning_course_schedule_value,
           isDesktop: isDesktop,
         ),
         SizedBox(height: 12.h),
         _buildDetailItem(
           context,
           icon: FeatherIcons.users,
-          title: '适合人群',
-          content: '编程初学者，对AI感兴趣的学生',
+          title: AppLocalizations.of(context)!.learning_course_target_audience,
+          content: AppLocalizations.of(context)!.learning_course_target_audience_value,
           isDesktop: isDesktop,
         ),
         SizedBox(height: 12.h),
         _buildDetailItem(
           context,
           icon: FeatherIcons.bookOpen,
-          title: '课程内容',
-          content: 'Python基础、机器学习入门、深度学习概念',
+          title: AppLocalizations.of(context)!.learning_course_content,
+          content: AppLocalizations.of(context)!.learning_course_content_value,
           isDesktop: isDesktop,
         ),
       ],

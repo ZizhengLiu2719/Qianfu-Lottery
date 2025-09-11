@@ -109,7 +109,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
         ),
         SizedBox(height: 8.h),
         Text(
-          '选择你感兴趣的旅游类型，开始你的探索之旅',
+          AppLocalizations.of(context)!.travel_subtitle,
           style: TextStyle(
             fontSize: 14.sp,
             color: AppTheme.textSecondary,
@@ -118,8 +118,8 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
         SizedBox(height: 24.h),
         _buildCategoryCard(
           context,
-          title: '国内旅游',
-          subtitle: '探索中华大地的美丽风景和深厚文化',
+          title: AppLocalizations.of(context)!.travel_domestic,
+          subtitle: AppLocalizations.of(context)!.travel_domestic_desc,
           icon: FeatherIcons.mapPin,
           category: '国内旅游',
           onTap: () => setState(() => _selectedCategory = 'domestic'),
@@ -127,8 +127,8 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
         SizedBox(height: 12.h),
         _buildCategoryCard(
           context,
-          title: '国外旅游',
-          subtitle: '体验异国风情，感受不同文化的魅力',
+          title: AppLocalizations.of(context)!.travel_international,
+          subtitle: AppLocalizations.of(context)!.travel_international_desc,
           icon: FeatherIcons.globe,
           category: '国外旅游',
           onTap: () => setState(() => _selectedCategory = 'international'),
@@ -143,7 +143,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
       children: [
         SizedBox(height: 16.h),
         Text(
-          '国内旅游',
+          AppLocalizations.of(context)!.travel_domestic,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -152,7 +152,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
         ),
         SizedBox(height: 8.h),
         Text(
-          '探索中华大地的美丽风景和深厚文化',
+          AppLocalizations.of(context)!.travel_domestic_desc,
           style: TextStyle(
             fontSize: 14.sp,
             color: AppTheme.textSecondary,
@@ -161,28 +161,28 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
         SizedBox(height: 24.h),
         _buildPackageCard(
           context,
-          title: '西湖一日游攻略',
-          subtitle: '早上断桥、下午灵隐、傍晚苏堤看日落',
+          title: AppLocalizations.of(context)!.travel_west_lake,
+          subtitle: AppLocalizations.of(context)!.travel_west_lake_desc,
           icon: FeatherIcons.map,
-          category: '文化体验',
+          category: AppLocalizations.of(context)!.travel_cultural_experience,
           onTap: () => _navigateToPackageDetail('1'),
         ),
         SizedBox(height: 12.h),
         _buildPackageCard(
           context,
-          title: '成都·火锅+大熊猫',
-          subtitle: '必吃推荐与最佳参观时段',
+          title: AppLocalizations.of(context)!.travel_chengdu,
+          subtitle: AppLocalizations.of(context)!.travel_chengdu_desc,
           icon: FeatherIcons.heart,
-          category: '美食文化',
+          category: AppLocalizations.of(context)!.travel_food_culture,
           onTap: () => _navigateToPackageDetail('2'),
         ),
         SizedBox(height: 12.h),
         _buildPackageCard(
           context,
-          title: '三亚海边拍照点合集',
-          subtitle: '椰林沙滩、礁石海湾、最佳光线时间',
+          title: AppLocalizations.of(context)!.travel_sanya,
+          subtitle: AppLocalizations.of(context)!.travel_sanya_desc,
           icon: FeatherIcons.camera,
-          category: '自然风光',
+          category: AppLocalizations.of(context)!.travel_natural_scenery,
           onTap: () => _navigateToPackageDetail('3'),
         ),
       ],

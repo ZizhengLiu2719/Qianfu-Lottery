@@ -48,8 +48,8 @@ class SettingsScreen extends ConsumerWidget {
                   SnackBar(
                     content: Text(
                       currentLanguage.isChinese 
-                          ? 'Language changed to English' 
-                          : '语言已切换到中文',
+                          ? AppLocalizations.of(context)!.settings_language_changed_to_english
+                          : AppLocalizations.of(context)!.settings_language_changed_to_chinese,
                     ),
                     backgroundColor: AppTheme.primaryColor,
                     duration: const Duration(seconds: 2),

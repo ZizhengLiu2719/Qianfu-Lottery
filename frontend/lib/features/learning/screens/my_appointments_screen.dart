@@ -64,7 +64,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
           ),
           SizedBox(height: 24.h),
           Text(
-            '暂无预约记录',
+            AppLocalizations.of(context)!.learning_no_appointments,
             style: TextStyle(
               fontSize: isDesktop ? 18.sp : 20.sp,
               fontWeight: FontWeight.w600,
@@ -73,7 +73,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
           ),
           SizedBox(height: 8.h),
           Text(
-            '去学习彩页面选择感兴趣的课程吧',
+            AppLocalizations.of(context)!.learning_go_to_learning_page,
             style: TextStyle(
               fontSize: isDesktop ? 14.sp : 16.sp,
               color: AppTheme.textTertiary,
@@ -83,7 +83,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
           ElevatedButton.icon(
             onPressed: () => context.go(AppRoutes.courses),
             icon: Icon(FeatherIcons.arrowLeft),
-            label: Text('返回学习彩'),
+            label: Text(AppLocalizations.of(context)!.learning_back_to_learning),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryColor,
               foregroundColor: Colors.white,
