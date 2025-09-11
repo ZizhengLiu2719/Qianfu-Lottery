@@ -350,60 +350,60 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
   String _getServiceDuration() {
     switch (widget.serviceId) {
       case 'study_abroad_1':
-        return '4周';
+        return AppLocalizations.of(context)!.study_abroad_duration_4_weeks;
       case 'study_abroad_2':
-        return '2周';
+        return AppLocalizations.of(context)!.study_abroad_duration_2_weeks;
       case 'study_abroad_3':
-        return '6周';
+        return AppLocalizations.of(context)!.study_abroad_duration_6_weeks;
       case 'study_abroad_4':
-        return '8周';
+        return AppLocalizations.of(context)!.study_abroad_duration_8_weeks;
       default:
-        return '4周';
+        return AppLocalizations.of(context)!.study_abroad_duration_4_weeks;
     }
   }
 
   String _getTargetAudience() {
     switch (widget.serviceId) {
       case 'study_abroad_1':
-        return '准备申请海外大学的学生';
+        return AppLocalizations.of(context)!.study_abroad_audience_overseas;
       case 'study_abroad_2':
-        return '对专业选择迷茫的学生';
+        return AppLocalizations.of(context)!.study_abroad_audience_major_confused;
       case 'study_abroad_3':
-        return '需要申请材料指导的学生';
+        return AppLocalizations.of(context)!.study_abroad_audience_materials;
       case 'study_abroad_4':
-        return '需要语言培训的学生';
+        return AppLocalizations.of(context)!.study_abroad_audience_language;
       default:
-        return '准备留学的学生';
+        return AppLocalizations.of(context)!.study_abroad_audience_overseas;
     }
   }
 
   String _getServiceContent() {
     switch (widget.serviceId) {
       case 'study_abroad_1':
-        return '个人背景分析、目标院校评估、申请时间规划、专业选择建议';
+        return AppLocalizations.of(context)!.study_abroad_content_planning;
       case 'study_abroad_2':
-        return '院校信息收集、专业对比分析、录取要求解读、申请策略制定';
+        return AppLocalizations.of(context)!.study_abroad_content_school_selection;
       case 'study_abroad_3':
-        return '个人陈述撰写、推荐信指导、简历优化、作品集准备';
+        return AppLocalizations.of(context)!.study_abroad_content_application;
       case 'study_abroad_4':
-        return '托福/雅思培训、口语练习、写作指导、考试技巧';
+        return AppLocalizations.of(context)!.study_abroad_content_language;
       default:
-        return '个性化留学规划服务';
+        return AppLocalizations.of(context)!.study_abroad_content_planning;
     }
   }
 
   String _getServiceAdvantages() {
     switch (widget.serviceId) {
       case 'study_abroad_1':
-        return '资深顾问一对一指导，成功率高达95%';
+        return AppLocalizations.of(context)!.study_abroad_advantages_experienced;
       case 'study_abroad_2':
-        return '海量院校数据库，精准匹配推荐';
+        return AppLocalizations.of(context)!.study_abroad_advantages_database;
       case 'study_abroad_3':
-        return '专业文书团队，提升申请竞争力';
+        return AppLocalizations.of(context)!.study_abroad_advantages_writing;
       case 'study_abroad_4':
-        return '小班教学，快速提升语言能力';
+        return AppLocalizations.of(context)!.study_abroad_advantages_small_class;
       default:
-        return '专业团队，优质服务';
+        return AppLocalizations.of(context)!.study_abroad_advantages_experienced;
     }
   }
 

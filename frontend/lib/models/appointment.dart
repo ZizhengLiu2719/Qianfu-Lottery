@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'appointment.g.dart';
 
@@ -32,25 +33,31 @@ class OfflineCourse {
   
   Map<String, dynamic> toJson() => _$OfflineCourseToJson(this);
 
-  String get categoryDisplay {
+  String getCategoryDisplay(BuildContext context) {
     switch (category) {
       case 'ENGLISH_ORAL':
-        return '英语口语练习';
+        return AppLocalizations.of(context)!.appointment_category_english_oral;
       case 'AI_PROGRAMMING':
-        return 'AI编程学习';
+        return AppLocalizations.of(context)!.appointment_category_ai_programming;
       default:
         return category;
     }
   }
 
-  String get durationDisplay {
+  String getDurationDisplay(BuildContext context) {
     if (duration == null) return '';
     final hours = duration! ~/ 60;
     final minutes = duration! % 60;
     if (hours > 0) {
-      return minutes > 0 ? '${hours}小时${minutes}分钟' : '${hours}小时';
+      return minutes > 0 
+          ? AppLocalizations.of(context)!.appointment_duration_hours_minutes
+              .replaceAll('{hours}', hours.toString())
+              .replaceAll('{minutes}', minutes.toString())
+          : AppLocalizations.of(context)!.appointment_duration_hours
+              .replaceAll('{hours}', hours.toString());
     }
-    return '${minutes}分钟';
+    return AppLocalizations.of(context)!.appointment_duration_minutes
+        .replaceAll('{minutes}', minutes.toString());
   }
 }
 
@@ -96,17 +103,19 @@ class CourseSchedule {
     return '$start - $end';
   }
 
-  String get dateDisplay {
+  String getDateDisplay(BuildContext context) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final scheduleDate = DateTime(startTime.year, startTime.month, startTime.day);
     
     if (scheduleDate == today) {
-      return '今天';
+      return AppLocalizations.of(context)!.appointment_date_today;
     } else if (scheduleDate == today.add(const Duration(days: 1))) {
-      return '明天';
+      return AppLocalizations.of(context)!.appointment_date_tomorrow;
     } else {
-      return '${startTime.month}月${startTime.day}日';
+      return AppLocalizations.of(context)!.appointment_date_format
+          .replaceAll('{month}', startTime.month.toString())
+          .replaceAll('{day}', startTime.day.toString());
     }
   }
 }
@@ -137,16 +146,16 @@ class UserAppointment {
   
   Map<String, dynamic> toJson() => _$UserAppointmentToJson(this);
 
-  String get statusDisplay {
+  String getStatusDisplay(BuildContext context) {
     switch (status) {
       case 'BOOKED':
-        return '已预约';
+        return AppLocalizations.of(context)!.appointment_status_booked;
       case 'CANCELLED':
-        return '已取消';
+        return AppLocalizations.of(context)!.appointment_status_cancelled;
       case 'COMPLETED':
-        return '已完成';
+        return AppLocalizations.of(context)!.appointment_status_completed;
       case 'NO_SHOW':
-        return '缺席';
+        return AppLocalizations.of(context)!.appointment_status_no_show;
       default:
         return status;
     }

@@ -358,75 +358,75 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
   String _getCampDuration() {
     switch (widget.campId) {
       case 'summer_camp_1':
-        return '7月1日-14日 (14天)';
+        return AppLocalizations.of(context)!.summer_camp_duration_july_1_14;
       case 'summer_camp_2':
-        return '7月15日-28日 (14天)';
+        return AppLocalizations.of(context)!.summer_camp_duration_july_15_28;
       case 'summer_camp_3':
-        return '8月1日-14日 (14天)';
+        return AppLocalizations.of(context)!.summer_camp_duration_aug_1_14;
       case 'summer_camp_4':
-        return '8月15日-28日 (14天)';
+        return AppLocalizations.of(context)!.summer_camp_duration_aug_15_28;
       default:
-        return '14天';
+        return AppLocalizations.of(context)!.summer_camp_duration_july_1_14;
     }
   }
 
   String _getAgeRange() {
     switch (widget.campId) {
       case 'summer_camp_1':
-        return '14-18岁';
+        return AppLocalizations.of(context)!.summer_camp_age_14_18;
       case 'summer_camp_2':
-        return '15-18岁';
+        return AppLocalizations.of(context)!.summer_camp_age_15_18;
       case 'summer_camp_3':
-        return '10-16岁';
+        return AppLocalizations.of(context)!.summer_camp_age_10_16;
       case 'summer_camp_4':
-        return '12-17岁';
+        return AppLocalizations.of(context)!.summer_camp_age_12_17;
       default:
-        return '10-18岁';
+        return AppLocalizations.of(context)!.summer_camp_age_14_18;
     }
   }
 
   String _getLocation() {
     switch (widget.campId) {
       case 'summer_camp_1':
-        return '马萨诸塞州，哈佛西湖学校';
+        return AppLocalizations.of(context)!.summer_camp_location_harvard;
       case 'summer_camp_2':
-        return '马萨诸塞州，麻省理工学院';
+        return AppLocalizations.of(context)!.summer_camp_location_mit;
       case 'summer_camp_3':
-        return '加利福尼亚州，Wonder Valley度假村';
+        return AppLocalizations.of(context)!.summer_camp_location_wonder;
       case 'summer_camp_4':
-        return '纽约州，Rocking Horse牧场';
+        return AppLocalizations.of(context)!.summer_camp_location_ranch;
       default:
-        return '美国知名学府';
+        return AppLocalizations.of(context)!.summer_camp_location_harvard;
     }
   }
 
   String _getCampContent() {
     switch (widget.campId) {
       case 'summer_camp_1':
-        return '辩论技巧训练、公共演讲、逻辑思维、团队合作、模拟辩论赛';
+        return AppLocalizations.of(context)!.summer_camp_content_debate;
       case 'summer_camp_2':
-        return '科学实验、工程挑战、数学建模、编程项目、创新设计';
+        return AppLocalizations.of(context)!.summer_camp_content_steam;
       case 'summer_camp_3':
-        return '户外探险、团队建设、领导力训练、自然探索、生存技能';
+        return AppLocalizations.of(context)!.summer_camp_content_adventure;
       case 'summer_camp_4':
-        return '马术训练、农场体验、环保教育、手工制作、户外运动';
+        return AppLocalizations.of(context)!.summer_camp_content_horse;
       default:
-        return '丰富多彩的夏令营活动';
+        return AppLocalizations.of(context)!.summer_camp_content_debate;
     }
   }
 
   String _getCampFeatures() {
     switch (widget.campId) {
       case 'summer_camp_1':
-        return '顶级辩论教练、小班教学、个性化指导、国际视野';
+        return AppLocalizations.of(context)!.summer_camp_features_debate;
       case 'summer_camp_2':
-        return 'MIT教授授课、前沿科技体验、创新思维培养';
+        return AppLocalizations.of(context)!.summer_camp_features_steam;
       case 'summer_camp_3':
-        return '自然教育、冒险精神、独立能力、环保意识';
+        return AppLocalizations.of(context)!.summer_camp_features_adventure;
       case 'summer_camp_4':
-        return '马术专业指导、农场生活体验、动物关爱教育';
+        return AppLocalizations.of(context)!.summer_camp_features_horse;
       default:
-        return '专业指导、安全可靠、寓教于乐';
+        return AppLocalizations.of(context)!.summer_camp_features_debate;
     }
   }
 
