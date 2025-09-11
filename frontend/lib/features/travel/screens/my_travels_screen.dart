@@ -404,7 +404,10 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              ref.read(travelsProvider.notifier).removeTravel(travel.id);
+              // 先重新加载用户旅游数据，确保有正确的 registrationId
+              ref.read(travelsProvider.notifier).loadUserTravels().then((_) {
+                ref.read(travelsProvider.notifier).removeTravel(travel.id);
+              });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('已取消预约'),
