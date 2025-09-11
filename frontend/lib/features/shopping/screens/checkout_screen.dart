@@ -34,7 +34,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   }
 
   Future<void> _loadDefaultAddress() async {
-    // 直接获取默认地址
+    // 先加载地址列表，然后获取默认地址
+    await ref.read(addressesProvider.notifier).loadAddresses();
     final defaultAddress = ref.read(defaultAddressProvider);
     if (defaultAddress != null) {
       setState(() {
@@ -45,6 +46,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width > 768;
     final cartItems = ref.watch(cartItemsProvider);
     final totalCost = ref.watch(cartTotalCostProvider);
 
@@ -129,7 +131,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               ),
             ),
           ),
-          _buildBottomBar(totalCost),
+          _buildBottomBar(totalCost, isDesktop),
         ],
       ),
     );
@@ -434,9 +436,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     );
   }
 
-  Widget _buildBottomBar(int totalCost) {
+  Widget _buildBottomBar(int totalCost, bool isDesktop) {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(isDesktop ? 12.w : 16.w),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -457,19 +459,21 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 '总计',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppTheme.textSecondary,
+                  fontSize: isDesktop ? 12.sp : 14.sp,
                 ),
               ),
               SizedBox(height: 4.h),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  QiancaiDouIcon(size: 20.sp),
+                  QiancaiDouIcon(size: isDesktop ? 16.sp : 20.sp),
                   SizedBox(width: 4.w),
                   Text(
                     '$totalCost',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppTheme.primaryColor,
+                      fontSize: isDesktop ? 16.sp : 20.sp,
                     ),
                   ),
                 ],
@@ -478,20 +482,20 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
           ),
           const Spacer(),
           SizedBox(
-            width: 120.w,
+            width: isDesktop ? 100.w : 120.w,
             child: ElevatedButton(
               onPressed: _selectedAddress == null || _isLoading ? null : _createOrder,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryColor,
-                padding: EdgeInsets.symmetric(vertical: 16.h),
+                padding: EdgeInsets.symmetric(vertical: isDesktop ? 12.h : 16.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
               child: _isLoading
                   ? SizedBox(
-                      width: 20.w,
-                      height: 20.w,
+                      width: isDesktop ? 16.w : 20.w,
+                      height: isDesktop ? 16.w : 20.w,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -502,6 +506,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        fontSize: isDesktop ? 14.sp : 16.sp,
                       ),
                     ),
             ),

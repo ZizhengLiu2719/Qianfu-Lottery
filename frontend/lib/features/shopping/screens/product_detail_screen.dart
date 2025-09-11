@@ -29,6 +29,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width > 768;
     final productsRepository = ref.watch(productsRepositoryProvider);
     final qiancaiDouBalance = ref.watch(qiancaiDouBalanceProvider);
     final isLoggedIn = ref.watch(isAuthenticatedProvider);
@@ -86,8 +87,8 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
           final product = snapshot.data!;
           return Column(
             children: [
-              Expanded(child: _buildProductDetail(context, product, qiancaiDouBalance, isLoggedIn)),
-              _buildBottomActions(context, product, isLoggedIn),
+              Expanded(child: _buildProductDetail(context, product, qiancaiDouBalance, isLoggedIn, isDesktop)),
+              _buildBottomActions(context, product, isLoggedIn, isDesktop),
             ],
           );
         },
@@ -95,27 +96,32 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
     );
   }
 
-  Widget _buildProductDetail(BuildContext context, Product product, int balance, bool isLoggedIn) {
+  Widget _buildProductDetail(BuildContext context, Product product, int balance, bool isLoggedIn, bool isDesktop) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 商品图片
-          AspectRatio(
-            aspectRatio: 1.2,
-            child: CachedNetworkImage(
-              imageUrl: product.mainImage,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                color: AppTheme.backgroundColor,
-                child: const Center(child: CircularProgressIndicator()),
-              ),
-              errorWidget: (context, url, error) => Container(
-                color: AppTheme.backgroundColor,
-                child: Icon(
-                  FeatherIcons.image,
-                  size: 64.sp,
-                  color: AppTheme.textTertiary,
+          // 商品图片 - 电脑端限制最大高度
+          Container(
+            constraints: BoxConstraints(
+              maxHeight: isDesktop ? 400.h : double.infinity,
+            ),
+            child: AspectRatio(
+              aspectRatio: isDesktop ? 1.5 : 1.2,
+              child: CachedNetworkImage(
+                imageUrl: product.mainImage,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  color: AppTheme.backgroundColor,
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  color: AppTheme.backgroundColor,
+                  child: Icon(
+                    FeatherIcons.image,
+                    size: 64.sp,
+                    color: AppTheme.textTertiary,
+                  ),
                 ),
               ),
             ),
@@ -285,10 +291,10 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
     );
   }
 
-  Widget _buildBottomActions(BuildContext context, Product product, bool isLoggedIn) {
+  Widget _buildBottomActions(BuildContext context, Product product, bool isLoggedIn, bool isDesktop) {
     if (!isLoggedIn) {
       return Container(
-        padding: EdgeInsets.all(20.w),
+        padding: EdgeInsets.all(isDesktop ? 16.w : 20.w),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -307,7 +313,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryColor,
-              padding: EdgeInsets.symmetric(vertical: 16.h),
+              padding: EdgeInsets.symmetric(vertical: isDesktop ? 12.h : 16.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
               ),
@@ -317,6 +323,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
+                fontSize: isDesktop ? 14.sp : 16.sp,
               ),
             ),
           ),
@@ -328,7 +335,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
     final canAfford = ref.watch(qiancaiDouBalanceProvider) >= totalPrice;
 
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.all(isDesktop ? 16.w : 20.w),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -348,7 +355,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               onPressed: product.isInStock ? () => _addToCart(product) : null,
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: AppTheme.primaryColor),
-                padding: EdgeInsets.symmetric(vertical: 16.h),
+                padding: EdgeInsets.symmetric(vertical: isDesktop ? 12.h : 16.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.r),
                 ),
@@ -356,13 +363,14 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(FeatherIcons.shoppingCart, size: 20.sp, color: AppTheme.primaryColor),
+                  Icon(FeatherIcons.shoppingCart, size: isDesktop ? 16.sp : 20.sp, color: AppTheme.primaryColor),
                   SizedBox(width: 8.w),
                   Text(
                     '加购物车',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: AppTheme.primaryColor,
                       fontWeight: FontWeight.w600,
+                      fontSize: isDesktop ? 14.sp : 16.sp,
                     ),
                   ),
                 ],
@@ -377,7 +385,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               onPressed: product.isInStock && canAfford ? () => _buyNow(product) : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: product.isInStock && canAfford ? AppTheme.primaryColor : AppTheme.textTertiary,
-                padding: EdgeInsets.symmetric(vertical: 16.h),
+                padding: EdgeInsets.symmetric(vertical: isDesktop ? 12.h : 16.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.r),
                 ),
@@ -390,6 +398,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: isDesktop ? 14.sp : 16.sp,
                     ),
                   ),
                   SizedBox(height: 2.h),
@@ -400,10 +409,11 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                         '$totalPrice',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.white,
+                          fontSize: isDesktop ? 12.sp : 14.sp,
                         ),
                       ),
                       SizedBox(width: 4.w),
-                      QiancaiDouIcon(size: 14.0),
+                      QiancaiDouIcon(size: isDesktop ? 12.0 : 14.0),
                     ],
                   ),
                 ],

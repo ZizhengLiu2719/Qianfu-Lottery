@@ -33,7 +33,24 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
       }
     } catch (e) {
       print('Error adding item to cart: $e');
-      rethrow;
+      // 即使后端失败，也更新本地状态，确保用户体验
+      final existingIndex = state.indexWhere((item) => item.product.id == product.id);
+      
+      if (existingIndex >= 0) {
+        // 如果商品已存在，增加数量
+        final existingItem = state[existingIndex];
+        final newQuantity = existingItem.quantity + quantity;
+        
+        state = [
+          ...state.sublist(0, existingIndex),
+          existingItem.copyWith(quantity: newQuantity),
+          ...state.sublist(existingIndex + 1),
+        ];
+      } else {
+        // 如果商品不存在，添加新商品
+        state = [...state, CartItem(product: product, quantity: quantity)];
+      }
+      // 不重新抛出异常，让用户知道商品已添加到本地购物车
     }
   }
 
