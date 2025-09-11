@@ -52,7 +52,7 @@ class QianfuJicaiApp extends ConsumerWidget {
       useInheritedMediaQuery: true,
       builder: (context, child) {
         return MaterialApp.router(
-          title: '千府集彩',
+          title: 'Qianfu Lottery',
           debugShowCheckedModeBanner: false,
           
           // 路由配置

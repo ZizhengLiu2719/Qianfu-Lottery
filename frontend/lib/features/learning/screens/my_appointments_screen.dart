@@ -111,7 +111,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
           
           // 预约列表
           Text(
-            '预约列表 (${appointments.length})',
+            '${AppLocalizations.of(context)!.learning_appointment_list} (${appointments.length})',
             style: TextStyle(
               fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
@@ -151,7 +151,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '预约统计',
+            AppLocalizations.of(context)!.learning_appointment_stats,
             style: TextStyle(
               fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
@@ -161,11 +161,11 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
           SizedBox(height: 16.h),
           Row(
             children: [
-              _buildStatItem(context, '课程', courseCount, FeatherIcons.bookOpen, isDesktop),
+              _buildStatItem(context, AppLocalizations.of(context)!.learning_courses_category, courseCount, FeatherIcons.bookOpen, isDesktop),
               SizedBox(width: 16.w),
-              _buildStatItem(context, '留学咨询', serviceCount, FeatherIcons.globe, isDesktop),
+              _buildStatItem(context, AppLocalizations.of(context)!.learning_study_abroad_category, serviceCount, FeatherIcons.globe, isDesktop),
               SizedBox(width: 16.w),
-              _buildStatItem(context, '夏令营', campCount, FeatherIcons.sun, isDesktop),
+              _buildStatItem(context, AppLocalizations.of(context)!.learning_summer_camp_category, campCount, FeatherIcons.sun, isDesktop),
             ],
           ),
         ],
@@ -299,7 +299,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
                     ),
                     SizedBox(width: 8.w),
                     Text(
-                      '预约时间: ${_formatDate(appointment.registeredAt)}',
+                      '${AppLocalizations.of(context)!.learning_appointment_time} ${_formatDate(appointment.registeredAt)}',
                       style: TextStyle(
                         fontSize: isDesktop ? 10.sp : 12.sp,
                         color: AppTheme.textTertiary,
@@ -317,7 +317,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
               size: isDesktop ? 16.sp : 18.sp,
             ),
             onPressed: () => _removeAppointment(appointment.id),
-            tooltip: '删除预约',
+            tooltip: AppLocalizations.of(context)!.common_delete,
           ),
         ],
       ),
@@ -326,13 +326,13 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
 
   Color _getCategoryColor(String category) {
     switch (category) {
-      case 'AI编程':
+      case AppLocalizations.of(context)!.learning_ai_programming_tag:
         return Colors.blue;
-      case '英语学习':
+      case AppLocalizations.of(context)!.learning_english_category:
         return Colors.green;
-      case '留学咨询':
+      case AppLocalizations.of(context)!.learning_study_abroad_category:
         return Colors.purple;
-      case '夏令营':
+      case AppLocalizations.of(context)!.learning_summer_camp_category:
         return Colors.orange;
       default:
         return AppTheme.primaryColor;
@@ -347,12 +347,12 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('确认删除'),
-        content: Text('确定要删除这个预约吗？'),
+        title: Text(AppLocalizations.of(context)!.common_confirm_delete),
+        content: Text(AppLocalizations.of(context)!.common_confirm_delete_content),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('取消'),
+            child: Text(AppLocalizations.of(context)!.common_cancel),
           ),
           TextButton(
             onPressed: () {
@@ -360,12 +360,12 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('已删除预约'),
+                  content: Text(AppLocalizations.of(context)!.common_deleted),
                   backgroundColor: Colors.red,
                 ),
               );
             },
-            child: Text('删除', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context)!.common_delete, style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -376,12 +376,12 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('确认清空'),
-        content: Text('确定要清空所有预约吗？此操作不可撤销。'),
+        title: Text(AppLocalizations.of(context)!.common_confirm_clear),
+        content: Text(AppLocalizations.of(context)!.common_confirm_clear_content),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('取消'),
+            child: Text(AppLocalizations.of(context)!.common_cancel),
           ),
           TextButton(
             onPressed: () {
@@ -389,12 +389,12 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('已清空所有预约'),
+                  content: Text(AppLocalizations.of(context)!.common_cleared),
                   backgroundColor: Colors.red,
                 ),
               );
             },
-            child: Text('清空', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context)!.common_clear, style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

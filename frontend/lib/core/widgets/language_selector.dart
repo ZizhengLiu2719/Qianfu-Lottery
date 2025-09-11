@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../providers/language_provider.dart';
 import '../theme/app_theme.dart';
@@ -129,7 +130,7 @@ class LanguageSelector extends ConsumerWidget {
               ),
               SizedBox(width: 8.w),
               Text(
-                '语言设置',
+                AppLocalizations.of(context)!.language_settings,
                 style: TextStyle(
                   fontSize: isDesktop ? 16.sp : 18.sp,
                   fontWeight: FontWeight.w600,

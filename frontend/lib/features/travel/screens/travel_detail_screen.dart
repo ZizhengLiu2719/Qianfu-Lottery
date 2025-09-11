@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TravelDetailScreen extends ConsumerWidget {
   final int postId;
@@ -9,9 +10,9 @@ class TravelDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: Text('旅游详情')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.travel_details)),
       body: Center(
-        child: Text('旅游文章详情 - ID: $postId'),
+        child: Text('${AppLocalizations.of(context)!.travel_details} - ID: $postId'),
       ),
     );
   }

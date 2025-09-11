@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/appointments_provider.dart';
 
@@ -37,7 +38,7 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('留学咨询详情'),
+        title: Text(AppLocalizations.of(context)!.study_abroad_detail_title),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
@@ -146,7 +147,7 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '服务详情',
+          AppLocalizations.of(context)!.study_abroad_service_details,
           style: TextStyle(
             fontSize: isDesktop ? 18.sp : 20.sp,
             fontWeight: FontWeight.bold,
@@ -157,7 +158,7 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
         _buildDetailItem(
           context,
           icon: FeatherIcons.clock,
-          title: '服务时长',
+          title: AppLocalizations.of(context)!.study_abroad_service_duration,
           content: _getServiceDuration(),
           isDesktop: isDesktop,
         ),
@@ -165,7 +166,7 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
         _buildDetailItem(
           context,
           icon: FeatherIcons.users,
-          title: '适合人群',
+          title: AppLocalizations.of(context)!.study_abroad_target_audience,
           content: _getTargetAudience(),
           isDesktop: isDesktop,
         ),
@@ -173,7 +174,7 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
         _buildDetailItem(
           context,
           icon: FeatherIcons.bookOpen,
-          title: '服务内容',
+          title: AppLocalizations.of(context)!.study_abroad_service_content,
           content: _getServiceContent(),
           isDesktop: isDesktop,
         ),
@@ -181,7 +182,7 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
         _buildDetailItem(
           context,
           icon: FeatherIcons.award,
-          title: '服务优势',
+          title: AppLocalizations.of(context)!.study_abroad_service_advantages,
           content: _getServiceAdvantages(),
           isDesktop: isDesktop,
         ),
@@ -243,7 +244,7 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
       child: Column(
         children: [
           Text(
-            isAppointed ? '已注册此服务' : '立即注册服务',
+            isAppointed ? AppLocalizations.of(context)!.study_abroad_registered_service : AppLocalizations.of(context)!.study_abroad_register_now,
             style: TextStyle(
               fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
@@ -288,7 +289,7 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            isAppointed ? '已注册' : '注册服务',
+                            isAppointed ? AppLocalizations.of(context)!.study_abroad_registered : AppLocalizations.of(context)!.study_abroad_register_service,
                             style: TextStyle(
                               fontSize: isDesktop ? 14.sp : 16.sp,
                               color: Colors.white,
@@ -326,7 +327,7 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            '取消注册',
+                            AppLocalizations.of(context)!.study_abroad_cancel_registration,
                             style: TextStyle(
                               fontSize: isDesktop ? 14.sp : 16.sp,
                               color: Colors.red,
@@ -426,10 +427,10 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('注册成功！'),
+        content: Text(AppLocalizations.of(context)!.study_abroad_registration_success),
         backgroundColor: Colors.green,
         action: SnackBarAction(
-          label: '查看我的预约',
+          label: AppLocalizations.of(context)!.study_abroad_view_my_appointments,
           textColor: Colors.white,
           onPressed: () {
             // TODO: 导航到我的预约页面
@@ -447,7 +448,7 @@ class _StudyAbroadDetailScreenState extends ConsumerState<StudyAbroadDetailScree
     ref.read(appointmentsProvider.notifier).removeAppointment(widget.serviceId);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('已取消注册'),
+        content: Text(AppLocalizations.of(context)!.study_abroad_registration_cancelled),
         backgroundColor: Colors.orange,
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/appointments_provider.dart';
 
@@ -37,7 +38,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('夏令营详情'),
+        title: Text(AppLocalizations.of(context)!.summer_camp_detail_title),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
@@ -146,7 +147,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '夏令营详情',
+          AppLocalizations.of(context)!.summer_camp_details,
           style: TextStyle(
             fontSize: isDesktop ? 18.sp : 20.sp,
             fontWeight: FontWeight.bold,
@@ -157,7 +158,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
         _buildDetailItem(
           context,
           icon: FeatherIcons.calendar,
-          title: '活动时间',
+          title: AppLocalizations.of(context)!.summer_camp_activity_time,
           content: _getCampDuration(),
           isDesktop: isDesktop,
         ),
@@ -165,7 +166,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
         _buildDetailItem(
           context,
           icon: FeatherIcons.users,
-          title: '适合年龄',
+          title: AppLocalizations.of(context)!.summer_camp_suitable_age,
           content: _getAgeRange(),
           isDesktop: isDesktop,
         ),
@@ -173,7 +174,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
         _buildDetailItem(
           context,
           icon: FeatherIcons.mapPin,
-          title: '活动地点',
+          title: AppLocalizations.of(context)!.summer_camp_activity_location,
           content: _getLocation(),
           isDesktop: isDesktop,
         ),
@@ -181,7 +182,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
         _buildDetailItem(
           context,
           icon: FeatherIcons.bookOpen,
-          title: '活动内容',
+          title: AppLocalizations.of(context)!.summer_camp_activity_content,
           content: _getCampContent(),
           isDesktop: isDesktop,
         ),
@@ -189,7 +190,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
         _buildDetailItem(
           context,
           icon: FeatherIcons.award,
-          title: '活动特色',
+          title: AppLocalizations.of(context)!.summer_camp_activity_features,
           content: _getCampFeatures(),
           isDesktop: isDesktop,
         ),
@@ -251,7 +252,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
       child: Column(
         children: [
           Text(
-            isAppointed ? '已注册此夏令营' : '立即注册夏令营',
+            isAppointed ? AppLocalizations.of(context)!.summer_camp_registered_camp : AppLocalizations.of(context)!.summer_camp_register_now,
             style: TextStyle(
               fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
@@ -296,7 +297,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            isAppointed ? '已注册' : '注册夏令营',
+                            isAppointed ? AppLocalizations.of(context)!.summer_camp_registered : AppLocalizations.of(context)!.summer_camp_register_camp,
                             style: TextStyle(
                               fontSize: isDesktop ? 14.sp : 16.sp,
                               color: Colors.white,
@@ -334,7 +335,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            '取消注册',
+                            AppLocalizations.of(context)!.summer_camp_cancel_registration,
                             style: TextStyle(
                               fontSize: isDesktop ? 14.sp : 16.sp,
                               color: Colors.red,
@@ -449,10 +450,10 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('注册成功！'),
+        content: Text(AppLocalizations.of(context)!.summer_camp_registration_success),
         backgroundColor: Colors.green,
         action: SnackBarAction(
-          label: '查看我的预约',
+          label: AppLocalizations.of(context)!.summer_camp_view_my_appointments,
           textColor: Colors.white,
           onPressed: () {
             // TODO: 导航到我的预约页面
@@ -470,7 +471,7 @@ class _SummerCampDetailScreenState extends ConsumerState<SummerCampDetailScreen>
     ref.read(appointmentsProvider.notifier).removeAppointment(widget.campId);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('已取消注册'),
+        content: Text(AppLocalizations.of(context)!.summer_camp_registration_cancelled),
         backgroundColor: Colors.orange,
       ),
     );
