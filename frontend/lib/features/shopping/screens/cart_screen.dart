@@ -150,7 +150,7 @@ class CartScreen extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(width: 4.w),
-                    const Text('仟彩豆'),
+                    const Text('千彩豆'),
                     SizedBox(width: 4.w),
                     QiancaiDouIcon(
                       size: 14.0,
@@ -243,7 +243,7 @@ class CartScreen extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(width: 4.w),
-                    const Text('仟彩豆'),
+                    const Text('千彩豆'),
                     SizedBox(width: 4.w),
                     QiancaiDouIcon(
                       size: 20.0,

@@ -526,7 +526,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '${widget.points} 仟彩豆',
+                    '${widget.points} 千彩豆',
                     style: const TextStyle(color: AppTheme.primaryColor),
                   ),
                   SizedBox(width: 4.w),

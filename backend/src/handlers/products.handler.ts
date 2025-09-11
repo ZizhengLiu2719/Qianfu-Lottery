@@ -215,7 +215,7 @@ export function createProductHandlers(qiancaiDouService: QiancaiDouService) {
           })
         }
 
-        // 扣除用户仟彩豆
+        // 扣除用户千彩豆
         await qiancaiDouService.debitQiancaiDou({
           userId: currentUser.id,
           amount: totalCost,

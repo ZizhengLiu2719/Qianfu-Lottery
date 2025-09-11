@@ -77,7 +77,7 @@ class AuthRepository {
     return response.data!;
   }
 
-  // 获取仟彩豆交易历史
+  // 获取千彩豆交易历史
   Future<List<QiancaiDouTransaction>> getTransactionHistory({
     int page = 1,
     int limit = 20,

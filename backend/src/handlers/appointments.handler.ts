@@ -171,7 +171,7 @@ export function createAppointmentHandlers(qiancaiDouService: QiancaiDouService) 
           throw new Error('You have already booked this schedule')
         }
 
-        // 如果有费用，扣除仟彩豆
+        // 如果有费用，扣除千彩豆
         if (schedule.feeInQiancaiDou > 0) {
           await qiancaiDouService.debitQiancaiDou({
             userId: currentUser.id,
@@ -375,7 +375,7 @@ export function createAppointmentHandlers(qiancaiDouService: QiancaiDouService) 
           }
         })
 
-        // 如果有费用，退还仟彩豆
+        // 如果有费用，退还千彩豆
         if (appointment.schedule.feeInQiancaiDou > 0) {
           await qiancaiDouService.creditQiancaiDou({
             userId: currentUser.id,

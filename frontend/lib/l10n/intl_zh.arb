@@ -34,7 +34,7 @@
   "auth_password_not_match": "两次密码不一致",
   "auth_login_hint": "登录您的账户",
   "auth_register_hint": "创建新账户",
-  "auth_welcome_bonus": "欢迎奖励：100仟彩豆",
+  "auth_welcome_bonus": "欢迎奖励：100千彩豆",
   
   "nav_life": "生活彩",
   "nav_learning": "学习彩", 
@@ -42,9 +42,9 @@
   "nav_entertainment": "娱乐彩",
   "nav_profile": "我的",
   
-  "qiancaidou_balance": "仟彩豆余额",
+  "qiancaidou_balance": "千彩豆余额",
   "qiancaidou_transactions": "交易记录",
-  "qiancaidou_unit": "仟彩豆",
+  "qiancaidou_unit": "千彩豆",
   
   "products_title": "生活好物",
   "products_category_all": "全部",
@@ -126,7 +126,7 @@
   "error_network": "网络连接失败",
   "error_server": "服务器错误",
   "error_unknown": "未知错误",
-  "error_insufficient_balance": "仟彩豆余额不足",
+  "error_insufficient_balance": "千彩豆余额不足",
   "error_product_not_found": "商品不存在",
   "error_schedule_full": "该时段已满",
   "error_already_booked": "您已经预约了这个时段"

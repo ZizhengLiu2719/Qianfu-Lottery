@@ -21,7 +21,7 @@ export class QiancaiDouService {
   constructor(private prisma: PrismaClient) {}
 
   /**
-   * 获取用户仟彩豆余额
+   * 获取用户千彩豆余额
    */
   async getBalance(userId: number, tx?: Prisma.TransactionClient | PrismaClient): Promise<number> {
     const db = (tx as Prisma.TransactionClient) || this.prisma
@@ -34,7 +34,7 @@ export class QiancaiDouService {
   }
 
   /**
-   * 增加仟彩豆
+   * 增加千彩豆
    */
   async creditQiancaiDou(transaction: QiancaiDouTransaction, tx?: Prisma.TransactionClient | PrismaClient): Promise<number> {
     const db = (tx as Prisma.TransactionClient) || this.prisma
@@ -77,7 +77,7 @@ export class QiancaiDouService {
   }
 
   /**
-   * 扣除仟彩豆
+   * 扣除千彩豆
    */
   async debitQiancaiDou(transaction: QiancaiDouTransaction, tx?: Prisma.TransactionClient | PrismaClient): Promise<number> {
     const db = (tx as Prisma.TransactionClient) || this.prisma

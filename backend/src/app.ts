@@ -499,7 +499,7 @@ app.post('/api/inventory/cleanup-expired', async (c) => {
   return handlers.cleanupExpiredLocks(c)
 })
 
-// 仟彩豆交易历史 (受保护)
+// 千彩豆交易历史 (受保护)
 app.get('/api/me/qiancaidou/transactions', async (c) => {
   const { qiancaiDouService, authMiddleware } = initializeServices(c)
   await authMiddleware(c, async () => {})

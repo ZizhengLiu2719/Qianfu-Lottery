@@ -39,7 +39,7 @@ model User {
   @@map("users")
 }
 
-// 仟彩豆交易记录
+// 千彩豆交易记录
 model QiancaiDouTransaction {
   id          Int      @id @default(autoincrement())
   userId      Int
@@ -68,7 +68,7 @@ model Product {
   title               String
   description         String
   images              String[]    @default([])
-  priceInQiancaiDou   Int         // 仟彩豆价格
+  priceInQiancaiDou   Int         // 千彩豆价格
   stock               Int         @default(0)
   category            String      @default("general")
   isActive            Boolean     @default(true)
@@ -88,7 +88,7 @@ model Order {
   id                  Int         @id @default(autoincrement())
   userId              Int
   user                User        @relation(fields: [userId], references: [id])
-  totalCost           Int         // 总仟彩豆消费
+  totalCost           Int         // 总千彩豆消费
   status              OrderStatus @default(PENDING) // PENDING, PAID, PROCESSING, SHIPPED, DELIVERED, CANCELLED, REFUNDED
   payMethod           PayMethod   @default(QIANCAIDOU)
   shippingAddressId   Int?        // 配送地址ID
@@ -121,8 +121,8 @@ model OrderItem {
   productId   Int
   product     Product @relation(fields: [productId], references: [id])
   quantity    Int
-  unitPrice   Int     // 单价（仟彩豆）
-  totalPrice  Int     // 小计（仟彩豆）
+  unitPrice   Int     // 单价（千彩豆）
+  totalPrice  Int     // 小计（千彩豆）
   
   @@map("order_items")
 }
@@ -267,7 +267,7 @@ model TravelRegistration {
   @@map("travel_registrations")
 }
 
-// 账户：仟彩豆可用/锁定余额
+// 账户：千彩豆可用/锁定余额
 model Account {
   id               Int      @id @default(autoincrement())
   userId           Int      @unique

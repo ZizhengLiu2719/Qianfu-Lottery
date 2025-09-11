@@ -85,7 +85,7 @@ class QiancaiDouText extends StatelessWidget {
           style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
         ),
         SizedBox(width: spacing.w),
-        const Text('仟彩豆'),
+        const Text('千彩豆'),
         SizedBox(width: spacing.w),
         QiancaiDouIcon(
           size: iconSize,

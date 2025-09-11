@@ -97,7 +97,7 @@ export function createAuthHandlers(authService: AuthService, qiancaiDouService: 
           firstName: body.firstName,
           lastName: body.lastName,
           language: body.language || 'zh',
-          qiancaiDouBalance: 100 // 新用户奖励100仟彩豆
+          qiancaiDouBalance: 100 // 新用户奖励100千彩豆
         }
       })
 
