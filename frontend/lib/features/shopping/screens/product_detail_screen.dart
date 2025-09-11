@@ -492,7 +492,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   Future<void> _buyNow(Product product) async {
     if (!ref.read(isAuthenticatedProvider)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(AppLocalizations.of(context)!.products_please_login),
           backgroundColor: AppTheme.errorColor,
         ),

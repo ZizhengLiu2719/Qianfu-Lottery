@@ -251,7 +251,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
   String _selectedPriority = 'medium';
   bool _isSubmitting = false;
 
-  final List<Map<String, String>> _categories = [
+  List<Map<String, String>> _getCategories(BuildContext context) => [
     {'value': 'general', 'label': AppLocalizations.of(context)!.feedback_category_general},
     {'value': 'bug', 'label': AppLocalizations.of(context)!.feedback_category_bug},
     {'value': 'feature', 'label': AppLocalizations.of(context)!.feedback_category_feature},
@@ -259,7 +259,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
     {'value': 'complaint', 'label': AppLocalizations.of(context)!.feedback_category_complaint},
   ];
 
-  final List<Map<String, String>> _priorities = [
+  List<Map<String, String>> _getPriorities(BuildContext context) => [
     {'value': 'low', 'label': AppLocalizations.of(context)!.feedback_priority_low},
     {'value': 'medium', 'label': AppLocalizations.of(context)!.feedback_priority_medium},
     {'value': 'high', 'label': AppLocalizations.of(context)!.feedback_priority_high},
@@ -355,7 +355,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                 ),
-                items: _categories.map((category) {
+                items: _getCategories(context).map((category) {
                   return DropdownMenuItem(
                     value: category['value'],
                     child: Text(category['label']!),
@@ -386,7 +386,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                 ),
-                items: _priorities.map((priority) {
+                items: _getPriorities(context).map((priority) {
                   return DropdownMenuItem(
                     value: priority['value'],
                     child: Text(priority['label']!),
@@ -489,7 +489,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
       if (success) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text(AppLocalizations.of(context)!.success_feedback_submitted),
               backgroundColor: Colors.green,
             ),
@@ -499,7 +499,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text(AppLocalizations.of(context)!.common_failed),
               backgroundColor: Colors.red,
             ),
