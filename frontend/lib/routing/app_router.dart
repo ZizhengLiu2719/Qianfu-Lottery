@@ -23,6 +23,7 @@ import '../features/profile/screens/transaction_history_screen.dart';
 import '../features/profile/screens/settings_screen.dart';
 import '../features/feedback/screens/feedback_screen.dart';
 import '../features/auth/providers/auth_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // 路由路径常量
 class AppRoutes {
@@ -148,7 +149,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (context, state) {
                   final id = state.pathParameters['id']!;
                   // 根据ID获取课程信息
-                  Map<String, dynamic> courseInfo = _getCourseInfoById(id);
+                  Map<String, dynamic> courseInfo = _getCourseInfoById(context, id);
                   return CourseDetailScreen(
                     courseId: id,
                     title: courseInfo['title'],
@@ -233,55 +234,55 @@ BottomNavPage getCurrentBottomNavPage(String location) {
 }
 
 // 根据课程ID获取课程信息
-Map<String, dynamic> _getCourseInfoById(String courseId) {
+Map<String, dynamic> _getCourseInfoById(BuildContext context, String courseId) {
   switch (courseId) {
     case 'ai_course_1':
       return {
-        'title': AppLocalizations.current.courses_title,
-        'subtitle': AppLocalizations.current.learning_course_schedule_value,
-        'category': AppLocalizations.current.learning_ai_programming,
+        'title': AppLocalizations.of(context)!.courses_title,
+        'subtitle': AppLocalizations.of(context)!.learning_course_schedule_value,
+        'category': AppLocalizations.of(context)!.learning_ai_programming,
         'icon': FeatherIcons.cpu,
       };
     case 'ai_course_2':
       return {
-        'title': AppLocalizations.current.learning_course_content,
-        'subtitle': AppLocalizations.current.learning_course_content_value,
-        'category': AppLocalizations.current.learning_ai_programming,
+        'title': AppLocalizations.of(context)!.learning_course_content,
+        'subtitle': AppLocalizations.of(context)!.learning_course_content_value,
+        'category': AppLocalizations.of(context)!.learning_ai_programming,
         'icon': FeatherIcons.cpu,
       };
     case 'ai_course_3':
       return {
-        'title': AppLocalizations.current.learning_course_content,
-        'subtitle': AppLocalizations.current.learning_course_content_value,
-        'category': AppLocalizations.current.learning_ai_programming,
+        'title': AppLocalizations.of(context)!.learning_course_content,
+        'subtitle': AppLocalizations.of(context)!.learning_course_content_value,
+        'category': AppLocalizations.of(context)!.learning_ai_programming,
         'icon': FeatherIcons.layers,
       };
     case 'english_course_1':
       return {
-        'title': AppLocalizations.current.learning_oral_english,
-        'subtitle': AppLocalizations.current.learning_course_schedule_value,
-        'category': AppLocalizations.current.learning_english,
+        'title': AppLocalizations.of(context)!.learning_oral_english,
+        'subtitle': AppLocalizations.of(context)!.learning_course_schedule_value,
+        'category': AppLocalizations.of(context)!.learning_english,
         'icon': FeatherIcons.mic,
       };
     case 'english_course_2':
       return {
-        'title': AppLocalizations.current.learning_english,
-        'subtitle': AppLocalizations.current.learning_english_desc,
-        'category': AppLocalizations.current.learning_english,
+        'title': AppLocalizations.of(context)!.learning_english,
+        'subtitle': AppLocalizations.of(context)!.learning_english_desc,
+        'category': AppLocalizations.of(context)!.learning_english,
         'icon': FeatherIcons.edit,
       };
     case 'english_course_3':
       return {
-        'title': AppLocalizations.current.learning_english,
-        'subtitle': AppLocalizations.current.learning_english_desc,
-        'category': AppLocalizations.current.learning_english,
+        'title': AppLocalizations.of(context)!.learning_english,
+        'subtitle': AppLocalizations.of(context)!.learning_english_desc,
+        'category': AppLocalizations.of(context)!.learning_english,
         'icon': FeatherIcons.award,
       };
     default:
       return {
-        'title': AppLocalizations.current.travel_unknown_package,
-        'subtitle': AppLocalizations.current.travel_package_unavailable,
-        'category': AppLocalizations.current.travel_other,
+        'title': AppLocalizations.of(context)!.travel_unknown_package,
+        'subtitle': AppLocalizations.of(context)!.travel_package_unavailable,
+        'category': AppLocalizations.of(context)!.travel_other,
         'icon': FeatherIcons.helpCircle,
       };
   }
