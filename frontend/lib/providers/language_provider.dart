@@ -10,6 +10,12 @@ enum AppLanguage {
   const AppLanguage(this.code, this.displayName);
   final String code;
   final String displayName;
+
+  // 是否为中文
+  bool get isChinese => this == AppLanguage.chinese;
+
+  // 是否为英文
+  bool get isEnglish => this == AppLanguage.english;
 }
 
 // 语言Provider
@@ -53,10 +59,4 @@ class LanguageNotifier extends StateNotifier<AppLanguage> {
 
   // 获取当前语言代码
   String get currentLanguageCode => state.code;
-
-  // 是否为中文
-  bool get isChinese => state == AppLanguage.chinese;
-
-  // 是否为英文
-  bool get isEnglish => state == AppLanguage.english;
 }
