@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/qiancai_dou_icon.dart';
 import '../providers/order_provider.dart';
@@ -36,7 +37,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            '订单详情',
+            AppLocalizations.of(context)!.orders_order_info,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: AppTheme.textPrimary,
@@ -59,7 +60,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          '订单详情',
+          AppLocalizations.of(context)!.orders_order_info,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
@@ -172,25 +173,25 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '订单信息',
+              AppLocalizations.of(context)!.orders_order_info,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 16.h),
-            _buildInfoRow('订单号', '${order.id}'),
-            _buildInfoRow('创建时间', _formatDateTime(order.createdAt)),
+            _buildInfoRow(AppLocalizations.of(context)!.orders_order_number_label, '${order.id}'),
+            _buildInfoRow(AppLocalizations.of(context)!.orders_created_time, _formatDateTime(order.createdAt)),
             if (order.paidAt != null)
-              _buildInfoRow('支付时间', _formatDateTime(order.paidAt!)),
+              _buildInfoRow(AppLocalizations.of(context)!.orders_paid_time, _formatDateTime(order.paidAt!)),
             if (order.fulfilledAt != null)
-              _buildInfoRow('完成时间', _formatDateTime(order.fulfilledAt!)),
-            _buildInfoRow('支付方式', '千彩豆'),
+              _buildInfoRow(AppLocalizations.of(context)!.orders_completed_time, _formatDateTime(order.fulfilledAt!)),
+            _buildInfoRow(AppLocalizations.of(context)!.orders_payment_method, '千彩豆'),
             if (order.trackingNumber != null)
-              _buildInfoRow('物流单号', order.trackingNumber!),
+              _buildInfoRow(AppLocalizations.of(context)!.orders_tracking_number, order.trackingNumber!),
             if (order.note != null && order.note!.isNotEmpty) ...[
               SizedBox(height: 12.h),
               Text(
-                '订单备注',
+                AppLocalizations.of(context)!.orders_note,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: AppTheme.textSecondary,
@@ -234,7 +235,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                 Icon(FeatherIcons.mapPin, color: AppTheme.primaryColor, size: 20.sp),
                 SizedBox(width: 8.w),
                 Text(
-                  '收货地址',
+                  AppLocalizations.of(context)!.orders_shipping_address,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -281,7 +282,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '商品清单',
+              AppLocalizations.of(context)!.orders_items_list,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -294,7 +295,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
             Row(
               children: [
                 Text(
-                  '共${order.items.length}件商品',
+                  AppLocalizations.of(context)!.orders_total_items.replaceAll('{count}', '${order.items.length}'),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppTheme.textSecondary,
                   ),
@@ -304,7 +305,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '合计: ',
+                      AppLocalizations.of(context)!.orders_total_amount,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -359,7 +360,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  '数量: ${item.quantity}',
+                  '${AppLocalizations.of(context)!.orders_quantity} ${item.quantity}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppTheme.textSecondary,
                   ),
@@ -415,7 +416,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                 Icon(FeatherIcons.truck, color: AppTheme.primaryColor, size: 20.sp),
                 SizedBox(width: 8.w),
                 Text(
-                  '物流信息',
+                  AppLocalizations.of(context)!.orders_logistics_info,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -424,14 +425,14 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
             ),
             SizedBox(height: 12.h),
             if (shipment.carrier != null)
-              _buildInfoRow('承运商', shipment.carrier!),
+              _buildInfoRow(AppLocalizations.of(context)!.orders_carrier, shipment.carrier!),
             if (shipment.trackingNo != null)
-              _buildInfoRow('物流单号', shipment.trackingNo!),
-            _buildInfoRow('状态', shipment.statusText),
+              _buildInfoRow(AppLocalizations.of(context)!.orders_tracking_number, shipment.trackingNo!),
+            _buildInfoRow(AppLocalizations.of(context)!.orders_tracking_status, shipment.statusText),
             if (shipment.shippedAt != null)
-              _buildInfoRow('发货时间', _formatDateTime(shipment.shippedAt!)),
+              _buildInfoRow(AppLocalizations.of(context)!.orders_shipped_time, _formatDateTime(shipment.shippedAt!)),
             if (shipment.deliveredAt != null)
-              _buildInfoRow('送达时间', _formatDateTime(shipment.deliveredAt!)),
+              _buildInfoRow(AppLocalizations.of(context)!.orders_delivered_time, _formatDateTime(shipment.deliveredAt!)),
           ],
         ),
       ),
@@ -461,7 +462,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                 Icon(FeatherIcons.map, color: AppTheme.primaryColor, size: 20.sp),
                 SizedBox(width: 8.w),
                 Text(
-                  '物流跟踪',
+                  AppLocalizations.of(context)!.orders_tracking,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -567,7 +568,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                     ),
                   ),
                   child: Text(
-                    '取消订单',
+                    AppLocalizations.of(context)!.orders_cancel_order,
                     style: TextStyle(
                       color: AppTheme.errorColor,
                       fontWeight: FontWeight.w600,
@@ -589,7 +590,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
                     ),
                   ),
                   child: Text(
-                    '确认收货',
+                    AppLocalizations.of(context)!.orders_confirm_delivery,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
@@ -696,17 +697,17 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('取消订单'),
-        content: Text('确定要取消这个订单吗？'),
+        title: Text(AppLocalizations.of(context)!.orders_cancel_confirm_title),
+        content: Text(AppLocalizations.of(context)!.orders_cancel_confirm_content),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('取消'),
+            child: Text(AppLocalizations.of(context)!.common_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: Text(
-              '确定',
+              AppLocalizations.of(context)!.common_confirm,
               style: TextStyle(color: AppTheme.errorColor),
             ),
           ),
@@ -719,7 +720,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('订单已取消'),
+            content: Text(AppLocalizations.of(context)!.orders_cancelled_success),
             backgroundColor: AppTheme.successColor,
           ),
         );
@@ -731,17 +732,17 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('确认收货'),
-        content: Text('确定已收到商品吗？'),
+        title: Text(AppLocalizations.of(context)!.orders_delivery_confirm_title),
+        content: Text(AppLocalizations.of(context)!.orders_delivery_confirm_content),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('取消'),
+            child: Text(AppLocalizations.of(context)!.common_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: Text(
-              '确定',
+              AppLocalizations.of(context)!.common_confirm,
               style: TextStyle(color: AppTheme.primaryColor),
             ),
           ),
@@ -754,7 +755,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('确认收货成功'),
+            content: Text(AppLocalizations.of(context)!.orders_delivery_confirmed),
             backgroundColor: AppTheme.successColor,
           ),
         );

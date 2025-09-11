@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/qiancai_dou_icon.dart';
 import '../../../models/order.dart';
@@ -25,7 +26,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Text(
-          '支付成功',
+          AppLocalizations.of(context)!.payment_success_title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
@@ -55,7 +56,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
             
             // 成功标题
             Text(
-              '支付成功！',
+              AppLocalizations.of(context)!.payment_success_title,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,
@@ -64,7 +65,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
             SizedBox(height: 8.h),
             
             Text(
-              '您的订单已成功创建并支付',
+              AppLocalizations.of(context)!.payment_success_message,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: AppTheme.textSecondary,
               ),
@@ -93,8 +94,8 @@ class PaymentSuccessScreen extends ConsumerWidget {
                     children: [
                       Icon(FeatherIcons.fileText, color: AppTheme.primaryColor, size: 20.sp),
                       SizedBox(width: 8.w),
-                      Text(
-                        '订单信息',
+                        Text(
+                        AppLocalizations.of(context)!.payment_order_info,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -103,16 +104,16 @@ class PaymentSuccessScreen extends ConsumerWidget {
                   ),
                   SizedBox(height: 16.h),
                   
-                  _buildInfoRow('订单号', '#${order.id}', context),
+                  _buildInfoRow(AppLocalizations.of(context)!.payment_order_number, '#${order.id}', context),
                   SizedBox(height: 12.h),
                   
-                  _buildInfoRow('订单状态', order.statusText, context),
+                  _buildInfoRow(AppLocalizations.of(context)!.payment_order_status, order.statusText, context),
                   SizedBox(height: 12.h),
                   
-                  _buildInfoRow('支付时间', _formatDateTime(order.paidAt), context),
+                  _buildInfoRow(AppLocalizations.of(context)!.payment_paid_time, _formatDateTime(order.paidAt), context),
                   SizedBox(height: 12.h),
                   
-                  _buildInfoRow('订单总额', '', context, isPrice: true, price: order.totalCost),
+                  _buildInfoRow(AppLocalizations.of(context)!.payment_order_total, '', context, isPrice: true, price: order.totalCost),
                 ],
               ),
             ),
@@ -142,7 +143,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
                         Icon(FeatherIcons.package, color: AppTheme.primaryColor, size: 20.sp),
                         SizedBox(width: 8.w),
                         Text(
-                          '商品清单',
+                          AppLocalizations.of(context)!.payment_items_list,
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -174,7 +175,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
                       side: BorderSide(color: AppTheme.primaryColor),
                     ),
                     child: Text(
-                      '返回首页',
+                      AppLocalizations.of(context)!.payment_back_home,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppTheme.primaryColor,
                         fontWeight: FontWeight.w600,
@@ -200,7 +201,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      '查看订单',
+                      AppLocalizations.of(context)!.payment_view_orders,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -284,7 +285,7 @@ class PaymentSuccessScreen extends ConsumerWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  '数量: ${item.quantity}',
+                  '${AppLocalizations.of(context)!.payment_quantity} ${item.quantity}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppTheme.textSecondary,
                   ),

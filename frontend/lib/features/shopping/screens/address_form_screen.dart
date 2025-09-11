@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/address_provider.dart';
 import '../../../models/address.dart';
@@ -61,7 +62,7 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          widget.address == null ? '新增地址' : '编辑地址',
+          widget.address == null ? AppLocalizations.of(context)!.address_title_add : AppLocalizations.of(context)!.address_title_edit,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
@@ -79,15 +80,15 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle('收货人信息'),
+              _buildSectionTitle(AppLocalizations.of(context)!.address_section_contact),
               SizedBox(height: 12.h),
               _buildTextField(
                 controller: _receiverNameController,
-                label: '收货人姓名',
-                hint: '请输入收货人姓名',
+                label: AppLocalizations.of(context)!.address_receiver_name,
+                hint: AppLocalizations.of(context)!.address_receiver_name,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '请输入收货人姓名';
+                    return AppLocalizations.of(context)!.address_receiver_name;
                   }
                   return null;
                 },
@@ -95,32 +96,32 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
               SizedBox(height: 16.h),
               _buildTextField(
                 controller: _phoneController,
-                label: '手机号码',
-                hint: '请输入手机号码',
+                label: AppLocalizations.of(context)!.address_phone,
+                hint: AppLocalizations.of(context)!.address_phone,
                 keyboardType: TextInputType.phone,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '请输入手机号码';
+                    return AppLocalizations.of(context)!.address_phone;
                   }
-                  if (!RegExp(r'^1[3-9]\d{9}$').hasMatch(value)) {
-                    return '请输入正确的手机号码';
+                  if (!RegExp(r'^1[3-9]\\d{9}$').hasMatch(value)) {
+                    return AppLocalizations.of(context)!.address_phone;
                   }
                   return null;
                 },
               ),
               SizedBox(height: 24.h),
-              _buildSectionTitle('收货地址'),
+              _buildSectionTitle(AppLocalizations.of(context)!.address_section_address),
               SizedBox(height: 12.h),
               Row(
                 children: [
                   Expanded(
                     child: _buildTextField(
                       controller: _provinceController,
-                      label: '省份',
-                      hint: '请选择省份',
+                      label: AppLocalizations.of(context)!.address_province,
+                      hint: AppLocalizations.of(context)!.address_province,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '请选择省份';
+                          return AppLocalizations.of(context)!.address_province;
                         }
                         return null;
                       },
@@ -130,11 +131,11 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
                   Expanded(
                     child: _buildTextField(
                       controller: _cityController,
-                      label: '城市',
-                      hint: '请选择城市',
+                      label: AppLocalizations.of(context)!.address_city,
+                      hint: AppLocalizations.of(context)!.address_city,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return '请选择城市';
+                          return AppLocalizations.of(context)!.address_city;
                         }
                         return null;
                       },
@@ -145,18 +146,18 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
               SizedBox(height: 16.h),
               _buildTextField(
                 controller: _districtController,
-                label: '区县（可选）',
-                hint: '请输入区县',
+                label: AppLocalizations.of(context)!.address_district_optional,
+                hint: AppLocalizations.of(context)!.address_district_optional,
               ),
               SizedBox(height: 16.h),
               _buildTextField(
                 controller: _detailController,
-                label: '详细地址',
-                hint: '请输入街道、门牌号等详细信息',
+                label: AppLocalizations.of(context)!.address_detail,
+                hint: AppLocalizations.of(context)!.address_detail,
                 maxLines: 3,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return '请输入详细地址';
+                    return AppLocalizations.of(context)!.address_detail;
                   }
                   return null;
                 },
@@ -164,12 +165,12 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
               SizedBox(height: 16.h),
               _buildTextField(
                 controller: _zipController,
-                label: '邮政编码（可选）',
-                hint: '请输入邮政编码',
+                label: AppLocalizations.of(context)!.address_zip_optional,
+                hint: AppLocalizations.of(context)!.address_zip_optional,
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 24.h),
-              _buildSectionTitle('其他设置'),
+              _buildSectionTitle(AppLocalizations.of(context)!.app_settings),
               SizedBox(height: 12.h),
               Container(
                 padding: EdgeInsets.all(16.w),
@@ -197,14 +198,14 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '设为默认地址',
+                            AppLocalizations.of(context)!.address_set_default,
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            '下单时默认使用此地址',
+                            AppLocalizations.of(context)!.address_set_default_desc,
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: AppTheme.textSecondary,
                             ),
@@ -253,7 +254,7 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
               ),
             ),
             child: Text(
-              widget.address == null ? '保存地址' : '更新地址',
+              widget.address == null ? AppLocalizations.of(context)!.address_save : AppLocalizations.of(context)!.address_update,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -354,7 +355,7 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
     if (result != null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(widget.address == null ? '地址已保存' : '地址已更新'),
+          content: Text(widget.address == null ? AppLocalizations.of(context)!.address_saved : AppLocalizations.of(context)!.address_updated),
           backgroundColor: AppTheme.successColor,
         ),
       );
@@ -362,7 +363,7 @@ class _AddressFormScreenState extends ConsumerState<AddressFormScreen> {
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('操作失败，请重试'),
+          content: Text(AppLocalizations.of(context)!.action_failed),
           backgroundColor: AppTheme.errorColor,
         ),
       );

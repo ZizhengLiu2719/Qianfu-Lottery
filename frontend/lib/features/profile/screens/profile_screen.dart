@@ -577,7 +577,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
                     ),
                   )
                 : Text(
-                    '更换',
+                    AppLocalizations.of(context)!.profile_change_avatar,
                     style: TextStyle(
                       fontSize: 8.sp, // 进一步减小字体到8
                       fontWeight: FontWeight.w500,

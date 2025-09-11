@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/qiancai_dou_icon.dart';
@@ -37,7 +38,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          '我的订单',
+          AppLocalizations.of(context)!.orders_title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
@@ -60,29 +61,29 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'all',
-                child: Text('全部订单'),
+                child: Text(AppLocalizations.of(context)!.orders_all),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'PENDING',
-                child: Text('待支付'),
+                child: Text(AppLocalizations.of(context)!.orders_pending),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'PAID',
-                child: Text('已支付'),
+                child: Text(AppLocalizations.of(context)!.orders_paid),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'SHIPPED',
-                child: Text('已发货'),
+                child: Text(AppLocalizations.of(context)!.orders_shipped),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'DELIVERED',
-                child: Text('已送达'),
+                child: Text(AppLocalizations.of(context)!.orders_delivered),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'CANCELLED',
-                child: Text('已取消'),
+                child: Text(AppLocalizations.of(context)!.orders_cancelled),
               ),
             ],
             child: Padding(
@@ -117,14 +118,14 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
           ),
           SizedBox(height: 16.h),
           Text(
-            '暂无订单',
+            AppLocalizations.of(context)!.orders_empty,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: AppTheme.textTertiary,
             ),
           ),
           SizedBox(height: 8.h),
           Text(
-            '快去购买心仪的商品吧',
+            AppLocalizations.of(context)!.orders_empty_desc,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: AppTheme.textTertiary,
             ),
@@ -156,7 +157,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
             Row(
               children: [
                 Text(
-                  '订单 #${order.id}',
+                  '${AppLocalizations.of(context)!.orders_order_number}${order.id}',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -173,7 +174,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
             Row(
               children: [
                 Text(
-                  '总计：',
+                  AppLocalizations.of(context)!.orders_total,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppTheme.textSecondary,
                   ),
@@ -215,7 +216,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                         ),
                       ),
                       child: Text(
-                        '取消订单',
+                        AppLocalizations.of(context)!.orders_cancel_order,
                         style: TextStyle(color: AppTheme.errorColor),
                       ),
                     ),
@@ -230,8 +231,8 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                       ),
-                      child: const Text(
-                        '立即支付',
+                      child: Text(
+                        AppLocalizations.of(context)!.orders_pay_now,
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -294,7 +295,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  '数量: ${item.quantity}',
+                  '${AppLocalizations.of(context)!.orders_quantity} ${item.quantity}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppTheme.textSecondary,
                   ),
@@ -328,23 +329,23 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
     switch (status) {
       case 'PENDING':
         color = AppTheme.warningColor;
-        text = '待支付';
+        text = AppLocalizations.of(context)!.orders_pending;
         break;
       case 'PAID':
         color = AppTheme.primaryColor;
-        text = '已支付';
+        text = AppLocalizations.of(context)!.orders_paid;
         break;
       case 'SHIPPED':
         color = AppTheme.infoColor;
-        text = '已发货';
+        text = AppLocalizations.of(context)!.orders_shipped;
         break;
       case 'DELIVERED':
         color = AppTheme.successColor;
-        text = '已送达';
+        text = AppLocalizations.of(context)!.orders_delivered;
         break;
       case 'CANCELLED':
         color = AppTheme.errorColor;
-        text = '已取消';
+        text = AppLocalizations.of(context)!.orders_cancelled;
         break;
       default:
         color = AppTheme.textTertiary;
@@ -372,7 +373,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(success ? '支付成功' : '支付失败'),
+          content: Text(success ? AppLocalizations.of(context)!.orders_payment_success : AppLocalizations.of(context)!.orders_payment_failed),
           backgroundColor: success ? AppTheme.successColor : AppTheme.errorColor,
       ),
     );
@@ -384,7 +385,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(success ? '订单已取消' : '取消失败'),
+          content: Text(success ? AppLocalizations.of(context)!.orders_cancelled_success : AppLocalizations.of(context)!.orders_cancel_failed),
           backgroundColor: success ? AppTheme.successColor : AppTheme.errorColor,
         ),
       );

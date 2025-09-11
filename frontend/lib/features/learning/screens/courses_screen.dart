@@ -139,7 +139,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: AppLocalizations.of(context)!.learning_ai_programming,
           subtitle: AppLocalizations.of(context)!.learning_ai_programming_desc,
           icon: FeatherIcons.cpu,
-          category: 'AI编程学习',
+          category: AppLocalizations.of(context)!.learning_ai_programming_category,
           onTap: () => setState(() => _selectedCategory = 'ai'),
         ),
         SizedBox(height: 12.h),
@@ -148,7 +148,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: AppLocalizations.of(context)!.learning_english,
           subtitle: AppLocalizations.of(context)!.learning_english_desc,
           icon: FeatherIcons.mic,
-          category: '英语学习',
+          category: AppLocalizations.of(context)!.learning_english_category,
           onTap: () => setState(() => _selectedCategory = 'english'),
         ),
         SizedBox(height: 12.h),
@@ -157,7 +157,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: AppLocalizations.of(context)!.learning_study_abroad,
           subtitle: AppLocalizations.of(context)!.learning_study_abroad_desc,
           icon: FeatherIcons.globe,
-          category: '留学咨询',
+          category: AppLocalizations.of(context)!.learning_study_abroad_category,
           onTap: () => setState(() => _selectedCategory = 'study_abroad'),
         ),
         SizedBox(height: 12.h),
@@ -166,7 +166,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           title: AppLocalizations.of(context)!.learning_summer_camp,
           subtitle: AppLocalizations.of(context)!.learning_summer_camp_desc,
           icon: FeatherIcons.sun,
-          category: '夏令营',
+          category: AppLocalizations.of(context)!.learning_summer_camp_category,
           onTap: () => setState(() => _selectedCategory = 'summer_camp'),
         ),
       ],
@@ -303,7 +303,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           onTap: () => _navigateToStudyAbroadDetail('study_abroad_1'),
           child: _buildServiceCard(
             context,
-            title: '留学规划与定位',
+            title: AppLocalizations.of(context)!.learning_planning_positioning,
             subtitle: AppLocalizations.of(context)!.learning_study_abroad_desc,
             icon: FeatherIcons.crosshair,
             duration: AppLocalizations.of(context)!.learning_course_duration_value,
@@ -314,7 +314,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           onTap: () => _navigateToStudyAbroadDetail('study_abroad_2'),
           child: _buildServiceCard(
             context,
-            title: '院校选择与专业推荐',
+            title: AppLocalizations.of(context)!.learning_school_selection,
             subtitle: AppLocalizations.of(context)!.learning_study_abroad_desc,
             icon: FeatherIcons.bookOpen,
             duration: AppLocalizations.of(context)!.learning_course_duration_value,
@@ -325,7 +325,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           onTap: () => _navigateToStudyAbroadDetail('study_abroad_3'),
           child: _buildServiceCard(
             context,
-            title: '申请材料准备指导',
+            title: AppLocalizations.of(context)!.learning_application_guidance,
             subtitle: AppLocalizations.of(context)!.learning_study_abroad_desc,
             icon: FeatherIcons.edit,
             duration: AppLocalizations.of(context)!.learning_course_duration_value,
@@ -336,7 +336,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           onTap: () => _navigateToStudyAbroadDetail('study_abroad_4'),
           child: _buildServiceCard(
             context,
-            title: '语言培训与考试指导',
+            title: AppLocalizations.of(context)!.learning_language_training,
             subtitle: AppLocalizations.of(context)!.learning_study_abroad_desc,
             icon: FeatherIcons.award,
             duration: AppLocalizations.of(context)!.learning_course_duration_value,
@@ -352,7 +352,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
       children: [
         SizedBox(height: 16.h),
         Text(
-          '夏令营',
+          AppLocalizations.of(context)!.learning_summer_camp_title,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
@@ -361,7 +361,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
         ),
         SizedBox(height: 8.h),
         Text(
-          '美国顶级夏令营，体验国际化教育',
+          AppLocalizations.of(context)!.learning_summer_camp_desc,
           style: TextStyle(
             fontSize: 14.sp,
             color: AppTheme.textSecondary,
@@ -372,10 +372,10 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           onTap: () => _navigateToSummerCampDetail('summer_camp_1'),
           child: _buildCampCard(
             context,
-            title: '哈佛西湖辩论赛夏令营',
-            subtitle: '马萨诸塞州 · 14-18岁',
+            title: AppLocalizations.of(context)!.learning_harvard_debate,
+            subtitle: AppLocalizations.of(context)!.learning_harvard_debate_subtitle,
             icon: FeatherIcons.messageSquare,
-            duration: '7月1日-14日',
+            duration: AppLocalizations.of(context)!.learning_harvard_debate_duration,
           ),
         ),
         SizedBox(height: 12.h),
@@ -383,10 +383,10 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           onTap: () => _navigateToSummerCampDetail('summer_camp_2'),
           child: _buildCampCard(
             context,
-            title: '麻省理工STEAM沉浸式夏令营',
-            subtitle: '马萨诸塞州 · 15-18岁',
+            title: AppLocalizations.of(context)!.learning_mit_steam,
+            subtitle: AppLocalizations.of(context)!.learning_mit_steam_subtitle,
             icon: FeatherIcons.cpu,
-            duration: '7月15日-28日',
+            duration: AppLocalizations.of(context)!.learning_mit_steam_duration,
           ),
         ),
         SizedBox(height: 12.h),
@@ -394,10 +394,10 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           onTap: () => _navigateToSummerCampDetail('summer_camp_3'),
           child: _buildCampCard(
             context,
-            title: 'Wonder Valley度假村夏令营',
-            subtitle: '加利福尼亚州 · 10-16岁',
+            title: AppLocalizations.of(context)!.learning_wonder_valley,
+            subtitle: AppLocalizations.of(context)!.learning_wonder_valley_subtitle,
             icon: FeatherIcons.mapPin,
-            duration: '8月1日-14日',
+            duration: AppLocalizations.of(context)!.learning_wonder_valley_duration,
           ),
         ),
         SizedBox(height: 12.h),
@@ -405,10 +405,10 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           onTap: () => _navigateToSummerCampDetail('summer_camp_4'),
           child: _buildCampCard(
             context,
-            title: 'Rocking Horse牧场夏令营',
-            subtitle: '纽约州 · 12-17岁',
+            title: AppLocalizations.of(context)!.learning_rocking_horse,
+            subtitle: AppLocalizations.of(context)!.learning_rocking_horse_subtitle,
             icon: FeatherIcons.heart,
-            duration: '8月15日-28日',
+            duration: AppLocalizations.of(context)!.learning_rocking_horse_duration,
           ),
         ),
       ],
@@ -530,51 +530,51 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
     switch (courseId) {
       case 'ai_course_1':
         return {
-          'title': 'AI 编程入门（直播课）',
-          'subtitle': '每周二/四 晚 20:00 · 60 分钟',
-          'category': 'AI编程',
+          'title': AppLocalizations.of(context)!.learning_ai_programming_live,
+          'subtitle': AppLocalizations.of(context)!.learning_schedule_tue_thu,
+          'category': AppLocalizations.of(context)!.learning_ai_programming_tag,
           'icon': FeatherIcons.cpu,
         };
       case 'ai_course_2':
         return {
-          'title': '机器学习实战',
-          'subtitle': '从零开始构建AI模型',
-          'category': 'AI编程',
+          'title': AppLocalizations.of(context)!.learning_machine_learning,
+          'subtitle': AppLocalizations.of(context)!.learning_machine_learning_subtitle,
+          'category': AppLocalizations.of(context)!.learning_ai_programming_tag,
           'icon': FeatherIcons.cpu,
         };
       case 'ai_course_3':
         return {
-          'title': '深度学习进阶',
-          'subtitle': '神经网络与深度学习应用',
-          'category': 'AI编程',
+          'title': AppLocalizations.of(context)!.learning_deep_learning,
+          'subtitle': AppLocalizations.of(context)!.learning_deep_learning_subtitle,
+          'category': AppLocalizations.of(context)!.learning_ai_programming_tag,
           'icon': FeatherIcons.layers,
         };
       case 'english_course_1':
         return {
-          'title': '英语口语提升（录播+答疑）',
-          'subtitle': '随时观看 · 每周一次答疑',
-          'category': '英语学习',
+          'title': AppLocalizations.of(context)!.learning_english_speaking,
+          'subtitle': AppLocalizations.of(context)!.learning_english_speaking_subtitle,
+          'category': AppLocalizations.of(context)!.learning_english_category,
           'icon': FeatherIcons.mic,
         };
       case 'english_course_2':
         return {
-          'title': '商务英语写作',
-          'subtitle': '专业商务邮件与报告写作',
-          'category': '英语学习',
+          'title': AppLocalizations.of(context)!.learning_business_english,
+          'subtitle': AppLocalizations.of(context)!.learning_business_english_subtitle,
+          'category': AppLocalizations.of(context)!.learning_english_category,
           'icon': FeatherIcons.edit,
         };
       case 'english_course_3':
         return {
-          'title': '雅思托福备考',
-          'subtitle': '系统化备考，高分通过',
-          'category': '英语学习',
+          'title': AppLocalizations.of(context)!.learning_ielts_toefl,
+          'subtitle': AppLocalizations.of(context)!.learning_ielts_toefl_subtitle,
+          'category': AppLocalizations.of(context)!.learning_english_category,
           'icon': FeatherIcons.award,
         };
       default:
         return {
-          'title': '未知课程',
-          'subtitle': '课程信息不可用',
-          'category': '其他',
+          'title': AppLocalizations.of(context)!.learning_unknown_course,
+          'subtitle': AppLocalizations.of(context)!.learning_unknown_course_subtitle,
+          'category': AppLocalizations.of(context)!.learning_other_category,
           'icon': FeatherIcons.helpCircle,
         };
     }
@@ -622,37 +622,37 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
     switch (serviceId) {
       case 'study_abroad_1':
         return {
-          'title': '留学规划与定位',
-          'subtitle': '根据学术背景和职业目标提供个性化留学计划',
-          'category': '留学咨询',
+          'title': AppLocalizations.of(context)!.learning_planning_positioning,
+          'subtitle': AppLocalizations.of(context)!.learning_study_abroad_desc,
+          'category': AppLocalizations.of(context)!.learning_study_abroad_category,
           'icon': FeatherIcons.crosshair,
         };
       case 'study_abroad_2':
         return {
-          'title': '院校选择与专业推荐',
-          'subtitle': '推荐适合的学校和专业，提供详细信息',
-          'category': '留学咨询',
+          'title': AppLocalizations.of(context)!.learning_school_selection,
+          'subtitle': AppLocalizations.of(context)!.learning_study_abroad_desc,
+          'category': AppLocalizations.of(context)!.learning_study_abroad_category,
           'icon': FeatherIcons.bookOpen,
         };
       case 'study_abroad_3':
         return {
-          'title': '申请材料准备指导',
-          'subtitle': '协助准备个人陈述、推荐信等申请材料',
-          'category': '留学咨询',
+          'title': AppLocalizations.of(context)!.learning_application_guidance,
+          'subtitle': AppLocalizations.of(context)!.learning_study_abroad_desc,
+          'category': AppLocalizations.of(context)!.learning_study_abroad_category,
           'icon': FeatherIcons.edit,
         };
       case 'study_abroad_4':
         return {
-          'title': '语言培训与考试指导',
-          'subtitle': '提供语言培训课程和考试指导',
-          'category': '留学咨询',
+          'title': AppLocalizations.of(context)!.learning_language_training,
+          'subtitle': AppLocalizations.of(context)!.learning_study_abroad_desc,
+          'category': AppLocalizations.of(context)!.learning_study_abroad_category,
           'icon': FeatherIcons.award,
         };
       default:
         return {
-          'title': '未知服务',
-          'subtitle': '服务信息不可用',
-          'category': '留学咨询',
+          'title': AppLocalizations.of(context)!.learning_unknown_service,
+          'subtitle': AppLocalizations.of(context)!.learning_unknown_service_subtitle,
+          'category': AppLocalizations.of(context)!.learning_study_abroad_category,
           'icon': FeatherIcons.helpCircle,
         };
     }
@@ -662,37 +662,37 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
     switch (campId) {
       case 'summer_camp_1':
         return {
-          'title': '哈佛西湖辩论赛夏令营',
-          'subtitle': '马萨诸塞州 · 14-18岁',
-          'category': '夏令营',
+          'title': AppLocalizations.of(context)!.learning_harvard_debate,
+          'subtitle': AppLocalizations.of(context)!.learning_harvard_debate_subtitle,
+          'category': AppLocalizations.of(context)!.learning_summer_camp_category,
           'icon': FeatherIcons.messageSquare,
         };
       case 'summer_camp_2':
         return {
-          'title': '麻省理工STEAM沉浸式夏令营',
-          'subtitle': '马萨诸塞州 · 15-18岁',
-          'category': '夏令营',
+          'title': AppLocalizations.of(context)!.learning_mit_steam,
+          'subtitle': AppLocalizations.of(context)!.learning_mit_steam_subtitle,
+          'category': AppLocalizations.of(context)!.learning_summer_camp_category,
           'icon': FeatherIcons.cpu,
         };
       case 'summer_camp_3':
         return {
-          'title': 'Wonder Valley度假村夏令营',
-          'subtitle': '加利福尼亚州 · 10-16岁',
-          'category': '夏令营',
+          'title': AppLocalizations.of(context)!.learning_wonder_valley,
+          'subtitle': AppLocalizations.of(context)!.learning_wonder_valley_subtitle,
+          'category': AppLocalizations.of(context)!.learning_summer_camp_category,
           'icon': FeatherIcons.mapPin,
         };
       case 'summer_camp_4':
         return {
-          'title': 'Rocking Horse牧场夏令营',
-          'subtitle': '纽约州 · 12-17岁',
-          'category': '夏令营',
+          'title': AppLocalizations.of(context)!.learning_rocking_horse,
+          'subtitle': AppLocalizations.of(context)!.learning_rocking_horse_subtitle,
+          'category': AppLocalizations.of(context)!.learning_summer_camp_category,
           'icon': FeatherIcons.heart,
         };
       default:
         return {
-          'title': '未知夏令营',
-          'subtitle': '夏令营信息不可用',
-          'category': '夏令营',
+          'title': AppLocalizations.of(context)!.learning_unknown_camp,
+          'subtitle': AppLocalizations.of(context)!.learning_unknown_camp_subtitle,
+          'category': AppLocalizations.of(context)!.learning_summer_camp_category,
           'icon': FeatherIcons.helpCircle,
         };
     }
