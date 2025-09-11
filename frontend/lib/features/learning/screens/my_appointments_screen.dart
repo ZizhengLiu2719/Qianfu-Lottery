@@ -34,7 +34,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('我的学习预约'),
+        title: Text(AppLocalizations.of(context)!.learning_my_appointments),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
@@ -43,7 +43,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
             IconButton(
               icon: Icon(FeatherIcons.trash2),
               onPressed: _showClearAllDialog,
-              tooltip: '清空所有预约',
+              tooltip: AppLocalizations.of(context)!.cart_clear,
             ),
         ],
       ),

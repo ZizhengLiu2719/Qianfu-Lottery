@@ -86,7 +86,7 @@ class CartScreen extends ConsumerWidget {
           SizedBox(height: 24.h),
           ElevatedButton(
             onPressed: () => context.go(AppRoutes.products),
-            child: const Text('去购物'),
+            child: Text(AppLocalizations.of(context)!.products_title),
           ),
         ],
       ),

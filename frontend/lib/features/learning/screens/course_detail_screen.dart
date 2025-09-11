@@ -245,7 +245,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
       child: Column(
         children: [
           Text(
-            isAppointed ? '已注册此课程' : '立即注册课程',
+            isAppointed ? AppLocalizations.of(context)!.learning_my_appointments : AppLocalizations.of(context)!.courses_book_now,
             style: TextStyle(
               fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
@@ -290,7 +290,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            isAppointed ? '已注册' : '注册课程',
+                            isAppointed ? AppLocalizations.of(context)!.appointments_status_booked : AppLocalizations.of(context)!.courses_book_now,
                             style: TextStyle(
                               fontSize: isDesktop ? 14.sp : 16.sp,
                               color: Colors.white,
@@ -328,7 +328,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            '取消注册',
+                            AppLocalizations.of(context)!.appointments_cancel,
                             style: TextStyle(
                               fontSize: isDesktop ? 14.sp : 16.sp,
                               color: Colors.red,
@@ -363,10 +363,10 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('注册成功！'),
+        content: Text(AppLocalizations.of(context)!.appointments_book_success),
         backgroundColor: Colors.green,
         action: SnackBarAction(
-          label: '查看我的预约',
+          label: AppLocalizations.of(context)!.learning_my_appointments,
           textColor: Colors.white,
           onPressed: () {
             // TODO: 导航到我的预约页面
@@ -384,7 +384,7 @@ class _CourseDetailScreenState extends ConsumerState<CourseDetailScreen> {
     ref.read(appointmentsProvider.notifier).removeAppointment(widget.courseId);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('已取消注册'),
+        content: Text(AppLocalizations.of(context)!.appointments_cancel_success),
         backgroundColor: Colors.orange,
       ),
     );

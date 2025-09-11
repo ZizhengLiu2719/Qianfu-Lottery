@@ -35,7 +35,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('平台反馈'),
+        title: Text(AppLocalizations.of(context)!.feedback_title),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
@@ -47,7 +47,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
           IconButton(
             icon: const Icon(FeatherIcons.plus),
             onPressed: () => _showCreateFeedbackDialog(context),
-            tooltip: '新建反馈',
+            tooltip: AppLocalizations.of(context)!.feedback_submit,
           ),
         ],
       ),
@@ -74,7 +74,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
           ),
           SizedBox(height: 24.h),
           Text(
-            '暂无反馈记录',
+            AppLocalizations.of(context)!.common_empty,
             style: TextStyle(
               fontSize: isDesktop ? 18.sp : 20.sp,
               fontWeight: FontWeight.w600,
@@ -83,7 +83,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
           ),
           SizedBox(height: 8.h),
           Text(
-            '点击右上角 + 号创建您的第一条反馈',
+            AppLocalizations.of(context)!.feedback_submit,
             style: TextStyle(
               fontSize: isDesktop ? 14.sp : 16.sp,
               color: AppTheme.textTertiary,
@@ -189,7 +189,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               ),
               SizedBox(width: 8.w),
               Text(
-                '创建于 ${_formatDate(feedback.createdAt)}',
+                '${AppLocalizations.of(context)!.time_just_now} ${_formatDate(feedback.createdAt)}',
                 style: TextStyle(
                   fontSize: isDesktop ? 10.sp : 12.sp,
                   color: AppTheme.textTertiary,
@@ -281,7 +281,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('新建反馈'),
+        title: Text(AppLocalizations.of(context)!.feedback_title),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,
@@ -298,7 +298,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
                     height: 16.w,
                     child: const CircularProgressIndicator(strokeWidth: 2),
                   )
-                : const Text('提交'),
+                : Text(AppLocalizations.of(context)!.common_submit),
           ),
         ],
       ),
@@ -311,7 +311,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
             children: [
               // 标题输入
               Text(
-                '反馈标题',
+                AppLocalizations.of(context)!.feedback_title,
                 style: TextStyle(
                   fontSize: isDesktop ? 14.sp : 16.sp,
                   fontWeight: FontWeight.w600,
@@ -322,17 +322,14 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
-                  hintText: '请简要描述您的问题或建议',
+                  hintText: AppLocalizations.of(context)!.feedback_title_hint,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return '请输入反馈标题';
-                  }
-                  if (value.trim().length < 5) {
-                    return '标题至少需要5个字符';
+                    return AppLocalizations.of(context)!.feedback_title_hint;
                   }
                   return null;
                 },
@@ -341,7 +338,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
 
               // 分类选择
               Text(
-                '反馈分类',
+                AppLocalizations.of(context)!.feedback_category,
                 style: TextStyle(
                   fontSize: isDesktop ? 14.sp : 16.sp,
                   fontWeight: FontWeight.w600,
@@ -372,7 +369,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
 
               // 优先级选择
               Text(
-                '优先级',
+                AppLocalizations.of(context)!.feedback_priority,
                 style: TextStyle(
                   fontSize: isDesktop ? 14.sp : 16.sp,
                   fontWeight: FontWeight.w600,
@@ -403,7 +400,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
 
               // 内容输入
               Text(
-                '详细描述',
+                AppLocalizations.of(context)!.feedback_content_hint,
                 style: TextStyle(
                   fontSize: isDesktop ? 14.sp : 16.sp,
                   fontWeight: FontWeight.w600,
@@ -415,7 +412,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
                 controller: _contentController,
                 maxLines: 8,
                 decoration: InputDecoration(
-                  hintText: '请详细描述您遇到的问题或建议，包括复现步骤、期望结果等...',
+                  hintText: AppLocalizations.of(context)!.feedback_content_hint,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.r),
                   ),
@@ -423,10 +420,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return '请输入详细描述';
-                  }
-                  if (value.trim().length < 10) {
-                    return '详细描述至少需要10个字符';
+                    return AppLocalizations.of(context)!.feedback_content_hint;
                   }
                   return null;
                 },
@@ -456,7 +450,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
                           ),
                         )
                       : Text(
-                          '提交反馈',
+                          AppLocalizations.of(context)!.feedback_submit,
                           style: TextStyle(fontSize: isDesktop ? 14.sp : 16.sp),
                         ),
                 ),

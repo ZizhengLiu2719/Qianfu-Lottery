@@ -189,7 +189,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         }
       }
     } catch (e) {
-      _showError('选择图片失败: $e');
+      _showError(AppLocalizations.of(context)!.common_failed);
     }
   }
 
@@ -209,7 +209,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         await _processImageData(bytes, extension);
       }
     } catch (e) {
-      _showError('选择图片失败: $e');
+      _showError(AppLocalizations.of(context)!.common_failed);
     }
   }
 
@@ -273,15 +273,15 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
         // 延迟显示成功消息，确保状态更新完成
         Future.delayed(const Duration(milliseconds: 100), () {
           if (mounted) {
-            _showSuccess('头像上传成功');
+            _showSuccess(AppLocalizations.of(context)!.common_success);
           }
         });
       } else {
-        _showError(result['message'] ?? '上传失败');
+        _showError(result['message'] ?? AppLocalizations.of(context)!.common_failed);
       }
     } catch (e) {
       print('上传头像错误: $e');
-      _showError('上传失败: $e');
+      _showError(AppLocalizations.of(context)!.common_failed);
     } finally {
       setState(() {
         _isUploading = false;
@@ -462,7 +462,7 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
       builder: (ctx) {
         final controller = TextEditingController();
         return AlertDialog(
-          title: const Text('上传头像 (粘贴 data URL)'),
+          title: Text(AppLocalizations.of(context)!.profile_edit),
           content: TextField(
             controller: controller,
             decoration: const InputDecoration(hintText: 'data:image/png;base64,...'),
@@ -470,13 +470,13 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
             maxLines: 3,
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
+            TextButton(onPressed: () => Navigator.pop(ctx), child: Text(AppLocalizations.of(context)!.common_cancel)),
             TextButton(
               onPressed: () {
                 inputDataUrl = controller.text.trim();
                 Navigator.pop(ctx);
               },
-              child: const Text('确定'),
+              child: Text(AppLocalizations.of(context)!.common_confirm),
             )
           ],
         );

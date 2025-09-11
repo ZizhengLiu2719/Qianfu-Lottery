@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../../core/theme/app_theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/widgets/qiancai_dou_icon.dart';
 import '../providers/address_provider.dart';
 import '../../../models/address.dart';
@@ -24,7 +25,7 @@ class AddressListScreen extends ConsumerWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          '地址管理',
+          AppLocalizations.of(context)!.checkout_shipping_address,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
@@ -44,7 +45,7 @@ class AddressListScreen extends ConsumerWidget {
               );
             },
             child: Text(
-              '新增',
+              AppLocalizations.of(context)!.checkout_add_address,
               style: TextStyle(
                 color: AppTheme.primaryColor,
                 fontWeight: FontWeight.w600,
@@ -81,14 +82,14 @@ class AddressListScreen extends ConsumerWidget {
           ),
           SizedBox(height: 16.h),
           Text(
-            '暂无收货地址',
+            AppLocalizations.of(context)!.error_address_required,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: AppTheme.textTertiary,
             ),
           ),
           SizedBox(height: 8.h),
           Text(
-            '添加地址后可以正常下单',
+            AppLocalizations.of(context)!.checkout_add_address,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: AppTheme.textTertiary,
             ),
@@ -110,7 +111,7 @@ class AddressListScreen extends ConsumerWidget {
               ),
             ),
             child: Text(
-              '添加地址',
+              AppLocalizations.of(context)!.checkout_add_address,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
@@ -165,7 +166,7 @@ class AddressListScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(4.r),
                     ),
                     child: Text(
-                      '默认',
+                      AppLocalizations.of(context)!.checkout_default,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppTheme.primaryColor,
                         fontWeight: FontWeight.w600,
@@ -199,7 +200,7 @@ class AddressListScreen extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      '选择此地址',
+                      AppLocalizations.of(context)!.checkout_change_address,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14.sp,
@@ -214,7 +215,7 @@ class AddressListScreen extends ConsumerWidget {
                       ref.read(addressesProvider.notifier).setDefaultAddress(address.id);
                     },
                     child: Text(
-                      '设为默认',
+                      AppLocalizations.of(context)!.checkout_default,
                       style: TextStyle(
                         color: AppTheme.primaryColor,
                         fontSize: 14.sp,
@@ -231,7 +232,7 @@ class AddressListScreen extends ConsumerWidget {
                     );
                   },
                   child: Text(
-                    '编辑',
+                    AppLocalizations.of(context)!.checkout_edit_address,
                     style: TextStyle(
                       color: AppTheme.textSecondary,
                       fontSize: 14.sp,
@@ -244,7 +245,7 @@ class AddressListScreen extends ConsumerWidget {
                     _showDeleteDialog(context, ref, address);
                   },
                   child: Text(
-                    '删除',
+                    AppLocalizations.of(context)!.common_delete,
                     style: TextStyle(
                       color: AppTheme.errorColor,
                       fontSize: 14.sp,
@@ -263,12 +264,12 @@ class AddressListScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('删除地址'),
-        content: Text('确定要删除这个地址吗？'),
+        title: Text(AppLocalizations.of(context)!.common_delete),
+        content: Text(AppLocalizations.of(context)!.confirm_delete),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('取消'),
+            child: Text(AppLocalizations.of(context)!.common_cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -277,14 +278,14 @@ class AddressListScreen extends ConsumerWidget {
               if (success && context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('地址已删除'),
+                    content: Text(AppLocalizations.of(context)!.common_success),
                     backgroundColor: AppTheme.successColor,
                   ),
                 );
               }
             },
             child: Text(
-              '删除',
+              AppLocalizations.of(context)!.common_delete,
               style: TextStyle(color: AppTheme.errorColor),
             ),
           ),
