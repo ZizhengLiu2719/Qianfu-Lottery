@@ -65,6 +65,11 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                   _buildMenuTextItem(
                     context,
+                    title: '平台反馈',
+                    onTap: () => context.go(AppRoutes.feedback),
+                  ),
+                  _buildMenuTextItem(
+                    context,
                     title: AppLocalizations.of(context)!.profile_settings,
                     onTap: () => context.go(AppRoutes.settings),
                   ),

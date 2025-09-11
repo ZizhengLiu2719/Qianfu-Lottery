@@ -21,6 +21,7 @@ import '../features/entertainment/screens/entertainment_screen.dart';
 import '../features/profile/screens/profile_screen.dart';
 import '../features/profile/screens/transaction_history_screen.dart';
 import '../features/profile/screens/settings_screen.dart';
+import '../features/feedback/screens/feedback_screen.dart';
 import '../features/auth/providers/auth_provider.dart';
 
 // 路由路径常量
@@ -42,6 +43,7 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String transactionHistory = '/transaction-history';
   static const String settings = '/settings';
+  static const String feedback = '/feedback';
 }
 
 // 底部导航页面类型
@@ -208,6 +210,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.settings,
             name: 'settings',
             builder: (context, state) => const SettingsScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.feedback,
+            name: 'feedback',
+            builder: (context, state) => const FeedbackScreen(),
           ),
         ],
       ),

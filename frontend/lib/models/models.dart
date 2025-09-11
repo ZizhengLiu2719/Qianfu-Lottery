@@ -5,3 +5,4 @@ export 'product.dart';
 export 'appointment.dart';
 export 'travel_post.dart';
 export 'travel_package.dart';
+export 'feedback.dart';
