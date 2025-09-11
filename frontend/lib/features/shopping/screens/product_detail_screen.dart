@@ -44,10 +44,37 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(FeatherIcons.shoppingCart, color: AppTheme.textPrimary),
-            onPressed: () {
-              // TODO: 跳转到购物车
+          Consumer(
+            builder: (context, ref, child) {
+              final cartItemCount = ref.watch(cartItemCountProvider);
+              return Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(FeatherIcons.shoppingCart, color: AppTheme.textPrimary),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/cart');
+                    },
+                  ),
+                  if (cartItemCount > 0)
+                    Positioned(
+                      right: 6,
+                      top: 6,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                        child: Text(
+                          cartItemCount > 99 ? '99+' : cartItemCount.toString(),
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
             },
           ),
         ],
@@ -335,7 +362,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
     final canAfford = ref.watch(qiancaiDouBalanceProvider) >= totalPrice;
 
     return Container(
-      padding: EdgeInsets.all(isDesktop ? 16.w : 20.w),
+      padding: EdgeInsets.all(isDesktop ? 8.w : 12.w),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -355,29 +382,29 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               onPressed: product.isInStock ? () => _addToCart(product) : null,
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: AppTheme.primaryColor),
-                padding: EdgeInsets.symmetric(vertical: isDesktop ? 12.h : 16.h),
+                padding: EdgeInsets.symmetric(vertical: isDesktop ? 6.h : 8.h),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(FeatherIcons.shoppingCart, size: isDesktop ? 16.sp : 20.sp, color: AppTheme.primaryColor),
-                  SizedBox(width: 8.w),
+                  Icon(FeatherIcons.shoppingCart, size: isDesktop ? 12.sp : 16.sp, color: AppTheme.primaryColor),
+                  SizedBox(width: 4.w),
                   Text(
                     '加购物车',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppTheme.primaryColor,
                       fontWeight: FontWeight.w600,
-                      fontSize: isDesktop ? 14.sp : 16.sp,
+                      fontSize: isDesktop ? 12.sp : 14.sp,
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: 8.w),
           // 立即购买按钮
           Expanded(
             flex: 2,
@@ -385,9 +412,9 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               onPressed: product.isInStock && canAfford ? () => _buyNow(product) : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: product.isInStock && canAfford ? AppTheme.primaryColor : AppTheme.textTertiary,
-                padding: EdgeInsets.symmetric(vertical: isDesktop ? 12.h : 16.h),
+                padding: EdgeInsets.symmetric(vertical: isDesktop ? 6.h : 8.h),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
               ),
               child: Column(
@@ -395,25 +422,25 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 children: [
                   Text(
                     '立即购买',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: isDesktop ? 14.sp : 16.sp,
+                      fontSize: isDesktop ? 12.sp : 14.sp,
                     ),
                   ),
-                  SizedBox(height: 2.h),
+                  SizedBox(height: 1.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         '$totalPrice',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.white,
-                          fontSize: isDesktop ? 12.sp : 14.sp,
+                          fontSize: isDesktop ? 10.sp : 12.sp,
                         ),
                       ),
-                      SizedBox(width: 4.w),
-                      QiancaiDouIcon(size: isDesktop ? 12.0 : 14.0),
+                      SizedBox(width: 2.w),
+                      QiancaiDouIcon(size: isDesktop ? 8.0 : 10.0),
                     ],
                   ),
                 ],
