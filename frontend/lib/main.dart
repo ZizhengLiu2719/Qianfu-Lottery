@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'l10n/l10n.dart';
 import 'routing/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'providers/language_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +43,7 @@ class QianfuJicaiApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final currentLanguage = ref.watch(languageProvider);
 
     return ScreenUtilInit(
       designSize: const Size(375, 812), // iPhone X 设计尺寸
@@ -61,7 +63,7 @@ class QianfuJicaiApp extends ConsumerWidget {
           darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.system,
           
-          // 国际化配置（默认中文）
+          // 国际化配置（动态语言）
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -70,7 +72,7 @@ class QianfuJicaiApp extends ConsumerWidget {
           ],
           supportedLocales: L10n.supportedLocales,
           localeResolutionCallback: L10n.localeResolutionCallback,
-          locale: const Locale('zh', 'CN'),
+          locale: Locale(currentLanguage.code),
           
           // 性能配置
           builder: (context, child) {

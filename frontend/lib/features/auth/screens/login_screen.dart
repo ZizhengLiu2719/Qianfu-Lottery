@@ -4,10 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lottie/lottie.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import '../../../routing/app_router.dart';
 import '../providers/auth_provider.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/language_selector.dart';
+import '../../../providers/language_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -101,34 +104,64 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnimation,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: SlideTransition(
-              position: _slideAnimation,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(height: 60.h),
-                  
-                  // Logo 和标题
-                  _buildHeader(context),
-                  
-                  SizedBox(height: 60.h),
-                  
-                  // 登录表单
-                  _buildLoginForm(context),
-                  
-                  SizedBox(height: 40.h),
-                  
-                  // 注册链接
-                  _buildRegisterLink(context),
-                  
-                  SizedBox(height: 40.h),
-                ],
+          child: Column(
+            children: [
+              // 语言切换按钮
+              _buildLanguageSelector(context),
+              
+              // 主要内容
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(height: 40.h),
+                        
+                        // Logo 和标题
+                        _buildHeader(context),
+                        
+                        SizedBox(height: 60.h),
+                        
+                        // 登录表单
+                        _buildLoginForm(context),
+                        
+                        SizedBox(height: 40.h),
+                        
+                        // 注册链接
+                        _buildRegisterLink(context),
+                        
+                        SizedBox(height: 40.h),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildLanguageSelector(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width > 768;
+    
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          LanguageSelector(
+            isCompact: true,
+            onChanged: () {
+              // 语言切换后重新构建界面
+              setState(() {});
+            },
+          ),
+        ],
       ),
     );
   }
