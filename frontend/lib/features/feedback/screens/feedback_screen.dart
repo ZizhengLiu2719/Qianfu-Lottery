@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../routing/app_router.dart';
 import '../providers/feedback_provider.dart';
-import '../../../models/feedback.dart';
+import '../../../models/feedback.dart' as models;
 
 class FeedbackScreen extends ConsumerStatefulWidget {
   const FeedbackScreen({super.key});
@@ -93,7 +93,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
     );
   }
 
-  Widget _buildFeedbackList(BuildContext context, bool isDesktop, List<Feedback> feedbackList) {
+  Widget _buildFeedbackList(BuildContext context, bool isDesktop, List<models.Feedback> feedbackList) {
     return ListView.builder(
       padding: EdgeInsets.all(16.w),
       itemCount: feedbackList.length,
@@ -104,7 +104,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
     );
   }
 
-  Widget _buildFeedbackCard(BuildContext context, Feedback feedback, bool isDesktop) {
+  Widget _buildFeedbackCard(BuildContext context, models.Feedback feedback, bool isDesktop) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(isDesktop ? 12.w : 16.w),
@@ -477,7 +477,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
     });
 
     try {
-      final request = CreateFeedbackRequest(
+      final request = models.CreateFeedbackRequest(
         title: _titleController.text.trim(),
         content: _contentController.text.trim(),
         category: _selectedCategory,

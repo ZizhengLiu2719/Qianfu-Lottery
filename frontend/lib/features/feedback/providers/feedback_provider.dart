@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../api/dio_client.dart';
 import '../../../api/feedback_repository.dart';
-import '../../../models/feedback.dart';
+import '../../../models/feedback.dart' as models;
 
 // 反馈Repository Provider
 final feedbackRepositoryProvider = Provider<FeedbackRepository>((ref) {
@@ -10,12 +10,12 @@ final feedbackRepositoryProvider = Provider<FeedbackRepository>((ref) {
 });
 
 // 用户反馈列表Provider
-final userFeedbackProvider = StateNotifierProvider<UserFeedbackNotifier, List<Feedback>>((ref) {
+final userFeedbackProvider = StateNotifierProvider<UserFeedbackNotifier, List<models.Feedback>>((ref) {
   final feedbackRepository = ref.watch(feedbackRepositoryProvider);
   return UserFeedbackNotifier(feedbackRepository);
 });
 
-class UserFeedbackNotifier extends StateNotifier<List<Feedback>> {
+class UserFeedbackNotifier extends StateNotifier<List<models.Feedback>> {
   final FeedbackRepository _feedbackRepository;
 
   UserFeedbackNotifier(this._feedbackRepository) : super([]);
@@ -37,7 +37,7 @@ class UserFeedbackNotifier extends StateNotifier<List<Feedback>> {
   }
 
   // 创建反馈
-  Future<bool> createFeedback(CreateFeedbackRequest request) async {
+  Future<bool> createFeedback(models.CreateFeedbackRequest request) async {
     try {
       final response = await _feedbackRepository.createFeedback(request);
       if (response.code == 200 && response.data != null) {
@@ -52,7 +52,7 @@ class UserFeedbackNotifier extends StateNotifier<List<Feedback>> {
   }
 
   // 更新反馈
-  Future<bool> updateFeedback(int feedbackId, CreateFeedbackRequest request) async {
+  Future<bool> updateFeedback(int feedbackId, models.CreateFeedbackRequest request) async {
     try {
       final response = await _feedbackRepository.updateFeedback(feedbackId, request);
       if (response.code == 200 && response.data != null) {
