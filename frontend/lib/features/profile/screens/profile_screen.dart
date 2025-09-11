@@ -50,18 +50,18 @@ class ProfileScreen extends ConsumerWidget {
                 children: [
                   _buildMenuTextItem(
                     context,
-                    title: AppLocalizations.of(context)!.profile_my_orders,
+                    title: '我的订单',
                     onTap: () => context.go(AppRoutes.orders),
                   ),
                   _buildMenuTextItem(
                     context,
-                    title: AppLocalizations.of(context)!.profile_my_appointments,
+                    title: '我的学习预约',
                     onTap: () => context.go(AppRoutes.appointments),
                   ),
                   _buildMenuTextItem(
                     context,
-                    title: AppLocalizations.of(context)!.profile_transaction_history,
-                    onTap: () => context.go(AppRoutes.transactionHistory),
+                    title: '我的旅游预约',
+                    onTap: () => context.go(AppRoutes.travel),
                   ),
                   _buildMenuTextItem(
                     context,

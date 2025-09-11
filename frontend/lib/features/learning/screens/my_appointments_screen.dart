@@ -31,7 +31,7 @@ class _MyAppointmentsScreenState extends ConsumerState<MyAppointmentsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('我的预约'),
+        title: Text('我的学习预约'),
         backgroundColor: Colors.white,
         foregroundColor: AppTheme.textPrimary,
         elevation: 0,

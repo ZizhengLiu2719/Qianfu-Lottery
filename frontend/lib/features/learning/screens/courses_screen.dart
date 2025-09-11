@@ -38,7 +38,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
               IconButton(
                 icon: Icon(FeatherIcons.calendar),
                 onPressed: () => _navigateToMyAppointments(),
-                tooltip: '我的预约',
+                tooltip: '我的学习预约',
               ),
             ],
           ),
