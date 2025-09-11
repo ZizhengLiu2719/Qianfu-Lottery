@@ -12,6 +12,7 @@ import '../features/shopping/screens/orders_screen.dart';
 import '../features/learning/screens/courses_screen.dart';
 import '../features/learning/screens/course_detail_screen.dart';
 import '../features/learning/screens/appointments_screen.dart';
+import '../features/learning/screens/my_appointments_screen.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../features/travel/screens/travel_screen.dart';
 import '../features/travel/screens/travel_detail_screen.dart';
@@ -158,7 +159,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: AppRoutes.appointments,
             name: 'appointments',
-            builder: (context, state) => const AppointmentsScreen(),
+            builder: (context, state) => const MyAppointmentsScreen(),
           ),
 
           // 旅游彩
