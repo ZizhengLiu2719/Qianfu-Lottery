@@ -659,11 +659,45 @@
   "appointment_category_english_oral": "English Speaking Practice",
   "appointment_category_ai_programming": "AI Programming",
   "appointment_duration_hours_minutes": "{hours}h {minutes}m",
+  "@appointment_duration_hours_minutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
   "appointment_duration_hours": "{hours}h",
+  "@appointment_duration_hours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
   "appointment_duration_minutes": "{minutes}m",
+  "@appointment_duration_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
   "appointment_date_today": "Today",
   "appointment_date_tomorrow": "Tomorrow",
   "appointment_date_format": "{month}/{day}",
+  "@appointment_date_format": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
   "appointment_status_booked": "Booked",
   "appointment_status_cancelled": "Cancelled",
   "appointment_status_completed": "Completed",

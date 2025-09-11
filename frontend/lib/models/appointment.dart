@@ -51,14 +51,10 @@ class OfflineCourse {
     final minutes = duration! % 60;
     if (hours > 0) {
       return minutes > 0 
-          ? AppLocalizations.of(context)!.appointment_duration_hours_minutes
-              .replaceAll('{hours}', hours.toString())
-              .replaceAll('{minutes}', minutes.toString())
-          : AppLocalizations.of(context)!.appointment_duration_hours
-              .replaceAll('{hours}', hours.toString());
+          ? AppLocalizations.of(context)!.appointment_duration_hours_minutes(hours, minutes)
+          : AppLocalizations.of(context)!.appointment_duration_hours(hours);
     }
-    return AppLocalizations.of(context)!.appointment_duration_minutes
-        .replaceAll('{minutes}', minutes.toString());
+    return AppLocalizations.of(context)!.appointment_duration_minutes(minutes);
   }
 }
 
@@ -114,9 +110,7 @@ class CourseSchedule {
     } else if (scheduleDate == today.add(const Duration(days: 1))) {
       return AppLocalizations.of(context)!.appointment_date_tomorrow;
     } else {
-      return AppLocalizations.of(context)!.appointment_date_format
-          .replaceAll('{month}', startTime.month.toString())
-          .replaceAll('{day}', startTime.day.toString());
+      return AppLocalizations.of(context)!.appointment_date_format(startTime.month, startTime.day);
     }
   }
 }
