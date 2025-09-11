@@ -62,13 +62,13 @@ class SettingsScreen extends ConsumerWidget {
             // 其他设置项
             _buildSettingsSection(
               context,
-              '应用设置',
+              AppLocalizations.of(context)!.app_settings,
               [
                 _buildSettingsItem(
                   context,
                   FeatherIcons.bell,
-                  '通知设置',
-                  '管理推送通知和提醒',
+                  AppLocalizations.of(context)!.settings_notification_settings,
+                  AppLocalizations.of(context)!.settings_notification_settings_desc,
                   () {
                     // TODO: 实现通知设置
                   },
@@ -77,8 +77,8 @@ class SettingsScreen extends ConsumerWidget {
                 _buildSettingsItem(
                   context,
                   FeatherIcons.shield,
-                  '隐私设置',
-                  '管理您的隐私和数据',
+                  AppLocalizations.of(context)!.settings_privacy_settings,
+                  AppLocalizations.of(context)!.settings_privacy_settings_desc,
                   () {
                     // TODO: 实现隐私设置
                   },
@@ -87,8 +87,8 @@ class SettingsScreen extends ConsumerWidget {
                 _buildSettingsItem(
                   context,
                   FeatherIcons.download,
-                  '缓存管理',
-                  '清理应用缓存和数据',
+                  AppLocalizations.of(context)!.settings_cache_management,
+                  AppLocalizations.of(context)!.settings_cache_management_desc,
                   () {
                     // TODO: 实现缓存管理
                   },
@@ -102,13 +102,13 @@ class SettingsScreen extends ConsumerWidget {
             // 关于应用
             _buildSettingsSection(
               context,
-              '关于应用',
+              AppLocalizations.of(context)!.settings_about_app,
               [
                 _buildSettingsItem(
                   context,
                   FeatherIcons.info,
-                  '应用信息',
-                  '版本号和更新信息',
+                  AppLocalizations.of(context)!.settings_app_info,
+                  AppLocalizations.of(context)!.settings_app_info_desc,
                   () {
                     // TODO: 实现应用信息
                   },
@@ -117,8 +117,8 @@ class SettingsScreen extends ConsumerWidget {
                 _buildSettingsItem(
                   context,
                   FeatherIcons.helpCircle,
-                  '帮助中心',
-                  '常见问题和用户指南',
+                  AppLocalizations.of(context)!.settings_help_center,
+                  AppLocalizations.of(context)!.settings_help_center_desc,
                   () {
                     // TODO: 实现帮助中心
                   },
@@ -127,8 +127,8 @@ class SettingsScreen extends ConsumerWidget {
                 _buildSettingsItem(
                   context,
                   FeatherIcons.fileText,
-                  '用户协议',
-                  '服务条款和隐私政策',
+                  AppLocalizations.of(context)!.settings_user_agreement,
+                  AppLocalizations.of(context)!.settings_user_agreement_desc,
                   () {
                     // TODO: 实现用户协议
                   },

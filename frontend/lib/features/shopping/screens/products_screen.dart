@@ -119,38 +119,38 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     final categories = [
       ResponsiveTagData(
         key: null,
-        text: '全部商品',
-        mobileText: '全部',
+        text: AppLocalizations.of(context)!.products_category_all,
+        mobileText: AppLocalizations.of(context)!.products_category_all_mobile,
         icon: FeatherIcons.grid,
       ),
       ResponsiveTagData(
         key: 'electronics',
-        text: '数码电子',
-        mobileText: '数码',
+        text: AppLocalizations.of(context)!.products_category_electronics,
+        mobileText: AppLocalizations.of(context)!.products_category_electronics_mobile,
         icon: FeatherIcons.smartphone,
       ),
       ResponsiveTagData(
         key: 'clothing',
-        text: '服装配饰',
-        mobileText: '服装',
+        text: AppLocalizations.of(context)!.products_category_clothing,
+        mobileText: AppLocalizations.of(context)!.products_category_clothing_mobile,
         icon: FeatherIcons.shoppingBag,
       ),
       ResponsiveTagData(
         key: 'food',
-        text: '美食饮品',
-        mobileText: '食品',
+        text: AppLocalizations.of(context)!.products_category_food,
+        mobileText: AppLocalizations.of(context)!.products_category_food_mobile,
         icon: FeatherIcons.coffee,
       ),
       ResponsiveTagData(
         key: 'books',
-        text: '图书文具',
-        mobileText: '图书',
+        text: AppLocalizations.of(context)!.products_category_books,
+        mobileText: AppLocalizations.of(context)!.products_category_books_mobile,
         icon: FeatherIcons.book,
       ),
       ResponsiveTagData(
         key: 'sports',
-        text: '运动健身',
-        mobileText: '运动',
+        text: AppLocalizations.of(context)!.products_category_sports,
+        mobileText: AppLocalizations.of(context)!.products_category_sports_mobile,
         icon: FeatherIcons.activity,
       ),
     ];
@@ -373,14 +373,14 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${product.title} 已添加到购物车'),
+        content: Text(AppLocalizations.of(context)!.success_add_to_cart),
         backgroundColor: AppTheme.successColor,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
         action: SnackBarAction(
-          label: '查看',
+          label: AppLocalizations.of(context)!.common_more,
           textColor: Colors.white,
           onPressed: () => context.go(AppRoutes.cart),
         ),

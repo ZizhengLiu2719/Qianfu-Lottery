@@ -100,13 +100,13 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                   ),
                   SizedBox(height: 16.h),
                   Text(
-                    '商品不存在或加载失败',
+                    AppLocalizations.of(context)!.common_error,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   SizedBox(height: 16.h),
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('返回'),
+                    child: Text(AppLocalizations.of(context)!.common_cancel),
                   ),
                 ],
               ),
@@ -222,7 +222,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 // 数量选择
                 if (isLoggedIn) ...[
                   Text(
-                    '数量',
+                    AppLocalizations.of(context)!.products_quantity,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: isDesktop ? 12.sp : 14.sp,
@@ -397,7 +397,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                   Icon(FeatherIcons.shoppingCart, size: isDesktop ? 10.sp : 12.sp, color: AppTheme.primaryColor),
                   SizedBox(width: 2.w),
                   Text(
-                    '加购物车',
+                    AppLocalizations.of(context)!.products_add_to_cart,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppTheme.primaryColor,
                       fontWeight: FontWeight.w600,
@@ -425,7 +425,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '立即购买',
+                    AppLocalizations.of(context)!.products_buy_now,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -463,11 +463,11 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${product.title} x$_quantity 已添加到购物车'),
+            content: Text(AppLocalizations.of(context)!.success_add_to_cart),
             backgroundColor: AppTheme.successColor,
             behavior: SnackBarBehavior.floating,
             action: SnackBarAction(
-              label: '查看购物车',
+              label: AppLocalizations.of(context)!.cart_title,
               textColor: Colors.white,
               onPressed: () {
                 // TODO: 跳转到购物车
@@ -480,7 +480,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('添加到购物车失败: $e'),
+            content: Text(AppLocalizations.of(context)!.common_failed),
             backgroundColor: AppTheme.errorColor,
             behavior: SnackBarBehavior.floating,
           ),
@@ -516,7 +516,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('购买失败: $e'),
+            content: Text(AppLocalizations.of(context)!.common_failed),
             backgroundColor: AppTheme.errorColor,
           ),
         );

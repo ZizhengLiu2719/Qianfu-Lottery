@@ -36,7 +36,7 @@ class ProfileScreen extends ConsumerWidget {
             child: Padding(
               padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
               child: _EditableAvatar(
-                initialName: user?.displayName ?? '未命名',
+                initialName: user?.displayName ?? AppLocalizations.of(context)!.common_loading,
                 points: qiancaiDouBalance,
               ),
             ),
@@ -50,22 +50,22 @@ class ProfileScreen extends ConsumerWidget {
                 children: [
                   _buildMenuTextItem(
                     context,
-                    title: '我的订单',
+                    title: AppLocalizations.of(context)!.profile_my_orders,
                     onTap: () => context.go(AppRoutes.orders),
                   ),
                   _buildMenuTextItem(
                     context,
-                    title: '我的学习预约',
+                    title: AppLocalizations.of(context)!.learning_my_appointments,
                     onTap: () => context.go(AppRoutes.appointments),
                   ),
                   _buildMenuTextItem(
                     context,
-                    title: '我的旅游预约',
+                    title: AppLocalizations.of(context)!.travel_my_appointments,
                     onTap: () => context.go(AppRoutes.myTravels),
                   ),
                   _buildMenuTextItem(
                     context,
-                    title: '平台反馈',
+                    title: AppLocalizations.of(context)!.profile_platform_feedback,
                     onTap: () => context.go(AppRoutes.feedback),
                   ),
                   _buildMenuTextItem(
@@ -108,7 +108,7 @@ class ProfileScreen extends ConsumerWidget {
           side: const BorderSide(color: AppTheme.errorColor),
           padding: EdgeInsets.symmetric(vertical: 16.h),
         ),
-        child: Text(AppLocalizations.of(context)!.auth_logout),
+        child: Text(AppLocalizations.of(context)!.profile_logout),
       ),
     );
   }
@@ -117,8 +117,8 @@ class ProfileScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.auth_logout),
-        content: Text('确定要退出登录吗？'),
+        title: Text(AppLocalizations.of(context)!.profile_logout),
+        content: Text(AppLocalizations.of(context)!.confirm_logout),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

@@ -197,7 +197,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             ),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return '请输入邮箱';
+                return AppLocalizations.of(context)!.error_invalid_email;
               }
               if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                 return AppLocalizations.of(context)!.auth_invalid_email;
@@ -230,7 +230,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             ),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return '请输入密码';
+                return AppLocalizations.of(context)!.error_password_too_short;
               }
               if (value.length < 6) {
                 return AppLocalizations.of(context)!.auth_password_too_short;
@@ -264,7 +264,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     ],
                   )
                 : Text(
-                    AppLocalizations.of(context)!.auth_login,
+                    AppLocalizations.of(context)!.auth_login_button,
                     style: TextStyle(fontSize: 16.sp),
                   ),
           ),
@@ -278,12 +278,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          '还没有账户？',
+          AppLocalizations.of(context)!.auth_no_account,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         TextButton(
           onPressed: () => context.go(AppRoutes.register),
-          child: Text(AppLocalizations.of(context)!.auth_register),
+          child: Text(AppLocalizations.of(context)!.auth_register_here),
         ),
       ],
     );

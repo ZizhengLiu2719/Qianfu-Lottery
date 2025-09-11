@@ -283,8 +283,8 @@ class CartScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('清空购物车'),
-        content: Text('确定要清空购物车吗？'),
+        title: Text(AppLocalizations.of(context)!.cart_empty),
+        content: Text(AppLocalizations.of(context)!.confirm_delete),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

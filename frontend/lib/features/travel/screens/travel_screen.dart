@@ -27,7 +27,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
         slivers: [
           // 顶部标题栏
           SliverAppBar(
-            title: Text('旅游攻略'),
+            title: Text(AppLocalizations.of(context)!.travel_packages),
             backgroundColor: Colors.white,
             foregroundColor: AppTheme.textPrimary,
             elevation: 0,
@@ -36,7 +36,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
               IconButton(
                 icon: Icon(FeatherIcons.calendar),
                 onPressed: () => _navigateToMyTravels(),
-                tooltip: '我的旅游预约',
+                tooltip: AppLocalizations.of(context)!.travel_my_appointments,
               ),
             ],
           ),
@@ -100,7 +100,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
       children: [
         SizedBox(height: 16.h),
         Text(
-          '旅游攻略 - 探索世界之美',
+          AppLocalizations.of(context)!.travel_packages,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
