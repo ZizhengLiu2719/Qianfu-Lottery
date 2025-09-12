@@ -113,27 +113,29 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
   }
 
   Widget _buildWelcomeContent(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width > 768;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 16.h),
+        SizedBox(height: isDesktop ? 8.h : 16.h),
         Text(
           AppLocalizations.of(context)!.learning_title,
           style: TextStyle(
-            fontSize: 18.sp,
+            fontSize: isDesktop ? 14.sp : 18.sp,
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: isDesktop ? 4.h : 8.h),
         Text(
           AppLocalizations.of(context)!.learning_subtitle,
           style: TextStyle(
-            fontSize: 14.sp,
+            fontSize: isDesktop ? 12.sp : 14.sp,
             color: AppTheme.textSecondary,
           ),
         ),
-        SizedBox(height: 24.h),
+        SizedBox(height: isDesktop ? 12.h : 24.h),
         _buildCategoryCard(
           context,
           title: AppLocalizations.of(context)!.learning_ai_programming,
@@ -142,7 +144,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           category: AppLocalizations.of(context)!.learning_ai_programming_category,
           onTap: () => setState(() => _selectedCategory = 'ai'),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: isDesktop ? 6.h : 12.h),
         _buildCategoryCard(
           context,
           title: AppLocalizations.of(context)!.learning_english,
@@ -151,7 +153,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           category: AppLocalizations.of(context)!.learning_english_category,
           onTap: () => setState(() => _selectedCategory = 'english'),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: isDesktop ? 6.h : 12.h),
         _buildCategoryCard(
           context,
           title: AppLocalizations.of(context)!.learning_study_abroad,
@@ -160,7 +162,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           category: AppLocalizations.of(context)!.learning_study_abroad_category,
           onTap: () => setState(() => _selectedCategory = 'study_abroad'),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: isDesktop ? 6.h : 12.h),
         _buildCategoryCard(
           context,
           title: AppLocalizations.of(context)!.learning_summer_camp,
@@ -174,27 +176,29 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
   }
 
   Widget _buildAICourses(BuildContext context) {
+    final isDesktop = MediaQuery.of(context).size.width > 768;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 16.h),
+        SizedBox(height: isDesktop ? 8.h : 16.h),
         Text(
           AppLocalizations.of(context)!.learning_ai_programming,
           style: TextStyle(
-            fontSize: 18.sp,
+            fontSize: isDesktop ? 14.sp : 18.sp,
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: isDesktop ? 4.h : 8.h),
         Text(
           AppLocalizations.of(context)!.learning_ai_programming_desc,
           style: TextStyle(
-            fontSize: 14.sp,
+            fontSize: isDesktop ? 12.sp : 14.sp,
             color: AppTheme.textSecondary,
           ),
         ),
-        SizedBox(height: 24.h),
+        SizedBox(height: isDesktop ? 12.h : 24.h),
         _buildCourseCard(
           context,
           title: AppLocalizations.of(context)!.courses_title,
@@ -203,7 +207,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           category: AppLocalizations.of(context)!.learning_ai_programming,
           onTap: () => _navigateToCourseDetail('ai_course_1'),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: isDesktop ? 6.h : 12.h),
         _buildCourseCard(
           context,
           title: AppLocalizations.of(context)!.travel_unknown_package,
@@ -212,7 +216,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen> {
           category: AppLocalizations.of(context)!.learning_ai_programming,
           onTap: () => _navigateToCourseDetail('ai_course_2'),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: isDesktop ? 6.h : 12.h),
         _buildCourseCard(
           context,
           title: AppLocalizations.of(context)!.learning_course_content,
