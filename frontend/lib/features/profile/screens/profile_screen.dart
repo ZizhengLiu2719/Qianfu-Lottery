@@ -264,14 +264,37 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
 
       print('上传结果: $result');
 
+      // 检查响应是否成功 - 支持多种响应格式
+      bool isSuccess = false;
+      String? avatarUrl;
+      
       if (result['code'] == 200 && result['data'] != null) {
+        // 标准响应格式
+        avatarUrl = result['data']['user']?['avatarUrl'] ?? result['data']['avatarUrl'];
+        isSuccess = true;
+      } else if (result['success'] == true && result['data'] != null) {
+        // 备用响应格式
+        avatarUrl = result['data']['user']?['avatarUrl'] ?? result['data']['avatarUrl'];
+        isSuccess = true;
+      } else if (result['status'] == 'success' && result['data'] != null) {
+        // 另一种响应格式
+        avatarUrl = result['data']['user']?['avatarUrl'] ?? result['data']['avatarUrl'];
+        isSuccess = true;
+      }
+
+      if (isSuccess && avatarUrl != null) {
         // 更新本地状态
         setState(() {
-          _avatarPath = result['data']['user']['avatarUrl'];
+          _avatarPath = avatarUrl;
         });
         
         // 更新全局用户状态
-        await ref.read(authProvider.notifier).refreshUser();
+        try {
+          await ref.read(authProvider.notifier).refreshUser();
+        } catch (e) {
+          print('刷新用户状态失败: $e');
+          // 即使刷新失败，头像上传仍然成功
+        }
         
         // 延迟显示成功消息，确保状态更新完成
         Future.delayed(const Duration(milliseconds: 100), () {
@@ -280,11 +303,26 @@ class _EditableAvatarState extends ConsumerState<_EditableAvatar> {
           }
         });
       } else {
-        _showError(result['message'] ?? AppLocalizations.of(context)!.common_failed);
+        String errorMessage = result['message'] ?? 
+                            result['error'] ?? 
+                            AppLocalizations.of(context)!.common_failed;
+        print('头像上传失败: $errorMessage');
+        _showError(errorMessage);
       }
     } catch (e) {
       print('上传头像错误: $e');
-      _showError(AppLocalizations.of(context)!.common_failed);
+      String errorMessage = AppLocalizations.of(context)!.common_failed;
+      
+      // 根据错误类型提供更具体的错误信息
+      if (e.toString().contains('network') || e.toString().contains('timeout')) {
+        errorMessage = '网络连接失败，请检查网络后重试';
+      } else if (e.toString().contains('format') || e.toString().contains('invalid')) {
+        errorMessage = '图片格式不支持，请选择 JPG、PNG 或 WebP 格式';
+      } else if (e.toString().contains('size') || e.toString().contains('large')) {
+        errorMessage = '图片文件过大，请选择小于 5MB 的图片';
+      }
+      
+      _showError(errorMessage);
     } finally {
       setState(() {
         _isUploading = false;
