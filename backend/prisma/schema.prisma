@@ -496,17 +496,17 @@ model UserSummerCampRegistration {
 // 用户反馈
 model Feedback {
   id              Int       @id @default(autoincrement())
-  userId          Int
+  userId          Int       @map("user_id")
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   title           String
   content         String
   category        String    // general, bug, feature, suggestion, complaint
   status          String    @default("pending") // pending, in_progress, resolved, closed
   priority        String    @default("medium") // low, medium, high, urgent
-  adminReply      String?
-  adminRepliedAt  DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  adminReply      String?   @map("admin_reply")
+  adminRepliedAt  DateTime? @map("admin_replied_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
   
   @@map("feedback")
 }
