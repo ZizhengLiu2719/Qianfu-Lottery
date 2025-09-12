@@ -89,34 +89,34 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
 
   Widget _buildPackageCard(BuildContext context, bool isDesktop) {
     return Container(
-      padding: EdgeInsets.all(isDesktop ? 7.w : 20.w),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(isDesktop ? 5.r : 16.r),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: isDesktop ? 3 : 10,
-            offset: const Offset(0, 1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(isDesktop ? 5.w : 16.w),
+            padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
               color: AppTheme.primaryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(isDesktop ? 4.r : 12.r),
+              borderRadius: BorderRadius.circular(12.r),
             ),
             child: Icon(
               widget.icon,
               color: AppTheme.primaryColor,
-              size: isDesktop ? 11.sp : 40.sp,
+              size: isDesktop ? 32.sp : 40.sp,
             ),
           ),
-          SizedBox(width: isDesktop ? 7.w : 20.w),
+          SizedBox(width: 20.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,33 +124,30 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
                 Text(
                   widget.title,
                   style: TextStyle(
-                    fontSize: isDesktop ? 7.sp : 24.sp,
+                    fontSize: isDesktop ? 20.sp : 24.sp,
                     fontWeight: FontWeight.bold,
                     color: AppTheme.textPrimary,
                   ),
                 ),
-                SizedBox(height: isDesktop ? 3.h : 8.h),
+                SizedBox(height: 8.h),
                 Text(
                   widget.subtitle,
                   style: TextStyle(
-                    fontSize: isDesktop ? 5.sp : 16.sp,
+                    fontSize: isDesktop ? 14.sp : 16.sp,
                     color: AppTheme.textSecondary,
                   ),
                 ),
-                SizedBox(height: isDesktop ? 4.h : 12.h),
+                SizedBox(height: 12.h),
                 Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isDesktop ? 4.w : 12.w, 
-                    vertical: isDesktop ? 2.h : 6.h
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                   decoration: BoxDecoration(
                     color: AppTheme.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(isDesktop ? 7.r : 20.r),
+                    borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
                     widget.category,
                     style: TextStyle(
-                      fontSize: isDesktop ? 4.sp : 14.sp,
+                      fontSize: isDesktop ? 12.sp : 14.sp,
                       color: AppTheme.primaryColor,
                       fontWeight: FontWeight.w600,
                     ),
@@ -171,12 +168,12 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
         Text(
           AppLocalizations.of(context)!.travel_package_details,
           style: TextStyle(
-            fontSize: isDesktop ? 6.sp : 20.sp,
+            fontSize: isDesktop ? 18.sp : 20.sp,
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
           ),
         ),
-        SizedBox(height: isDesktop ? 5.h : 16.h),
+        SizedBox(height: 16.h),
         _buildDetailItem(
           context,
           icon: FeatherIcons.clock,
@@ -226,10 +223,10 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
       children: [
         Icon(
           icon,
-          size: isDesktop ? 5.sp : 18.sp,
+          size: isDesktop ? 16.sp : 18.sp,
           color: AppTheme.primaryColor,
         ),
-        SizedBox(width: isDesktop ? 4.w : 12.w),
+        SizedBox(width: 12.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,16 +234,16 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: isDesktop ? 5.sp : 16.sp,
+                  fontSize: isDesktop ? 14.sp : 16.sp,
                   fontWeight: FontWeight.w600,
                   color: AppTheme.textPrimary,
                 ),
               ),
-              SizedBox(height: isDesktop ? 1.h : 4.h),
+              SizedBox(height: 4.h),
               Text(
                 content,
                 style: TextStyle(
-                  fontSize: isDesktop ? 4.sp : 14.sp,
+                  fontSize: isDesktop ? 12.sp : 14.sp,
                   color: AppTheme.textSecondary,
                 ),
               ),
@@ -259,10 +256,10 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
 
   Widget _buildRegistrationSection(BuildContext context, bool isDesktop, bool isTravelRegistered) {
     return Container(
-      padding: EdgeInsets.all(isDesktop ? 7.w : 20.w),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(isDesktop ? 5.r : 16.r),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
@@ -270,12 +267,12 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
           Text(
             isTravelRegistered ? AppLocalizations.of(context)!.travel_registered : AppLocalizations.of(context)!.travel_register_now,
             style: TextStyle(
-              fontSize: isDesktop ? 5.sp : 18.sp,
+              fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
               color: AppTheme.textPrimary,
             ),
           ),
-          SizedBox(height: isDesktop ? 5.h : 16.h),
+          SizedBox(height: 16.h),
           Row(
             children: [
               Expanded(
