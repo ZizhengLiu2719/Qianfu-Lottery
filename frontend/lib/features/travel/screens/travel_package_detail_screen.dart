@@ -67,17 +67,17 @@ class _TravelPackageDetailScreenState extends ConsumerState<TravelPackageDetailS
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(isDesktop ? 5.w : 16.w),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 套餐卡片
             _buildPackageCard(context, isDesktop),
-            SizedBox(height: isDesktop ? 8.h : 24.h),
+            SizedBox(height: 24.h),
             
             // 套餐详情
             _buildPackageDetails(context, isDesktop),
-            SizedBox(height: isDesktop ? 8.h : 24.h),
+            SizedBox(height: 24.h),
             
             // 注册按钮区域
             _buildRegistrationSection(context, isDesktop, isTravelRegistered),

@@ -119,24 +119,24 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
     final travelStats = ref.watch(travelStatsProvider);
     
     return SingleChildScrollView(
-      padding: EdgeInsets.all(isDesktop ? 5.w : 16.w),
+      padding: EdgeInsets.all(16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 统计信息
           _buildStatsCard(context, isDesktop, travelStats),
-          SizedBox(height: isDesktop ? 8.h : 24.h),
+          SizedBox(height: 24.h),
           
           // 预约列表
           Text(
             '${AppLocalizations.of(context)!.appointments_title} (${travels.length})',
             style: TextStyle(
-              fontSize: isDesktop ? 5.sp : 18.sp,
+              fontSize: isDesktop ? 16.sp : 18.sp,
               fontWeight: FontWeight.bold,
               color: AppTheme.textPrimary,
             ),
           ),
-          SizedBox(height: isDesktop ? 5.h : 16.h),
+          SizedBox(height: 16.h),
           
           ...travels.map((travel) => 
             _buildTravelCard(context, travel, isDesktop)

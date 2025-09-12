@@ -200,9 +200,9 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: isDesktop ? 2.h : 12.h,
-          crossAxisSpacing: isDesktop ? 2.w : 12.w,
-          childAspectRatio: isDesktop ? 0.4 : 0.75, // PC端更紧凑
+          mainAxisSpacing: isDesktop ? 4.h : 12.h,
+          crossAxisSpacing: isDesktop ? 4.w : 12.w,
+          childAspectRatio: isDesktop ? 0.6 : 0.75, // PC端更紧凑
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) {
@@ -275,7 +275,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             // 产品信息 - PC端紧凑布局
             Expanded(
               child: Padding(
-                padding: EdgeInsets.all(isDesktop ? 2.w : 12.w),
+                padding: EdgeInsets.all(isDesktop ? 4.w : 12.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -286,7 +286,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         height: isDesktop ? 1.0 : 1.2,
-                        fontSize: isDesktop ? 6.sp : null,
+                        fontSize: isDesktop ? 8.sp : null,
                       ),
                       maxLines: isDesktop ? 2 : 2, // PC端紧凑显示
                       overflow: TextOverflow.ellipsis,
@@ -305,7 +305,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: AppTheme.primaryColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: isDesktop ? 6.sp : null,
+                                fontSize: isDesktop ? 8.sp : null,
                               ),
                             ),
                             SizedBox(width: isDesktop ? 1.w : 4.w),
@@ -316,10 +316,10 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         // 库存状态
                         Text(
                           '${AppLocalizations.of(context)!.products_stock}: ${product.stock}',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: product.isInStock ? AppTheme.successColor : AppTheme.errorColor,
-                              fontSize: isDesktop ? 4.sp : null,
-                            ),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: product.isInStock ? AppTheme.successColor : AppTheme.errorColor,
+                            fontSize: isDesktop ? 6.sp : null,
+                          ),
                         ),
                       ],
                     ),
