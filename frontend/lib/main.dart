@@ -51,6 +51,10 @@ class QianfuJicaiApp extends ConsumerWidget {
       splitScreenMode: true,
       useInheritedMediaQuery: true,
       builder: (context, child) {
+        // 检测PC端并调整缩放因子
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isDesktop = screenWidth > 768;
+        
         return MaterialApp.router(
           title: 'Qianfu Lottery',
           debugShowCheckedModeBanner: false,
@@ -76,10 +80,11 @@ class QianfuJicaiApp extends ConsumerWidget {
           
           // 性能配置
           builder: (context, child) {
-            // 设置全局文字缩放
+            // 设置全局文字缩放 - PC端大幅缩小
+            final textScaleFactor = isDesktop ? 0.3 : MediaQuery.of(context).textScaleFactor.clamp(0.8, 1.2);
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(
-                textScaleFactor: MediaQuery.of(context).textScaleFactor.clamp(0.8, 1.2),
+                textScaleFactor: textScaleFactor,
               ),
               child: child!,
             );
