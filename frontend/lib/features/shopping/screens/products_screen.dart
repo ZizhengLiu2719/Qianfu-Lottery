@@ -165,26 +165,27 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 768;
-    // Debug info removed for deployment
+    print('ProductGrid - Screen width: $screenWidth, isDesktop: $isDesktop');
+    print('ResponsiveUtils test - w(16): ${ResponsiveUtils.w(context, 16)}, h(12): ${ResponsiveUtils.h(context, 12)}');
 
     if (filteredProducts.isEmpty) {
       return SliverToBoxAdapter(
         child: Container(
-          padding: EdgeInsets.all(isDesktop ? 2.6 : 40.0),
+          padding: ResponsiveUtils.padding(context, all: isDesktop ? 13 : 40),
           child: Center(
             child: Column(
               children: [
                 Icon(
                   FeatherIcons.package,
-                  size: isDesktop ? 4.2 : 64.0,
+                  size: ResponsiveUtils.sp(context, isDesktop ? 21 : 64),
                   color: AppTheme.textTertiary,
                 ),
-                SizedBox(height: isDesktop ? 1.0 : 16.0),
+                SizedBox(height: ResponsiveUtils.h(context, isDesktop ? 5 : 16)),
                 Text(
                   AppLocalizations.of(context)!.common_empty,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppTheme.textTertiary,
-                    fontSize: isDesktop ? 2.4 : 16.0,
+                    fontSize: ResponsiveUtils.sp(context, isDesktop ? 12 : 16),
                   ),
                 ),
               ],
@@ -221,7 +222,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   Widget _buildProductCard(BuildContext context, Product product) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 768;
-    // Debug info removed for deployment
+    print('ProductCard - Screen width: $screenWidth, isDesktop: $isDesktop');
     
     return GestureDetector(
       onTap: () => context.go('/products/${product.id}'),
@@ -263,7 +264,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                           color: AppTheme.backgroundColor,
                           child: Icon(
                             FeatherIcons.image,
-                            size: isDesktop ? 1.6 : 24.0,
+                            size: ResponsiveUtils.sp(context, isDesktop ? 8 : 24),
                             color: AppTheme.textTertiary,
                           ),
                         ),
@@ -272,7 +273,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         color: AppTheme.backgroundColor,
                         child: Icon(
                           FeatherIcons.image,
-                          size: isDesktop ? 2.0 : 24.0,
+                          size: ResponsiveUtils.sp(context, isDesktop ? 8 : 24),
                           color: AppTheme.textTertiary,
                         ),
                       ),
@@ -344,7 +345,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
   Widget _buildLoadingState(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(40.0),
+      padding: ResponsiveUtils.padding(context, all: 40),
       child: const Center(
         child: CircularProgressIndicator(),
       ),
@@ -353,21 +354,21 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
   Widget _buildErrorState(BuildContext context, Object error) {
     return Padding(
-      padding: EdgeInsets.all(40.0),
+      padding: ResponsiveUtils.padding(context, all: 40),
       child: Center(
         child: Column(
           children: [
             Icon(
               FeatherIcons.alertCircle,
-              size: 64.0,
+              size: ResponsiveUtils.sp(context, 64),
               color: AppTheme.errorColor,
             ),
-            SizedBox(height: 16.0),
+            SizedBox(height: ResponsiveUtils.h(context, 16)),
             Text(
               AppLocalizations.of(context)!.common_error,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            SizedBox(height: 8.0),
+            SizedBox(height: ResponsiveUtils.h(context, 8)),
             ElevatedButton(
               onPressed: () => ref.invalidate(productsProvider),
               child: Text(AppLocalizations.of(context)!.common_retry),
