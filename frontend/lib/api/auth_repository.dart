@@ -134,23 +134,36 @@ class AuthRepository {
     required String mimeType,
     required int size,
   }) async {
-    final response = await _dioClient.post<Map<String, dynamic>>(
-      '/api/me/avatar',
-      data: {
-        'avatarData': avatarData,
-        'mimeType': mimeType,
-        'size': size,
-      },
-      fromJson: (json) => json as Map<String, dynamic>,
-    );
+    try {
+      final response = await _dioClient.dio.post(
+        '/api/me/avatar',
+        data: {
+          'avatarData': avatarData,
+          'mimeType': mimeType,
+          'size': size,
+        },
+      );
 
-    if (response.data == null) {
+      if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
+        return response.data as Map<String, dynamic>;
+      } else {
+        throw const ApiException(
+          code: 500,
+          message: '上传头像失败',
+        );
+      }
+    } on DioException catch (e) {
+      if (e.response?.data is Map<String, dynamic>) {
+        final errorData = e.response!.data as Map<String, dynamic>;
+        throw ApiException(
+          code: errorData['code'] ?? e.response?.statusCode ?? 500,
+          message: errorData['message'] ?? '上传头像失败',
+        );
+      }
       throw const ApiException(
         code: 500,
         message: '上传头像失败',
       );
     }
-
-    return response.data!;
   }
 }
