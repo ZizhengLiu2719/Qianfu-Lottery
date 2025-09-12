@@ -325,10 +325,10 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         // 库存状态
                         Text(
                           '${AppLocalizations.of(context)!.products_stock}: ${product.stock}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: product.isInStock ? AppTheme.successColor : AppTheme.errorColor,
-                            fontSize: isDesktop ? 0.8 : 12.0,
-                          ),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: product.isInStock ? AppTheme.successColor : AppTheme.errorColor,
+                              fontSize: isDesktop ? 0.8 : 12.0,
+                            ),
                         ),
                       ],
                     ),
