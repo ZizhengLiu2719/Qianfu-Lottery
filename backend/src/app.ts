@@ -529,37 +529,37 @@ app.get('/api/me/qiancaidou/transactions', async (c) => {
 
 // 反馈路由 (受保护)
 app.post('/api/feedback', async (c) => {
-  const { authMiddleware } = initializeServices(c)
+  const { prisma, authMiddleware } = initializeServices(c)
   await authMiddleware(c, async () => {})
-  const handlers = createFeedbackHandlers()
+  const handlers = createFeedbackHandlers(prisma)
   return handlers.createFeedback(c)
 })
 
 app.get('/api/feedback', async (c) => {
-  const { authMiddleware } = initializeServices(c)
+  const { prisma, authMiddleware } = initializeServices(c)
   await authMiddleware(c, async () => {})
-  const handlers = createFeedbackHandlers()
+  const handlers = createFeedbackHandlers(prisma)
   return handlers.getUserFeedback(c)
 })
 
 app.get('/api/feedback/:id', async (c) => {
-  const { authMiddleware } = initializeServices(c)
+  const { prisma, authMiddleware } = initializeServices(c)
   await authMiddleware(c, async () => {})
-  const handlers = createFeedbackHandlers()
+  const handlers = createFeedbackHandlers(prisma)
   return handlers.getFeedback(c)
 })
 
 app.put('/api/feedback/:id', async (c) => {
-  const { authMiddleware } = initializeServices(c)
+  const { prisma, authMiddleware } = initializeServices(c)
   await authMiddleware(c, async () => {})
-  const handlers = createFeedbackHandlers()
+  const handlers = createFeedbackHandlers(prisma)
   return handlers.updateFeedback(c)
 })
 
 app.delete('/api/feedback/:id', async (c) => {
-  const { authMiddleware } = initializeServices(c)
+  const { prisma, authMiddleware } = initializeServices(c)
   await authMiddleware(c, async () => {})
-  const handlers = createFeedbackHandlers()
+  const handlers = createFeedbackHandlers(prisma)
   return handlers.deleteFeedback(c)
 })
 

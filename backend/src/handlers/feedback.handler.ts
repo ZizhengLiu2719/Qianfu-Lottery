@@ -1,5 +1,4 @@
 import { Context } from 'hono'
-import { getPrismaClient } from '../services/db'
 
 interface CreateFeedbackRequest {
   title: string
@@ -17,7 +16,7 @@ interface UpdateFeedbackRequest {
   adminReply?: string
 }
 
-export function createFeedbackHandlers() {
+export function createFeedbackHandlers(prisma: any) {
   
   /**
    * 创建反馈
@@ -64,15 +63,10 @@ export function createFeedbackHandlers() {
         }, 400)
       }
 
-      const databaseUrl = c.env?.DATABASE_URL as string
-      if (!databaseUrl) {
-        throw new Error('DATABASE_URL not configured')
-      }
-
-      const prisma = getPrismaClient(databaseUrl)
+      // 使用传入的 prisma 实例
 
       // 创建反馈
-      const feedback = await (prisma as any).feedback.create({
+      const feedback = await prisma.feedback.create({
         data: {
           userId: currentUser.id,
           title: body.title,
@@ -125,8 +119,9 @@ export function createFeedbackHandlers() {
    * 获取用户反馈列表
    */
   const getUserFeedback = async (c: Context) => {
+    let currentUser: any = null
     try {
-      const currentUser = c.get('user')
+      currentUser = c.get('user')
       if (!currentUser) {
         return c.json({
           code: 401,
@@ -139,15 +134,10 @@ export function createFeedbackHandlers() {
       const limit = parseInt(c.req.query('limit') || '20')
       const offset = (page - 1) * limit
 
-      const databaseUrl = c.env?.DATABASE_URL as string
-      if (!databaseUrl) {
-        throw new Error('DATABASE_URL not configured')
-      }
-
-      const prisma = getPrismaClient(databaseUrl)
+      // 使用传入的 prisma 实例
 
       // 获取反馈列表
-      const feedbacks = await (prisma as any).feedback.findMany({
+      const feedbacks = await prisma.feedback.findMany({
         where: {
           userId: currentUser.id
         },
@@ -159,7 +149,7 @@ export function createFeedbackHandlers() {
       })
 
       // 获取总数
-      const total = await (prisma as any).feedback.count({
+      const total = await prisma.feedback.count({
         where: {
           userId: currentUser.id
         }
@@ -222,15 +212,10 @@ export function createFeedbackHandlers() {
         }, 400)
       }
 
-      const databaseUrl = c.env?.DATABASE_URL as string
-      if (!databaseUrl) {
-        throw new Error('DATABASE_URL not configured')
-      }
-
-      const prisma = getPrismaClient(databaseUrl)
+      // 使用传入的 prisma 实例
 
       // 获取反馈详情
-      const feedback = await (prisma as any).feedback.findFirst({
+      const feedback = await prisma.feedback.findFirst({
         where: {
           id: feedbackId,
           userId: currentUser.id
@@ -298,15 +283,10 @@ export function createFeedbackHandlers() {
 
       const body = await c.req.json() as UpdateFeedbackRequest
 
-      const databaseUrl = c.env?.DATABASE_URL as string
-      if (!databaseUrl) {
-        throw new Error('DATABASE_URL not configured')
-      }
-
-      const prisma = getPrismaClient(databaseUrl)
+      // 使用传入的 prisma 实例
 
       // 检查反馈是否存在且属于当前用户
-      const existingFeedback = await (prisma as any).feedback.findFirst({
+      const existingFeedback = await prisma.feedback.findFirst({
         where: {
           id: feedbackId,
           userId: currentUser.id
@@ -369,7 +349,7 @@ export function createFeedbackHandlers() {
         updateData.adminRepliedAt = new Date()
       }
 
-      const feedback = await (prisma as any).feedback.update({
+      const feedback = await prisma.feedback.update({
         where: {
           id: feedbackId
         },
@@ -427,15 +407,10 @@ export function createFeedbackHandlers() {
         }, 400)
       }
 
-      const databaseUrl = c.env?.DATABASE_URL as string
-      if (!databaseUrl) {
-        throw new Error('DATABASE_URL not configured')
-      }
-
-      const prisma = getPrismaClient(databaseUrl)
+      // 使用传入的 prisma 实例
 
       // 检查反馈是否存在且属于当前用户
-      const existingFeedback = await (prisma as any).feedback.findFirst({
+      const existingFeedback = await prisma.feedback.findFirst({
         where: {
           id: feedbackId,
           userId: currentUser.id
@@ -451,7 +426,7 @@ export function createFeedbackHandlers() {
       }
 
       // 删除反馈
-      await (prisma as any).feedback.delete({
+      await prisma.feedback.delete({
         where: {
           id: feedbackId
         }
