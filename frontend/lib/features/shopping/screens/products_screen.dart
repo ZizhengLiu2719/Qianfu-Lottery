@@ -198,15 +198,15 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     // 卡片化展示：两列网格，每个商品独立卡片
     return SliverPadding(
       padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 0.5 : 16.0, 
-        vertical: isDesktop ? 0.2 : 8.0
+        horizontal: isDesktop ? 2.0 : 16.0, 
+        vertical: isDesktop ? 1.0 : 8.0
       ),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: isDesktop ? 0.1 : 12.0,
-          crossAxisSpacing: isDesktop ? 0.1 : 12.0,
-          childAspectRatio: isDesktop ? 1.5 : 0.75, // PC端更紧凑
+          mainAxisSpacing: isDesktop ? 0.5 : 12.0,
+          crossAxisSpacing: isDesktop ? 0.5 : 12.0,
+          childAspectRatio: isDesktop ? 0.4 : 0.75, // PC端更紧凑
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) {
@@ -242,15 +242,13 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 产品图片 - PC端缩小
-            Container(
-              height: isDesktop ? 20.0 : null, // PC端限制最大高度
-              child: ClipRRect(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(isDesktop ? 2.0 : 12.0),
-                ),
-                child: AspectRatio(
-                  aspectRatio: isDesktop ? 2.0 : 1.2, // PC端更紧凑
-                  child: product.mainImage.isNotEmpty
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(isDesktop ? 2.0 : 12.0),
+              ),
+              child: AspectRatio(
+                aspectRatio: isDesktop ? 1.0 : 1.2, // PC端更紧凑
+                child: product.mainImage.isNotEmpty
                     ? CachedNetworkImage(
                         imageUrl: product.mainImage,
                         fit: BoxFit.cover,
@@ -277,15 +275,13 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                           color: AppTheme.textTertiary,
                         ),
                       ),
-                  ),
-                ),
               ),
             ),
             
             // 产品信息 - PC端紧凑布局
             Expanded(
               child: Padding(
-                padding: EdgeInsets.all(isDesktop ? 0.1 : 12.0),
+                padding: EdgeInsets.all(isDesktop ? 0.5 : 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -296,7 +292,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         height: isDesktop ? 1.0 : 1.2,
-                        fontSize: isDesktop ? 1.0 : 14.0,
+                        fontSize: isDesktop ? 3.0 : 14.0,
                       ),
                       maxLines: isDesktop ? 2 : 2, // PC端紧凑显示
                       overflow: TextOverflow.ellipsis,
@@ -306,7 +302,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: isDesktop ? 0.1 : 4.0),
+                        SizedBox(height: isDesktop ? 0.5 : 4.0),
                         // 价格
                         Row(
                           children: [
@@ -315,20 +311,20 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: AppTheme.primaryColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: isDesktop ? 1.0 : 16.0,
+                                fontSize: isDesktop ? 3.0 : 16.0,
                               ),
                             ),
-                            SizedBox(width: isDesktop ? 0.1 : 4.0),
-                            QiancaiDouIcon(size: isDesktop ? 0.5 : 14.0),
+                            SizedBox(width: isDesktop ? 0.5 : 4.0),
+                            QiancaiDouIcon(size: isDesktop ? 2.0 : 14.0),
                           ],
                         ),
-                        SizedBox(height: isDesktop ? 0.1 : 4.0),
+                        SizedBox(height: isDesktop ? 0.5 : 4.0),
                         // 库存状态
                         Text(
                           '${AppLocalizations.of(context)!.products_stock}: ${product.stock}',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: product.isInStock ? AppTheme.successColor : AppTheme.errorColor,
-                              fontSize: isDesktop ? 0.8 : 12.0,
+                              fontSize: isDesktop ? 2.0 : 12.0,
                             ),
                         ),
                       ],
