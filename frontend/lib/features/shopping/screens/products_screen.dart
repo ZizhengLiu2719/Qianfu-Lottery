@@ -166,25 +166,26 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop = screenWidth > 768;
     print('ProductGrid - Screen width: $screenWidth, isDesktop: $isDesktop');
+    print('ResponsiveUtils test - w(16): ${ResponsiveUtils.w(context, 16)}, h(12): ${ResponsiveUtils.h(context, 12)}');
 
     if (filteredProducts.isEmpty) {
       return SliverToBoxAdapter(
         child: Container(
-          padding: EdgeInsets.all(isDesktop ? 13.w : 40.w),
+          padding: ResponsiveUtils.padding(context, all: isDesktop ? 13 : 40),
           child: Center(
             child: Column(
               children: [
                 Icon(
                   FeatherIcons.package,
-                  size: isDesktop ? 21.sp : 64.sp,
+                  size: ResponsiveUtils.sp(context, isDesktop ? 21 : 64),
                   color: AppTheme.textTertiary,
                 ),
-                SizedBox(height: isDesktop ? 5.h : 16.h),
+                SizedBox(height: ResponsiveUtils.h(context, isDesktop ? 5 : 16)),
                 Text(
                   AppLocalizations.of(context)!.common_empty,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppTheme.textTertiary,
-                    fontSize: isDesktop ? 12.sp : null,
+                    fontSize: ResponsiveUtils.sp(context, isDesktop ? 12 : 16),
                   ),
                 ),
               ],
@@ -344,7 +345,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
   Widget _buildLoadingState(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(40.w),
+      padding: ResponsiveUtils.padding(context, all: 40),
       child: const Center(
         child: CircularProgressIndicator(),
       ),
@@ -353,21 +354,21 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
   Widget _buildErrorState(BuildContext context, Object error) {
     return Padding(
-      padding: EdgeInsets.all(40.w),
+      padding: ResponsiveUtils.padding(context, all: 40),
       child: Center(
         child: Column(
           children: [
             Icon(
               FeatherIcons.alertCircle,
-              size: 64.sp,
+              size: ResponsiveUtils.sp(context, 64),
               color: AppTheme.errorColor,
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: ResponsiveUtils.h(context, 16)),
             Text(
               AppLocalizations.of(context)!.common_error,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: ResponsiveUtils.h(context, 8)),
             ElevatedButton(
               onPressed: () => ref.invalidate(productsProvider),
               child: Text(AppLocalizations.of(context)!.common_retry),
