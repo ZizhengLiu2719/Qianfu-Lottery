@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import '../models/models.dart';
 import 'dio_client.dart';
 
