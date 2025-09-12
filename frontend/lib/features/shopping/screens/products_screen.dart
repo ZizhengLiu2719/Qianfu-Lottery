@@ -162,26 +162,23 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         ? products
         : products.where((p) => p.category == _selectedCategory).toList();
 
-    final isDesktop = MediaQuery.of(context).size.width > 768;
-
     if (filteredProducts.isEmpty) {
       return SliverToBoxAdapter(
         child: Container(
-          padding: EdgeInsets.all(isDesktop ? 13.w : 40.w),
+          padding: EdgeInsets.all(40.w),
           child: Center(
             child: Column(
               children: [
                 Icon(
                   FeatherIcons.package,
-                  size: isDesktop ? 21.sp : 64.sp,
+                  size: 64.sp,
                   color: AppTheme.textTertiary,
                 ),
-                SizedBox(height: isDesktop ? 5.h : 16.h),
+                SizedBox(height: 16.h),
                 Text(
                   AppLocalizations.of(context)!.common_empty,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppTheme.textTertiary,
-                    fontSize: isDesktop ? 12.sp : null,
                   ),
                 ),
               ],
@@ -193,16 +190,13 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
 
     // 卡片化展示：两列网格，每个商品独立卡片
     return SliverPadding(
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 5.w : 16.w, 
-        vertical: isDesktop ? 3.h : 8.h
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: isDesktop ? 4.h : 12.h,
-          crossAxisSpacing: isDesktop ? 4.w : 12.w,
-          childAspectRatio: isDesktop ? 0.6 : 0.75, // PC端更紧凑
+          mainAxisSpacing: 12.h,
+          crossAxisSpacing: 12.w,
+          childAspectRatio: 0.75, // 调整比例让卡片更高一些
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) {
@@ -216,32 +210,30 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
   }
 
   Widget _buildProductCard(BuildContext context, Product product) {
-    final isDesktop = MediaQuery.of(context).size.width > 768;
-    
     return GestureDetector(
       onTap: () => context.go('/products/${product.id}'),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(isDesktop ? 4.r : 12.r),
+          borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.08),
-              blurRadius: isDesktop ? 3 : 8,
-              offset: const Offset(0, 1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 产品图片 - PC端缩小
+            // 产品图片 - 更小的尺寸
             ClipRRect(
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(isDesktop ? 4.r : 12.r),
+                top: Radius.circular(12.r),
               ),
               child: AspectRatio(
-                aspectRatio: isDesktop ? 1.0 : 1.2, // PC端更紧凑
+                aspectRatio: 1.2, // 稍微宽一些
                 child: product.mainImage.isNotEmpty
                     ? CachedNetworkImage(
                         imageUrl: product.mainImage,
@@ -256,7 +248,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                           color: AppTheme.backgroundColor,
                           child: Icon(
                             FeatherIcons.image,
-                            size: isDesktop ? 8.sp : 24.sp,
+                            size: 24.sp,
                             color: AppTheme.textTertiary,
                           ),
                         ),
@@ -265,17 +257,17 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                         color: AppTheme.backgroundColor,
                         child: Icon(
                           FeatherIcons.image,
-                          size: isDesktop ? 8.sp : 24.sp,
+                          size: 24.sp,
                           color: AppTheme.textTertiary,
                         ),
                       ),
               ),
             ),
             
-            // 产品信息 - PC端紧凑布局
+            // 产品信息 - 紧凑布局
             Expanded(
               child: Padding(
-                padding: EdgeInsets.all(isDesktop ? 4.w : 12.w),
+                padding: EdgeInsets.all(12.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -285,10 +277,9 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                       product.title,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        height: isDesktop ? 1.0 : 1.2,
-                        fontSize: isDesktop ? 8.sp : null,
+                        height: 1.2,
                       ),
-                      maxLines: isDesktop ? 2 : 2, // PC端紧凑显示
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     
@@ -296,7 +287,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: isDesktop ? 1.h : 4.h),
+                        SizedBox(height: 4.h),
                         // 价格
                         Row(
                           children: [
@@ -305,20 +296,18 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: AppTheme.primaryColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: isDesktop ? 8.sp : null,
                               ),
                             ),
-                            SizedBox(width: isDesktop ? 1.w : 4.w),
-                            QiancaiDouIcon(size: isDesktop ? 4.0 : 14.0),
+                            SizedBox(width: 4.w),
+                            QiancaiDouIcon(size: 14.0),
                           ],
                         ),
-                        SizedBox(height: isDesktop ? 1.h : 4.h),
+                        SizedBox(height: 4.h),
                         // 库存状态
                         Text(
                           '${AppLocalizations.of(context)!.products_stock}: ${product.stock}',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: product.isInStock ? AppTheme.successColor : AppTheme.errorColor,
-                            fontSize: isDesktop ? 6.sp : null,
                           ),
                         ),
                       ],

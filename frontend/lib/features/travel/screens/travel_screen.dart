@@ -249,39 +249,37 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
     required String category,
     required VoidCallback onTap,
   }) {
-    final isDesktop = MediaQuery.of(context).size.width > 768;
-    
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(isDesktop ? 5.w : 16.w),
+        padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(isDesktop ? 4.r : 12.r),
+          borderRadius: BorderRadius.circular(12.r),
           border: Border.all(color: Colors.grey.shade200),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              blurRadius: isDesktop ? 3 : 8,
-              offset: const Offset(0, 1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(isDesktop ? 4.w : 12.w),
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 color: AppTheme.primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(isDesktop ? 3.r : 8.r),
+                borderRadius: BorderRadius.circular(8.r),
               ),
               child: Icon(
                 icon,
                 color: AppTheme.primaryColor,
-                size: isDesktop ? 8.sp : 24.sp,
+                size: 24.sp,
               ),
             ),
-            SizedBox(width: isDesktop ? 5.w : 16.w),
+            SizedBox(width: 16.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,16 +287,16 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: isDesktop ? 5.sp : 16.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                       color: AppTheme.textPrimary,
                     ),
                   ),
-                  SizedBox(height: isDesktop ? 1.h : 4.h),
+                  SizedBox(height: 4.h),
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: isDesktop ? 4.sp : 14.sp,
+                      fontSize: 14.sp,
                       color: AppTheme.textSecondary,
                     ),
                   ),
@@ -307,7 +305,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
             ),
             Icon(
               FeatherIcons.chevronRight,
-              size: isDesktop ? 7.sp : 20.sp,
+              size: 20.sp,
               color: AppTheme.textTertiary,
             ),
           ],
@@ -329,34 +327,34 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(isDesktop ? 4.w : 16.w),
+        padding: EdgeInsets.all(isDesktop ? 12.w : 16.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(isDesktop ? 3.r : 12.r),
+          borderRadius: BorderRadius.circular(isDesktop ? 8.r : 12.r),
           border: Border.all(color: Colors.grey.shade200),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              blurRadius: isDesktop ? 2 : 8,
-              offset: const Offset(0, 1),
+              blurRadius: isDesktop ? 6 : 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(isDesktop ? 3.w : 12.w),
+              padding: EdgeInsets.all(isDesktop ? 8.w : 12.w),
               decoration: BoxDecoration(
                 color: AppTheme.primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(isDesktop ? 2.r : 8.r),
+                borderRadius: BorderRadius.circular(isDesktop ? 6.r : 8.r),
               ),
               child: Icon(
                 icon,
                 color: AppTheme.primaryColor,
-                size: isDesktop ? 6.sp : 24.sp,
+                size: isDesktop ? 18.sp : 24.sp,
               ),
             ),
-            SizedBox(width: isDesktop ? 4.w : 16.w),
+            SizedBox(width: isDesktop ? 12.w : 16.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -364,33 +362,33 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: isDesktop ? 5.sp : 16.sp,
+                      fontSize: isDesktop ? 14.sp : 16.sp,
                       fontWeight: FontWeight.w600,
                       color: AppTheme.textPrimary,
                     ),
                   ),
-                  SizedBox(height: isDesktop ? 1.h : 4.h),
+                  SizedBox(height: isDesktop ? 3.h : 4.h),
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: isDesktop ? 4.sp : 14.sp,
+                      fontSize: isDesktop ? 12.sp : 14.sp,
                       color: AppTheme.textSecondary,
                     ),
                   ),
-                  SizedBox(height: isDesktop ? 3.h : 8.h),
+                  SizedBox(height: isDesktop ? 6.h : 8.h),
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: isDesktop ? 3.w : 8.w, 
-                      vertical: isDesktop ? 1.h : 4.h
+                      horizontal: isDesktop ? 6.w : 8.w, 
+                      vertical: isDesktop ? 3.h : 4.h
                     ),
                     decoration: BoxDecoration(
                       color: AppTheme.primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(isDesktop ? 3.r : 12.r),
+                      borderRadius: BorderRadius.circular(isDesktop ? 8.r : 12.r),
                     ),
                     child: Text(
                       category,
                       style: TextStyle(
-                        fontSize: isDesktop ? 3.sp : 12.sp,
+                        fontSize: isDesktop ? 10.sp : 12.sp,
                         color: AppTheme.primaryColor,
                         fontWeight: FontWeight.w500,
                       ),
@@ -401,7 +399,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
             ),
             Icon(
               FeatherIcons.chevronRight,
-              size: isDesktop ? 5.sp : 20.sp,
+              size: isDesktop ? 16.sp : 20.sp,
               color: AppTheme.textTertiary,
             ),
           ],
