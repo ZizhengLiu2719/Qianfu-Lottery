@@ -48,9 +48,47 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-          // 顶部一行：左侧横向标签，右侧购物车
-          _buildTopFilterBar(context, cartItemCount),
-          
+          // 顶部标题栏
+          SliverAppBar(
+            title: Text(AppLocalizations.of(context)!.nav_life),
+            backgroundColor: Colors.white,
+            foregroundColor: AppTheme.textPrimary,
+            elevation: 0,
+            pinned: true,
+            actions: [
+              Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(FeatherIcons.shoppingCart, color: AppTheme.textPrimary),
+                    onPressed: () => context.go(AppRoutes.cart),
+                    tooltip: AppLocalizations.of(context)!.common_cart,
+                  ),
+                  if (cartItemCount > 0)
+                    Positioned(
+                      right: 6,
+                      top: 6,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                        child: Text(
+                          cartItemCount > 99 ? '99+' : cartItemCount.toString(),
+                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+          // 标签栏
+          SliverToBoxAdapter(
+            child: _buildCategoryFilter(context),
+          ),
           // 产品网格
           productsAsync.when(
             data: (products) => _buildProductGrid(context, products),
@@ -66,54 +104,6 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     );
   }
 
-  Widget _buildTopFilterBar(BuildContext context, int cartCount) {
-    return SliverToBoxAdapter(
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            // 标签栏
-            _buildCategoryFilter(context),
-            // 购物车按钮行
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Stack(
-                    children: [
-                      IconButton(
-                        icon: const Icon(FeatherIcons.shoppingCart, color: AppTheme.textPrimary),
-                        onPressed: () => context.go(AppRoutes.cart),
-                      ),
-                      if (cartCount > 0)
-                        Positioned(
-                          right: 6,
-                          top: 6,
-                          child: Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryColor,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                            child: Text(
-                              cartCount > 99 ? '99+' : cartCount.toString(),
-                              style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildCategoryFilter(BuildContext context) {
     final categories = [

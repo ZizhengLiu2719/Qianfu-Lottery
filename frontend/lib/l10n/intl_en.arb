@@ -18,6 +18,7 @@
   "common_edit": "Edit",
   "common_delete": "Delete",
   "common_save": "Save",
+  "common_cart": "Cart",
   
   "auth_login": "Login",
   "auth_register": "Register",
