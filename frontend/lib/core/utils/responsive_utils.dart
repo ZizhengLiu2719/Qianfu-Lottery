@@ -21,9 +21,11 @@ class ResponsiveUtils {
   /// 响应式宽度 - PC端大幅缩小
   static double w(BuildContext context, double value) {
     final isDesktop = ResponsiveUtils.isDesktop(context);
-    final result = isDesktop ? value * 0.2 : value;
-    print('ResponsiveUtils.w($value) - isDesktop: $isDesktop, result: $result');
-    return result;
+    if (isDesktop) {
+      // PC端缩小到原来的1/5
+      return value * 0.2;
+    }
+    return value;
   }
   
   /// 响应式高度 - PC端大幅缩小
