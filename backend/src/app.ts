@@ -5,6 +5,7 @@ import { createAppointmentHandlers } from './handlers/appointments.handler'
 import { createAuthHandlers } from './handlers/auth.handler'
 import { createCartHandlers } from './handlers/cart.handler'
 import { createCheckoutHandlers } from './handlers/checkout.handler'
+import { createFeedbackHandlers } from './handlers/feedback.handler'
 import { createInventoryHandlers } from './handlers/inventory.handler'
 import { createLearningHandlers } from './handlers/learning.handler'
 import { createOrderHandlers } from './handlers/order.handler'
@@ -524,6 +525,42 @@ app.get('/api/me/qiancaidou/transactions', async (c) => {
       data: null
     }, 500)
   }
+})
+
+// 反馈路由 (受保护)
+app.post('/api/feedback', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createFeedbackHandlers()
+  return handlers.createFeedback(c)
+})
+
+app.get('/api/feedback', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createFeedbackHandlers()
+  return handlers.getUserFeedback(c)
+})
+
+app.get('/api/feedback/:id', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createFeedbackHandlers()
+  return handlers.getFeedback(c)
+})
+
+app.put('/api/feedback/:id', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createFeedbackHandlers()
+  return handlers.updateFeedback(c)
+})
+
+app.delete('/api/feedback/:id', async (c) => {
+  const { authMiddleware } = initializeServices(c)
+  await authMiddleware(c, async () => {})
+  const handlers = createFeedbackHandlers()
+  return handlers.deleteFeedback(c)
 })
 
 // 娱乐彩占位路由
