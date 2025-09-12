@@ -162,10 +162,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     try {
       await _tokenManager.clearToken();
+      await _tokenManager.clearAll(); // 清除所有存储数据
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
         user: null,
         isLoading: false,
+        error: null,
       );
     } catch (e) {
       if (kDebugMode) {
@@ -176,6 +178,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         status: AuthStatus.unauthenticated,
         user: null,
         isLoading: false,
+        error: null,
       );
     }
   }

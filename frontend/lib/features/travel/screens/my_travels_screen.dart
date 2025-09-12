@@ -50,7 +50,7 @@ class _MyTravelsScreenState extends ConsumerState<MyTravelsScreen> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(FeatherIcons.arrowLeft),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.go(AppRoutes.travel),
         ),
         actions: [
           if (travels.isNotEmpty)

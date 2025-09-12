@@ -125,9 +125,12 @@ class ProfileScreen extends ConsumerWidget {
             child: Text(AppLocalizations.of(context)!.common_cancel),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
-              ref.read(authProvider.notifier).logout();
+              await ref.read(authProvider.notifier).logout();
+              if (context.mounted) {
+                context.go(AppRoutes.login);
+              }
             },
             child: Text(AppLocalizations.of(context)!.common_confirm),
           ),

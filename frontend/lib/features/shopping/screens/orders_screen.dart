@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/qiancai_dou_icon.dart';
 import '../../../models/order.dart';
+import '../../../routing/app_router.dart';
 import '../providers/order_provider.dart';
 
 class OrdersScreen extends ConsumerStatefulWidget {
@@ -46,7 +48,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
         ),
         leading: IconButton(
           icon: Icon(FeatherIcons.arrowLeft, color: AppTheme.textPrimary),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.go(AppRoutes.products),
         ),
         actions: [
           PopupMenuButton<String>(

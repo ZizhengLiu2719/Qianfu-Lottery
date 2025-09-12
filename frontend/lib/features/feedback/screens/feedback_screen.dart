@@ -41,7 +41,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(FeatherIcons.arrowLeft),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.go(AppRoutes.profile),
         ),
         actions: [
           IconButton(
@@ -287,7 +287,7 @@ class _CreateFeedbackScreenState extends ConsumerState<CreateFeedbackScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(FeatherIcons.arrowLeft),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.go(AppRoutes.profile),
         ),
         actions: [
           TextButton(

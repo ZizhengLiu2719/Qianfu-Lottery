@@ -68,7 +68,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: AppRoutes.home,
     debugLogDiagnostics: true,
     redirect: (context, state) {
-      final authState = ref.read(authProvider);
+      final authState = ref.watch(authProvider);
       final isAuthenticated = authState.isAuthenticated;
       final currentRoute = state.uri.toString();
       final isAuthPage = currentRoute == AppRoutes.login ||
