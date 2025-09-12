@@ -100,24 +100,24 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: isDesktop ? 8.h : 16.h),
+        SizedBox(height: isDesktop ? 2.h : 16.h),
         Text(
           AppLocalizations.of(context)!.travel_packages,
           style: TextStyle(
-            fontSize: isDesktop ? 14.sp : 18.sp,
+            fontSize: isDesktop ? 8.sp : 18.sp,
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
           ),
         ),
-        SizedBox(height: isDesktop ? 4.h : 8.h),
+        SizedBox(height: isDesktop ? 1.h : 8.h),
         Text(
           AppLocalizations.of(context)!.travel_subtitle,
           style: TextStyle(
-            fontSize: isDesktop ? 12.sp : 14.sp,
+            fontSize: isDesktop ? 6.sp : 14.sp,
             color: AppTheme.textSecondary,
           ),
         ),
-        SizedBox(height: isDesktop ? 12.h : 24.h),
+        SizedBox(height: isDesktop ? 4.h : 24.h),
         _buildCategoryCard(
           context,
           title: AppLocalizations.of(context)!.travel_domestic,
@@ -126,7 +126,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           category: AppLocalizations.of(context)!.travel_domestic,
           onTap: () => setState(() => _selectedCategory = 'domestic'),
         ),
-        SizedBox(height: isDesktop ? 6.h : 12.h),
+        SizedBox(height: isDesktop ? 2.h : 12.h),
         _buildCategoryCard(
           context,
           title: AppLocalizations.of(context)!.travel_international,
@@ -145,24 +145,24 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: isDesktop ? 8.h : 16.h),
+        SizedBox(height: isDesktop ? 2.h : 16.h),
         Text(
           AppLocalizations.of(context)!.travel_domestic,
           style: TextStyle(
-            fontSize: isDesktop ? 14.sp : 18.sp,
+            fontSize: isDesktop ? 8.sp : 18.sp,
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
           ),
         ),
-        SizedBox(height: isDesktop ? 4.h : 8.h),
+        SizedBox(height: isDesktop ? 1.h : 8.h),
         Text(
           AppLocalizations.of(context)!.travel_domestic_desc,
           style: TextStyle(
-            fontSize: isDesktop ? 12.sp : 14.sp,
+            fontSize: isDesktop ? 6.sp : 14.sp,
             color: AppTheme.textSecondary,
           ),
         ),
-        SizedBox(height: isDesktop ? 12.h : 24.h),
+        SizedBox(height: isDesktop ? 4.h : 24.h),
         _buildPackageCard(
           context,
           title: AppLocalizations.of(context)!.travel_west_lake,
@@ -171,7 +171,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           category: AppLocalizations.of(context)!.travel_cultural_experience,
           onTap: () => _navigateToPackageDetail('1'),
         ),
-        SizedBox(height: isDesktop ? 6.h : 12.h),
+        SizedBox(height: isDesktop ? 2.h : 12.h),
         _buildPackageCard(
           context,
           title: AppLocalizations.of(context)!.travel_chengdu,
@@ -180,7 +180,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           category: AppLocalizations.of(context)!.travel_food_culture,
           onTap: () => _navigateToPackageDetail('2'),
         ),
-        SizedBox(height: isDesktop ? 6.h : 12.h),
+        SizedBox(height: isDesktop ? 2.h : 12.h),
         _buildPackageCard(
           context,
           title: AppLocalizations.of(context)!.travel_sanya,
@@ -199,24 +199,24 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: isDesktop ? 8.h : 16.h),
+        SizedBox(height: isDesktop ? 2.h : 16.h),
         Text(
           AppLocalizations.of(context)!.travel_international,
           style: TextStyle(
-            fontSize: isDesktop ? 14.sp : 18.sp,
+            fontSize: isDesktop ? 8.sp : 18.sp,
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
           ),
         ),
-        SizedBox(height: isDesktop ? 4.h : 8.h),
+        SizedBox(height: isDesktop ? 1.h : 8.h),
         Text(
           AppLocalizations.of(context)!.travel_international_desc,
           style: TextStyle(
-            fontSize: isDesktop ? 12.sp : 14.sp,
+            fontSize: isDesktop ? 6.sp : 14.sp,
             color: AppTheme.textSecondary,
           ),
         ),
-        SizedBox(height: isDesktop ? 12.h : 24.h),
+        SizedBox(height: isDesktop ? 4.h : 24.h),
         _buildPackageCard(
           context,
           title: AppLocalizations.of(context)!.travel_japan,
@@ -225,7 +225,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           category: AppLocalizations.of(context)!.travel_natural_scenery,
           onTap: () => _navigateToPackageDetail('4'),
         ),
-        SizedBox(height: isDesktop ? 6.h : 12.h),
+        SizedBox(height: isDesktop ? 2.h : 12.h),
         _buildPackageCard(
           context,
           title: AppLocalizations.of(context)!.travel_europe,
@@ -234,7 +234,7 @@ class _TravelScreenState extends ConsumerState<TravelScreen> {
           category: AppLocalizations.of(context)!.travel_cultural_experience,
           onTap: () => _navigateToPackageDetail('5'),
         ),
-        SizedBox(height: isDesktop ? 6.h : 12.h),
+        SizedBox(height: isDesktop ? 2.h : 12.h),
         _buildPackageCard(
           context,
           title: AppLocalizations.of(context)!.travel_southeast_asia,
